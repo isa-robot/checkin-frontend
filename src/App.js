@@ -1,0 +1,39 @@
+import React from 'react';
+import { ToastContainer } from 'react-toastify';
+import { PersistGate } from 'redux-persist/integration/react';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import { ThemeProvider } from 'styled-components';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import { ptBR } from '@material-ui/core/locale';
+
+import './config/configReactotron';
+import 'react-datepicker/dist/react-datepicker.css';
+
+import GlobalStyle from './styles/global';
+import Routes from './routes';
+import globalTheme from '~/styles/colors';
+import MuiTheme from '~/styles/muiTheme';
+
+import { store, persistor } from './store';
+
+function App() {
+  const theme = createMuiTheme(MuiTheme, ptBR);
+  return (
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <BrowserRouter>
+          <ThemeProvider theme={globalTheme}>
+            <MuiThemeProvider theme={theme}>
+              <Routes />
+            </MuiThemeProvider>
+            <GlobalStyle />
+          </ThemeProvider>
+          <ToastContainer autoClose={3000} />
+        </BrowserRouter>
+      </PersistGate>
+    </Provider>
+  );
+}
+
+export default App;
