@@ -10,6 +10,9 @@ import { ptBR } from '@material-ui/core/locale';
 import './config/configReactotron';
 import 'react-datepicker/dist/react-datepicker.css';
 
+import { KeycloakProvider } from '@react-keycloak/web';
+import { keycloak, keycloakProviderInitConfig } from './keycloak';
+
 import GlobalStyle from './styles/global';
 import Routes from './routes';
 import globalTheme from '~/styles/colors';
@@ -20,19 +23,21 @@ import { store, persistor } from './store';
 function App() {
   const theme = createMuiTheme(MuiTheme, ptBR);
   return (
-    <Provider store={store}>
-      <PersistGate persistor={persistor}>
-        <BrowserRouter>
-          <ThemeProvider theme={globalTheme}>
-            <MuiThemeProvider theme={theme}>
-              <Routes />
-            </MuiThemeProvider>
-            <GlobalStyle />
-          </ThemeProvider>
-          <ToastContainer autoClose={3000} />
-        </BrowserRouter>
-      </PersistGate>
-    </Provider>
+    <KeycloakProvider keycloak={keycloak} onInit={keycloakProviderInitConfig}>
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+          <BrowserRouter>
+            <ThemeProvider theme={globalTheme}>
+              <MuiThemeProvider theme={theme}>
+                <Routes />
+              </MuiThemeProvider>
+              <GlobalStyle />
+            </ThemeProvider>
+            <ToastContainer autoClose={3000} />
+          </BrowserRouter>
+        </PersistGate>
+      </Provider>
+    </KeycloakProvider>
   );
 }
 

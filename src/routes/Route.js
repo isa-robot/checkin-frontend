@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
 
+import { useKeycloak } from '@react-keycloak/web';
+
 import { useSelector } from 'react-redux';
 import AuthLayout from '~/pages/_layouts/auth';
 import DefaultLayout from '~/pages/_layouts/default';
@@ -10,45 +12,42 @@ export default function RouteWrapper({
   component: Component,
   isPrivate,
   resource,
+  roles,
   ...rest
 }) {
-  const { signed } = useSelector(state => state.auth);
-  const { profile } = useSelector(state => state.user);
+  const [keycloak] = useKeycloak();
 
-  if (!signed && isPrivate) {
-    return <Redirect to="/" />;
-  }
-
-  if (signed && !isPrivate) {
-    return <Redirect to="/diario" />;
-  }
-
-  if (resource) {
-    const { resources: userResources } = profile.role;
-
-    let redirect = false;
-
-    userResources.map(res => {
-      if (res.name === resource) {
-        redirect = true;
-      }
-    });
-
-    if (!redirect) {
-      return <Redirect to="/qualis" />;
+  const isAuthorized = roles => {
+    if (keycloak && roles) {
+      return (
+        roles.some(r => {
+          const realm = keycloak.hasRealmRole(r);
+          return realm;
+        }) || roles.length === 0
+      );
     }
-  }
+    return false;
+  };
 
-  const Layout = signed ? DefaultLayout : AuthLayout;
+  const resources = keycloak.resourceAccess ? keycloak.resourceAccess['isa-frontend'].roles : []
+  const hasResource = resource ? resources.includes(resource) : true;
+
+  if(!hasResource) return <Redirect to="/qualis" />;
+
+  const Layout = keycloak.authenticated ? DefaultLayout : AuthLayout;
 
   return (
     <Route
       {...rest}
-      render={props => (
-        <Layout>
-          <Component {...props} />
-        </Layout>
-      )}
+      render={props => {
+        return isAuthorized(roles) ? (
+          <Layout>
+            <Component {...props} />
+          </Layout>
+        ) : (
+          <Redirect to={{ pathname: '/' }} />
+        );
+      }}
     />
   );
 }
@@ -57,6 +56,7 @@ RouteWrapper.propTypes = {
   isPrivate: PropTypes.bool,
   isAdmin: PropTypes.bool,
   resource: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  roles: PropTypes.oneOfType([PropTypes.string, PropTypes.any]),
   component: PropTypes.oneOfType([PropTypes.element, PropTypes.func])
     .isRequired,
 };
@@ -65,6 +65,7 @@ RouteWrapper.defaultProps = {
   isPrivate: false,
   isAdmin: false,
   resource: false,
+  roles: [],
 };
 
 // let admin;
