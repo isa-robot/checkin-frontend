@@ -13,6 +13,15 @@ export default function User(state = INICIAL_STATE, action) {
         draft.profile = user;
         break;
       }
+      case '@auth/UPDATE_STORE': {
+        const { user } = action.payload;
+        draft.profile = user.profile;
+        break;
+      }
+      case '@auth/CLEAN_STORE': {
+        draft.profile = null;
+        break;
+      }
       case '@auth/SIGN_OUT': {
         draft.profile = null;
         break;

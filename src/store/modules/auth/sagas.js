@@ -1,51 +1,61 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
-import { toast } from 'react-toastify';
 
 import api from '~/services/api';
 
-import { signInSuccess, signFailure } from './actions';
+import { UpdateStore, cleanStore } from './actions';
 
-export function* signIn({ payload }) {
-  try {
-    const { username, password } = payload;
+import { keycloak } from '~/keycloak';
 
-    const response = yield call(api.post, '/sessions', {
-      username,
-      password,
-    });
+export function kcSignIn() {
+  keycloak.login();
+}
 
-    const { token, user } = response.data;
+export function* kcAuth() {
+  api.defaults.headers.Authorization = `Bearer ${keycloak.token}`;
 
-    api.defaults.headers.Authorization = `Bearer ${token}`;
+  /*
+    A call da api precisaria retornar o establishment!
+  */
 
-    if (user.establishments.length > 0) {
-      api.defaults.headers.establishment = user.establishments[0].id;
-    }
+  const id = keycloak.tokenParsed.sub;
 
-    yield put(signInSuccess(token, user));
-  } catch (error) {
-    console.log(error);
-    toast.error('Username ou senha inválidos');
-    yield put(signFailure());
-  }
+  const response = yield call(api.get, `/users/user/${id}`, {
+    headers: { 'Access-Control-Allow-Origin': '*' },
+  });
+
+  const { username, enabled, emailVerified } = response.data.user;
+  const { roles } = response.data;
+
+  const user = {};
+  user.profile = { id, username, enabled, emailVerified, roles };
+
+  yield put(UpdateStore(user));
+}
+
+export function* kcSignOut() {
+  keycloak
+    .logout()
+    .then(yield put(cleanStore()))
+    .catch(console.log('error'));
 }
 
 export function setToken({ payload }) {
   if (!payload) return;
 
-  const { token } = payload.auth;
-  const { profile } = payload.user;
+  // const { profile } = payload.user;
 
-  if (token) {
-    api.defaults.headers.Authorization = `Bearer ${token}`;
+  if (keycloak && keycloak.authenticated) {
+    api.defaults.headers.Authorization = `Bearer ${keycloak.token}`;
   }
 
-  if (profile && profile.establishments.length > 0) {
-    api.defaults.headers.establishment = profile.establishments[0].id;
-  }
+  // if (profile && profile.establishments?.length > 0) {
+  //   api.defaults.headers.establishment = profile.establishments[0].id;
+  // }
 }
 
 export default all([
   takeLatest('persist/REHYDRATE', setToken),
-  takeLatest('@auth/SIGN_IN_REQUEST', signIn),
+  takeLatest('@auth/KC_SIGN_IN_REQUEST', kcSignIn),
+  takeLatest('@auth/KC_SIGN_OUT', kcSignOut),
+  takeLatest('@auth/KC_ON_AUTH', kcAuth),
 ]);

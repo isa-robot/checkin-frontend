@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import { ListSubheader, Divider } from '@material-ui/core';
 import ListItem from '@material-ui/core/ListItem';
@@ -7,8 +7,11 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { NavLink } from 'react-router-dom';
 import Drawer from '@material-ui/core/Drawer';
 
+import { useKeycloak } from '@react-keycloak/web';
+
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { IconContext } from 'react-icons';
+// import { signInRequest, signOut } from '~/store/modules/auth/actions';
 
 import {
   Container,
@@ -24,13 +27,37 @@ import Icon from '~/components/Icon';
 import logo from '~/assets/images/header-logo.png';
 
 export default function Header() {
-  const { name, establishments } = useSelector(state => state.user.profile);
-  const { resources } = useSelector(state => state.user.profile.role);
+  // const dispatch = useDispatch();
+  // const user = useSelector(state => state.user);
+  // const { name, establishments } = useSelector(state => state.user.profile);
+  const [keycloak] = useKeycloak();
 
-  let establishment = '';
-  if (establishments.length > 0) {
-    establishment = establishments[0].name;
-  }
+  const resources = keycloak.resourceAccess['isa-frontend']
+    ? keycloak.resourceAccess['isa-frontend'].roles
+    : [];
+
+  // const establishment = '';
+  // if (establishments?.length > 0) {
+  //   establishment = establishments[0].name;
+  // }
+
+  // dispatch(signOut());
+
+  const resourcesMapping = {
+    diary: { name: 'Diário', to: '/diario', icon: 'diary' },
+    painel: { name: 'Painel', to: '/painel', icon: 'monitoring' },
+    monitoring: {
+      name: 'Monitoramento',
+      to: '/monitoring',
+      icon: 'monitoring',
+    },
+    register: { name: 'Registro', to: '/qualis', icon: 'diary' },
+    'management-user': {
+      name: 'Gerenciamento de Usuários',
+      to: '/usuarios',
+      icon: 'diary',
+    },
+  };
 
   const [open, setOpen] = useState(false);
 
@@ -56,17 +83,17 @@ export default function Header() {
               {resources.map(resource => {
                 return (
                   <ListItem
-                    key={resource.id}
+                    key={resource}
                     button
                     onClick={handleOpenMenu}
                     component={NavLink}
                     activeStyle={{ fontWeight: 'bold' }}
-                    to={resource.to}
+                    to={resourcesMapping[resource].to}
                   >
                     <ListItemIcon>
-                      <Icon type={resource.icon} />
+                      <Icon type={resourcesMapping[resource].icon} />
                     </ListItemIcon>
-                    {resource.name}
+                    {resourcesMapping[resource].name}
                   </ListItem>
                 );
               })}
@@ -81,8 +108,9 @@ export default function Header() {
       </Menu>
       <Profile>
         <ProfileData>
-          <strong>{name}</strong>
-          <span>{establishment}</span>
+          <strong>{keycloak.tokenParsed.preferred_username}</strong>
+          {/* <strong>{name}</strong> */}
+          {/* <span>{establishment}</span> */}
         </ProfileData>
         <ProfileMenu />
       </Profile>

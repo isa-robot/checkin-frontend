@@ -1,25 +1,42 @@
-export function signInRequest(username, password) {
+export function kcSignInRequest() {
   return {
-    type: '@auth/SIGN_IN_REQUEST',
-    payload: { username, password },
+    type: '@auth/KC_SIGN_IN_REQUEST',
   };
 }
 
-export function signInSuccess(token, user) {
+// export function kcSignInSuccess() {
+//   return {
+//     type: '@auth/KC_SIGN_IN_SUCCESS',
+//   };
+// }
+
+// export function kcSignInFailure() {
+//   return {
+//     type: '@auth/KC_SIGN_IN_FAILURE',
+//   };
+// }
+
+export function kcSignOut() {
   return {
-    type: '@auth/SIGN_IN_SUCCESS',
-    payload: { token, user },
+    type: '@auth/KC_SIGN_OUT',
   };
 }
 
-export function signFailure() {
+export function kcOnAuth() {
   return {
-    type: '@auth/SIGN_IN_FAILURE',
+    type: '@auth/KC_ON_AUTH',
   };
 }
 
-export function signOut() {
+export function UpdateStore(user) {
   return {
-    type: '@auth/SIGN_OUT',
+    type: '@auth/UPDATE_STORE',
+    payload: { user },
+  };
+}
+
+export function cleanStore() {
+  return {
+    type: '@auth/CLEAN_STORE',
   };
 }
