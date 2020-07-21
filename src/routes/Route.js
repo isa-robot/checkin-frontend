@@ -29,10 +29,14 @@ export default function RouteWrapper({
     return false;
   };
 
-  const resources = keycloak.resourceAccess ? keycloak.resourceAccess['isa-frontend'].roles : []
+  const resources = keycloak.realmAcces
+    ? keycloak.resourceAccess
+      ? keycloak.resourceAccess['isa-frontend'].roles
+      : []
+    : [];
   const hasResource = resource ? resources.includes(resource) : true;
 
-  if(!hasResource) return <Redirect to="/qualis" />;
+  if (!hasResource) return <Redirect to="/qualis" />;
 
   const Layout = keycloak.authenticated ? DefaultLayout : AuthLayout;
 

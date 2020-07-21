@@ -9,15 +9,15 @@ import NotFound from '../pages/NotFound';
 import Monitoring from '~/pages/Monitoring';
 import Panel from '~/pages/Panel';
 import Profile from '~/pages/Profile';
-import Email from '~/pages/EmailSetup';
+import Setup from '~/pages/Setup';
 import Eleicao from '~/pages/Election';
+import Users from '~/pages/Users';
 
 // AuthRoutes
 import SignIn from '../pages/SignIn';
 import SignUp from '../pages/SignUp';
 import Forgot from '~/pages/Forgot';
 import ResetPassword from '~/pages/ResetPassword';
-import Users from '~/pages/Users';
 
 export default function AppRoutes() {
   return (
@@ -44,8 +44,8 @@ export default function AppRoutes() {
         isPrivate={false}
       />
       <Route
-        path="/email"
-        component={Email}
+        path="/configuracoes"
+        component={Setup}
         roles={[]}
         resource={false}
         isPrivate
@@ -72,9 +72,9 @@ export default function AppRoutes() {
         isPrivate
       />
       <Route
-        path="/email"
+        path="/configuracao"
         roles={['admin']}
-        component={Email}
+        component={Setup}
         resource={false}
         isPrivate
       />
