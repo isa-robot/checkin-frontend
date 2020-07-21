@@ -20,40 +20,25 @@ import {
   FormCard,
   ChoiceGroup,
   FormButtonGroup,
+  SelectDiv,
 } from './styles';
 import Button from '~/components/Buttons/Button';
 
 import Table from '~/components/Table';
 
 export default function Users() {
-  const initialState = {
-    enabled: false,
-    infectologist: false,
-    assisted: false,
-    admin: false,
-    user: false,
-    responsible: false,
-  };
-
-  const [loaded, setLoaded] = useState(true);
+  const [loaded, setLoaded] = useState(false);
   const [keycloak] = useKeycloak();
   const [users, setUsers] = useState([]);
   const [roles, setRoles] = useState([]);
-  const [formState, setFormState] = useState(initialState);
+  const [enabled, setEnabled] = useState(false);
 
   const [selected, selectUser] = useState(null);
+  const [newRole, setNewRole] = useState('desabilitado');
 
   const handleManageUser = user => {
-    const userRoles = initialState;
-
-    const parsedRoles = user.roles.map(role => {
-      userRoles[role.name] = true;
-      return role;
-    });
-
-    if (parsedRoles.length) userRoles.enabled = true;
-
-    setFormState(userRoles);
+    const role = user.roles.length ? user.roles[0].name : 'desabilitado';
+    setNewRole(role);
     selectUser(user);
   };
 
@@ -77,11 +62,11 @@ export default function Users() {
       title: 'Username',
       filtering: false,
     },
-    {
-      field: 'user.emailVerified',
-      title: 'E-mail',
-      filtering: false,
-    },
+    // {
+    //   field: 'user.emailVerified',
+    //   title: 'E-mail',
+    //   filtering: false,
+    // },
     {
       field: 'roles',
       title: 'Roles',
@@ -132,29 +117,15 @@ export default function Users() {
   }
 
   async function handleFormAnswer() {
-    if (
-      formState.enabled === true &&
-      Object.keys(formState).filter(key => formState[key] === true).length === 1
-    ) {
-      toast.error('Você precisa selecionar pelo menos 1 role!');
+    if (enabled === true && newRole === 'desabilitado') {
+      toast.error('Você precisa selecionar um perfil!');
     } else {
       const { id } = selected.user;
       const userRoles = selected.roles;
 
-      const deleteRole = userRoles
-        .filter(role => formState[role.name] === false)
-        .map(role => {
-          return { roleName: role.name, id };
-        });
-
-      const addRole = Object.keys(formState)
-        .filter(role => role !== 'enabled')
-        .filter(role => formState[role] === true)
-        .filter(role => !userRoles.map(r => r.name).includes(role))
-        .map(role => {
-          return { roleName: role, id };
-        });
-
+      const deleteRole = userRoles.map(role => {
+        return { roleName: role.name, id };
+      });
 
       const deleteRolePromises = deleteRole.map(role => {
         return api.delete(`/users/removeRole`, {
@@ -163,36 +134,33 @@ export default function Users() {
         });
       });
 
-      const addRolePromises = addRole.map(role => {
-        return api.post(`/users/addRole`, role, {
+      if (enabled === true) {
+        const role = { roleName: newRole, id };
+
+        await api.post(`/users/addRole`, role, {
           headers: { Authorization: `Bearer ${keycloak.token}` },
         });
-      });
+      }
 
-      const delete_responses = await Promise.all(deleteRolePromises);
-      const add_responses = await Promise.all(addRolePromises);
+      await Promise.all(deleteRolePromises);
 
-
-      setFormState({
-        ...initialState,
-      });
       selectUser(null);
-      toast.success('Resposta enviada com sucesso!');
+      setLoaded(false);
+      setNewRole('desabilitado');
+      toast.success('Perfil modificado com sucesso!');
     }
   }
 
-  function handleFormChange(evt) {
-    const { value, name } = evt.target;
-
-    if (name === 'enabled' && value === 'false') {
-      setFormState(initialState);
-    } else {
-      setFormState({
-        ...formState,
-        [name]: value === 'true',
-      });
-    }
+  function handleChangeEnabled(evt) {
+    const { value } = evt.target;
+    if (value === 'false') setNewRole('desabilitado');
+    setEnabled(value === 'true');
   }
+
+  const handleChangeRole = evt => {
+    const { value } = evt.target;
+    setNewRole(value);
+  };
 
   return (
     <>
@@ -211,8 +179,8 @@ export default function Users() {
                         id="enabled-true"
                         name="enabled"
                         value="true"
-                        onChange={handleFormChange}
-                        checked={formState.enabled === true}
+                        onChange={handleChangeEnabled}
+                        checked={enabled === true}
                       />
                       <label htmlFor="enabled-true">Sim</label>
                       <input
@@ -220,38 +188,32 @@ export default function Users() {
                         id="enabled-false"
                         name="enabled"
                         value="false"
-                        checked={formState.enabled === false}
-                        onChange={handleFormChange}
+                        checked={enabled === false}
+                        onChange={handleChangeEnabled}
                       />
                       <label htmlFor="enabled-false">Não</label>
                     </div>
                   </ChoiceGroup>
-                  {roles.map(role => (
-                    <ChoiceGroup key={role.name}>
-                      <strong>{role.name}</strong>
-                      <div>
-                        <input
-                          type="radio"
-                          id={`${role.name}-true`}
-                          name={role.name}
-                          value="true"
-                          onChange={handleFormChange}
-                          checked={formState[role.name] === true}
-                        />
-                        <label htmlFor={`${role.name}-true`}>Sim</label>
-                        <input
-                          type="radio"
-                          id={`${role.name}-false`}
-                          name={role.name}
-                          value="false"
-                          checked={formState[role.name] === false}
-                          onChange={handleFormChange}
-                        />
-                        <label htmlFor={`${role.name}-false`}>Não</label>
-                      </div>
-                    </ChoiceGroup>
-                  ))}
-
+                  <SelectDiv>
+                    <select
+                      required
+                      name="race"
+                      defaultValue={newRole}
+                      value={newRole}
+                      disabled={enabled === false}
+                      onChange={handleChangeRole}
+                    >
+                      <option disabled value="desabilitado">
+                        Escolha um perfil
+                      </option>
+                      {roles.map(role => (
+                        <option key={role.name} value={role.name}>
+                          {role.name}
+                        </option>
+                      ))}
+                    </select>
+                    <label>Perfil</label>
+                  </SelectDiv>
                   <FormButtonGroup>
                     <Button
                       width="13rem"

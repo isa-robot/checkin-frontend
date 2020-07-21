@@ -10,10 +10,13 @@ export const Container = styled.div``;
 
 export const Content = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 0 auto;
   padding: 0 32px 32px 32px;
   max-width: 1400px;
   height: 100%;
+
 
   @media screen and (max-width: 1400px) {
     margin: 0;
@@ -289,7 +292,6 @@ export const SelectDiv = styled.div`
   flex-direction: column;
   position: relative;
 
-  color: ${props => props.theme.colors.dimGrey};
   margin-bottom: 5px;
 
   &:hover {
@@ -311,13 +313,13 @@ export const SelectDiv = styled.div`
     border-radius: 4px;
     padding-left: 5px;
     font-size: 16px !important;
-    background: rgba(0, 0, 0, 0);
+    background: white;
     z-index: 1;
   }
 
   select:valid ~ label {
     transition: all 200ms cubic-bezier(0, 0, 0.2, 1) 0ms;
-    color: ${props => props.theme.colors.lightSeaGreen};
+    color: ${props => props.theme.colors.dimGray};
     font-size: 12px;
   }
 
