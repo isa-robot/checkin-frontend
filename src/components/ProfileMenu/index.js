@@ -39,6 +39,11 @@ export default function ProfileMenu() {
     history.push('/perfil');
   }
 
+  function handleSetup() {
+    setMenuDropDown(!menuDropdown);
+    history.push('/configuracao');
+  }
+
   function handleToggleMenuDropdown() {
     setMenuDropDown(!menuDropdown);
   }
@@ -53,6 +58,9 @@ export default function ProfileMenu() {
       <DropDown visible={menuDropdown}>
         <button type="button" onClick={handleProfile}>
           <p>Perfil</p>
+        </button>
+        <button type="button" onClick={handleSetup}>
+          <p>Configuração</p>
         </button>
         <button type="button" onClick={handleLogout}>
           <p>Sair</p>
