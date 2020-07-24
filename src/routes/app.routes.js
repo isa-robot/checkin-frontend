@@ -10,7 +10,7 @@ import Monitoring from '~/pages/Monitoring';
 import Panel from '~/pages/Panel';
 import Profile from '~/pages/Profile';
 import Setup from '~/pages/Setup';
-import Eleicao from '~/pages/Election';
+// import Eleicao from '~/pages/Election';
 import Users from '~/pages/Users';
 
 // AuthRoutes
@@ -78,13 +78,13 @@ export default function AppRoutes() {
         resource={false}
         isPrivate
       />
-      <Route
+      {/* <Route
         path="/eleicao"
         roles={['admin']}
-        component={Eleicao}
+        // component={Eleicao}
         resource={false}
         isPrivate
-      />
+      /> */}
       <Route
         path="/painel"
         roles={['admin']}

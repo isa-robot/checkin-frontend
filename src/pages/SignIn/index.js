@@ -22,13 +22,13 @@ export default function SignIn() {
 
   const [keycloak, initialized] = useKeycloak();
 
-  if (initialized && keycloak.authenticated) {
-    dispatch(kcOnAuth());
-    history.push('/qualis');
-  }
-
-  function handleKcLogin() {
-    dispatch(kcSignInRequest());
+  if (initialized) {
+    if (keycloak.authenticated) {
+      dispatch(kcOnAuth());
+      history.push('/qualis');
+    } else {
+      dispatch(kcSignInRequest());
+    }
   }
 
   return (
@@ -50,7 +50,6 @@ export default function SignIn() {
               type="button"
               backgroundColor="mountainMeadow"
               color="white"
-              onClick={handleKcLogin}
             >
               KC Login
             </GreenButton>

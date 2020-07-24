@@ -17,6 +17,8 @@ export default function RouteWrapper({
 }) {
   const [keycloak] = useKeycloak();
 
+  console.log(keycloak.token)
+
   const isAuthorized = roles => {
     if (keycloak && roles) {
       return (
@@ -34,9 +36,13 @@ export default function RouteWrapper({
       ? keycloak.resourceAccess['isa-frontend'].roles
       : []
     : [];
-  const hasResource = resource ? resources.includes(resource) : true;
 
-  if (!hasResource) return <Redirect to="/qualis" />;
+  // console.log(keycloak.resourceAccess['isa-frontend'].roles.includes(resource))
+
+
+  // const hasResource = resource ? resources.includes(resource) : true;
+
+  // if (!hasResource) return <Redirect to="/qualis" />;
 
   const Layout = keycloak.authenticated ? DefaultLayout : AuthLayout;
 

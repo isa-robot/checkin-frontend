@@ -5,8 +5,8 @@ import Keycloak from 'keycloak-js';
 export const keycloak = new Keycloak();
 
 export const keycloakProviderInitConfig = {
-  // onLoad: 'login-required',
-  onLoad: 'check-sso',
+  onLoad: 'login-required',
+  // onLoad: 'check-sso',
 };
 
 // export const onKeycloakEvent = (event, error) => {
