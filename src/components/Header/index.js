@@ -48,7 +48,7 @@ export default function Header() {
     painel: { name: 'Painel', to: '/painel', icon: 'monitoring' },
     monitoring: {
       name: 'Monitoramento',
-      to: '/monitoring',
+      to: '/monitoramento',
       icon: 'monitoring',
     },
     register: { name: 'Registro', to: '/qualis', icon: 'diary' },
