@@ -3,7 +3,7 @@ import { FaRegUserCircle } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { signOut } from '~/store/modules/auth/actions';
+import { kcSignOut } from '~/store/modules/auth/actions';
 
 import { Container, Badge, DropDown } from './styles';
 
@@ -30,8 +30,8 @@ export default function ProfileMenu() {
   }
 
   function handleLogout() {
-    dispatch(signOut());
     history.push('/');
+    dispatch(kcSignOut());
   }
 
   function handleProfile() {

@@ -3,6 +3,8 @@ import { toast } from 'react-toastify';
 
 import api from '~/services/api';
 
+import { keycloak } from '~/keycloak';
+
 import {
   newBaselineSuccess,
   newBaselineFailure,
@@ -10,10 +12,19 @@ import {
   updateUserFailure,
 } from './actions';
 
+function createBaseline(baseline) {
+  return api
+    .post(`/users/baselines/`, baseline, {
+      headers: { Authorization: `Bearer ${keycloak.token}` },
+    })
+    .then(response => ({ response }))
+    .catch(error => ({ error }));
+}
+
 export function* newBaseline({ payload }) {
   try {
     const baseline = payload.data;
-    const response = yield call(api.post, 'users/baselines', baseline);
+    const { response } = yield call(createBaseline, baseline);
 
     toast.success('Perfil preenchido com sucesso!');
 

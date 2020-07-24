@@ -29,7 +29,7 @@ export default function Modal({ toggle, toggleFunction }) {
 
   function handleAnswer(data) {
     dispatch(newBaselineRequest(data));
-    toggleFunction(String(loading));
+    toggleFunction(Boolean(loading));
   }
 
   return (
@@ -45,6 +45,7 @@ export default function Modal({ toggle, toggleFunction }) {
             <InputDiv>
               <input
                 name="age"
+                type="number"
                 autoComplete="off"
                 placeholder="-"
                 maxLength="2"
@@ -91,6 +92,7 @@ export default function Modal({ toggle, toggleFunction }) {
               <input
                 maxLength="3"
                 name="weight"
+                type="number"
                 autoComplete="off"
                 placeholder="-"
                 ref={register({ required: true, pattern: /^[0-9]*$/ })}
@@ -106,6 +108,7 @@ export default function Modal({ toggle, toggleFunction }) {
             <InputDiv>
               <input
                 maxLength="3"
+                type="number"
                 name="height"
                 autoComplete="off"
                 placeholder="-"

@@ -1,29 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-// import { useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { useKeycloak } from '@react-keycloak/web';
 
 import Header from '~/components/Header';
 import Footer from '~/components/Footer';
-import Modal from '~/components/NoAccessModal';
+import NoAccessModal from '~/components/NoAccessModal';
+import BaseLineModal from '~/components/BaseLineModal';
 
 import { Wrapper, Layer } from './styles';
 
 export default function DefaultLayout({ children }) {
-  const [toggle, setToggle] = useState(false);
+  const [toggleNoAccess, setToggleNoAccess] = useState(false);
+  const [toggleBaseline, setToggleBaseline] = useState(false);
   const [keycloak] = useKeycloak();
 
-  // const { profile } = useSelector(state => state.user);
+  const { profile } = useSelector(state => state.user);
   // const { roles } = useSelector(state => state.user.profile);
-  // const baseline = null;
-  // const baseline = true;
+  const baseline  = profile ? profile.baseline : null;
+  console.log(profile)
 
   const roles = keycloak.realmAccess ? keycloak.realmAccess.roles : [];
 
   useEffect(() => {
-    if (roles.length === 0) setToggle(true);
-  }, [roles]);
+    if (roles.length === 0) setToggleNoAccess(true);
+    else if (baseline === null) setToggleBaseline(true);
+  }, [roles, baseline]);
+
+  function toggleBaselineModal(prop) {
+    setToggleBaseline(prop);
+  }
 
   return (
     <Wrapper>
@@ -31,7 +38,11 @@ export default function DefaultLayout({ children }) {
         <Header />
         {children}
         <Footer />
-        <Modal toggle={toggle} />
+        <NoAccessModal toggle={toggleNoAccess} />
+        <BaseLineModal
+          toggle={toggleBaseline}
+          toggleFunction={toggleBaselineModal}
+        />
       </Layer>
     </Wrapper>
   );
