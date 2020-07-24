@@ -9,6 +9,7 @@ export const Content = styled.div`
   padding: 0 32px 32px 32px;
   max-width: 1400px;
   height: 100%;
+  justify-content: center;
 
   @media screen and (max-width: 1400px) {
     margin: 0;

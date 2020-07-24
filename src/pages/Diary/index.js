@@ -4,6 +4,7 @@ import { CircularProgress } from '@material-ui/core';
 import { FaRegThumbsUp, FaRegThumbsDown } from 'react-icons/fa';
 import { Form } from '@rocketseat/unform';
 import { toast } from 'react-toastify';
+import { useKeycloak } from '@react-keycloak/web';
 
 import {
   Container,
@@ -48,6 +49,8 @@ export default function Dairy() {
   const [formState, setFormState] = useState(initialState);
   const [clearAndSend, setClearAndSend] = useState(false);
 
+  const [keycloak] = useKeycloak();
+
   function toggleModal(prop) {
     setToggle(prop);
   }
@@ -55,7 +58,11 @@ export default function Dairy() {
   function handleFormAnswer() {
     setLoading(true);
     api
-      .post(`/users/diaries`, formState)
+      .post(`/users/diaries`, formState, {
+        headers: {
+          Authorization: `Bearer ${keycloak.token}`,
+        },
+      })
       .then(response => {
         toast.success('Resposta enviada com sucesso!');
         setApproved(response.data.approved);
@@ -90,7 +97,11 @@ export default function Dairy() {
   useEffect(() => {
     async function fetchData() {
       const newDate = formatISO(new Date(), { representation: 'date' });
-      const dailyAnswer = await api.get(`/users/diaries/date/${newDate}`);
+      const dailyAnswer = await api.get(`/users/diaries/date/${newDate}`, {
+        headers: {
+          Authorization: `Bearer ${keycloak.token}`,
+        },
+      });
 
       if (dailyAnswer.data) {
         setAnswered(true);
