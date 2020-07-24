@@ -2,6 +2,7 @@
   "name": "frontend",
   "version": "1.0.0",
   "author": "Igor Moraes <igor@portalqualis.com.br>",
+  "repository": "https://github.com/Qualis-Infectologia/ISA-Frontend.git",
   "scripts": {
     "start": "react-app-rewired start",
     "build:dev": "env-cmd -f ./.env.development react-app-rewired build",
