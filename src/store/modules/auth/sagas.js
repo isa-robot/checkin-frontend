@@ -34,8 +34,6 @@ export function* kcAuth() {
 
   const baseline_response = yield call(getBaseline, id);
 
-  console.log(baseline_response)
-
   if (baseline_response.response)
     user_response.data.user.baseline = baseline_response.response.data.baseline;
   else {
