@@ -1,5 +1,5 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Divider } from '@material-ui/core';
 
@@ -19,43 +19,21 @@ import { kcSignInRequest, kcOnAuth } from '~/store/modules/auth/actions';
 export default function SignIn() {
   const dispatch = useDispatch();
   const history = useHistory();
+  const { loading } = useSelector(state => state.auth);
+
+  useEffect(() => {
+    if (loading) history.push('/qualis');
+  }, [loading, history]);
 
   const [keycloak, initialized] = useKeycloak();
 
   if (initialized) {
     if (keycloak.authenticated) {
       dispatch(kcOnAuth());
-      history.push('/qualis');
     } else {
       dispatch(kcSignInRequest());
     }
   }
 
-  return (
-    <Container>
-      <span>By Qualis</span>
-      <Card>
-        <CardHeader>
-          <Logo>
-            <p>ISA</p>
-            <LogoSecondary>
-              <p>Infection</p> <p>Surveillance</p> <p>Assistant</p>
-            </LogoSecondary>
-          </Logo>
-          <Divider />
-        </CardHeader>
-        <CardFooter>
-          {keycloak && !keycloak.authenticated && (
-            <GreenButton
-              type="button"
-              backgroundColor="mountainMeadow"
-              color="white"
-            >
-              KC Login
-            </GreenButton>
-          )}
-        </CardFooter>
-      </Card>
-    </Container>
-  );
+  return <Container />;
 }

@@ -17,6 +17,7 @@ export default function DefaultLayout({ children }) {
   const [keycloak] = useKeycloak();
 
   const { profile } = useSelector(state => state.user);
+  const { loading } = useSelector(state => state.auth);
   // const { roles } = useSelector(state => state.user.profile);
   const baseline  = profile ? profile.baseline : null;
   console.log(profile)
@@ -24,9 +25,11 @@ export default function DefaultLayout({ children }) {
   const roles = keycloak.realmAccess ? keycloak.realmAccess.roles : [];
 
   useEffect(() => {
-    if (roles.length === 0) setToggleNoAccess(true);
-    else if (baseline === null) setToggleBaseline(true);
-  }, [roles, baseline]);
+    if (!loading) {
+      if (roles.length === 0) setToggleNoAccess(true);
+      else if (baseline === null) setToggleBaseline(true);
+    }
+  }, [roles, profile, baseline]);
 
   function toggleBaselineModal(prop) {
     setToggleBaseline(prop);

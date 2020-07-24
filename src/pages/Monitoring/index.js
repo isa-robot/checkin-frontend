@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useKeycloak } from '@react-keycloak/web';
 import {
   CircularProgress,
   CardContent,
@@ -39,7 +40,8 @@ import {
 import Table from "~/components/Table";
 
 export default function Monitoring() {
-  const date = formatISO(new Date());
+  const [keycloak] = useKeycloak();
+  const date = formatISO(new Date(), { representation: 'date' });
   const [loadedUsers, setLoadedUsers] = useState(false);
   const [loadedAccession, setLoadedAccession] = useState(false);
   const [loadedSymptoms, setLoadedSymptom] = useState(false);
@@ -50,8 +52,12 @@ export default function Monitoring() {
   const [approvedNotApprovedData, setApprovedNotApprovedData] = useState([]);
   const [accessionData, setAccessionData] = useState([]);
   const [usersSymptoms, setUsersSymptoms] = useState([]);
-  const [startDate] = useState(formatISO(subDays(new Date(), 7)));
-  const [endDate] = useState(formatISO(subDays(new Date(), 1)));
+  const [startDate] = useState(
+    formatISO(subDays(new Date(), 7), { representation: 'date' })
+  );
+  const [endDate] = useState(
+    formatISO(subDays(new Date(), 1), { representation: 'date' })
+  );
 
   const options = {
     filtering: true,
@@ -153,7 +159,9 @@ export default function Monitoring() {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await api.get(`/establishments/graphics/users/${date}`);
+      const response = await api.get(`/establishments/graphics/users/${date}`, {
+        headers: { Authorization: `Bearer ${keycloak.token}` },
+      });
       setUsersData(response.data);
       setLoadedUsers(true);
     }
@@ -162,7 +170,9 @@ export default function Monitoring() {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await api.get('/establishments/graphics/symptoms/');
+      const response = await api.get('/establishments/graphics/symptoms/', {
+        headers: { Authorization: `Bearer ${keycloak.token}` },
+      });
       setUsersSymptoms(response.data);
       setLoadedSymptom(true);
     }
@@ -172,8 +182,11 @@ export default function Monitoring() {
   useEffect(() => {
     async function fetchData() {
       const response = await api.get(
-        `/establishments/graphics/approved-not-approved/${startDate}/${endDate}`
-      );
+        `/establishments/graphics/approved-not-approved/${startDate}/${endDate}`,
+        {
+          headers: { Authorization: `Bearer ${keycloak.token}` },
+        });
+
       setApprovedNotApprovedData(response.data);
       setLoadedApprovedNotApproved(true);
     }
@@ -183,12 +196,15 @@ export default function Monitoring() {
   useEffect(() => {
     async function fetchData() {
       const response = await api.get(
-        `/establishments/graphics/accession/${startDate}/${endDate}`
+        `/establishments/graphics/accession/${startDate}/${endDate}`, {
+          headers: { Authorization: `Bearer ${keycloak.token}` },
+        }
       );
-      setAccessionData(response.data);
+      // setAccessionData(response.data);
       setLoadedAccession(true);
     }
-    fetchData();
+    setLoadedAccession(true);
+    // fetchData();
   }, [startDate, endDate]);
 
   function setLoadedAll() {
@@ -202,6 +218,7 @@ export default function Monitoring() {
 
   const CustomTooltipAccession = ({ active, payload, label }) => {
     if (active) {
+      alert(label)
       return (
         <ContentTooltipChart>
           <p>{format(new Date(parseISO(label)), 'dd/MM/yyyy')}</p>
@@ -277,7 +294,7 @@ export default function Monitoring() {
       {setLoadedAll() ? (
         <Container>
           <Scroll>
-            <Card>
+            {/* <Card>
               <CardHeader title="Adesão" subheader={formatIntervalDate()} />
               <CardContent>
                 <Chart>
@@ -341,7 +358,7 @@ export default function Monitoring() {
                   </ResponsiveContainer>
                 </Chart>
               </CardContent>
-            </Card>
+            </Card> */}
             <Card>
               <CardHeader
                 title="Acesso Permitido X Negado"
@@ -394,7 +411,7 @@ export default function Monitoring() {
                           stroke="#6f6f6f"
                           type="category"
                         >
-                          <Label value="Sintomas" offset={0} position="insideLeft" angle="-90" />
+                          <Label value="Sintomas" offset={0} position="insideLeft" angle={Number(-90)} />
                         </YAxis>
                         <XAxis stroke="#6f6f6f" tick={{ stroke: '#383A3D' }} type="number" />
                         <Tooltip content={<CustomTooltipTotal />} />

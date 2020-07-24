@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useKeycloak } from '@react-keycloak/web';
 import { CircularProgress, CardContent } from '@material-ui/core';
 import {
   ResponsiveContainer,
@@ -29,7 +30,8 @@ import {
 import Table from '~/components/Table';
 
 export default function Panel() {
-  const date = formatISO(new Date());
+  const [keycloak] = useKeycloak();
+  const date = formatISO(new Date(), { representation: 'date' });
   const [loadedUsers, setLoadedUsers] = useState(false);
   const [loadedAccession, setLoadedAccession] = useState(false);
   const [loadedSymptoms, setLoadedSymptom] = useState(false);
@@ -40,8 +42,12 @@ export default function Panel() {
   const [approvedNotApprovedData, setApprovedNotApprovedData] = useState([]);
   const [accessionData, setAccessionData] = useState([]);
   const [usersSymptoms, setUsersSymptoms] = useState([]);
-  const [startDate] = useState(formatISO(subDays(new Date(), 7)));
-  const [endDate] = useState(formatISO(subDays(new Date(), 1)));
+  const [startDate] = useState(
+    formatISO(subDays(new Date(), 7), { representation: 'date' })
+  );
+  const [endDate] = useState(
+    formatISO(subDays(new Date(), 1), { representation: 'date' })
+  );
   const options = {
     filtering: true,
     grouping: false,
@@ -91,18 +97,23 @@ export default function Panel() {
   useEffect(() => {
     async function fetchData() {
       const response = await api.get(
-        `/establishments/graphics/total-users/${date}`
+        `/establishments/graphics/total-users/${date}`, {
+          headers: { Authorization: `Bearer ${keycloak.token}` },
+        }
       );
       setUsersData(response.data);
       setLoadedUsers(true);
     }
-    fetchData();
+    setLoadedUsers(true);
+      // fetchData();
   }, [date]);
 
   useEffect(() => {
     async function fetchData() {
       const response = await api.get(
-        '/establishments/graphics/total-symptoms/'
+        '/establishments/graphics/total-symptoms/', {
+          headers: { Authorization: `Bearer ${keycloak.token}` },
+        }
       );
       setUsersSymptoms(response.data);
       setLoadedSymptom(true);
@@ -113,7 +124,10 @@ export default function Panel() {
   useEffect(() => {
     async function fetchData() {
       const response = await api.get(
-        `/establishments/graphics/total-approved-not-approved/${startDate}/${endDate}`
+        `/establishments/graphics/total-approved-not-approved/${startDate}/${endDate}`,
+        {
+          headers: { Authorization: `Bearer ${keycloak.token}` },
+        }
       );
       setApprovedNotApprovedData(response.data);
       setLoadedApprovedNotApproved(true);
@@ -124,7 +138,9 @@ export default function Panel() {
   useEffect(() => {
     async function fetchData() {
       const response = await api.get(
-        `/establishments/graphics/total-accession/${startDate}/${endDate}`
+        `/establishments/graphics/total-accession/${startDate}/${endDate}`, {
+          headers: { Authorization: `Bearer ${keycloak.token}` },
+        }
       );
       setAccessionData(response.data);
       setLoadedAccession(true);
