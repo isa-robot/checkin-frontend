@@ -35,4 +35,4 @@ docker run \
         --name isa-frontend \
           isa-frontend
 ```
-as variaveis API_URL e KEYCLOAK_SERVER_URL devem ser preenchidas com o ip das mesmas na network criada, descritas no Isa-Backend
+As variáveis API_URL e KEYCLOAK_SERVER_URL devem ser preenchidas com o ip das mesmas na network criada, descritas no Isa-Backend
