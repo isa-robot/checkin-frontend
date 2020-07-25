@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { CircularProgress } from '@material-ui/core';
+import {
+  CircularProgress,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  ListSubheader,
+} from '@material-ui/core';
+import { Inbox } from '@material-ui/icons';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import * as yup from 'yup';
@@ -22,14 +30,37 @@ import {
 import api from '~/services/api';
 
 export default function Setup() {
-  const [loaded] = useState(true);
+  const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [etherealRecipients, setEtherealRecipients] = useState([]);
+  const [sesRecipients, setSesRecipients] = useState([]);
   const history = useHistory();
   const [provider, setProvider] = useState('');
   const [smsChanel, setSmsChanel] = useState('whatsapp');
   const [keycloak] = useKeycloak();
 
-  const gmailSchema = yup.object().shape({
+  const [ethereal, setEthereal] = useState({
+    address: '',
+    host: '',
+    pass: '',
+    user: '',
+    port: '',
+    name: '',
+  });
+
+  const [ses, setSes] = useState({
+    accessKeyId: '',
+    secretAccessKey: '',
+    region: '',
+    name: '',
+  });
+
+  const recipientsNames = {
+    usersNotApproved: 'Usuários não aprovados',
+    suport: 'Suporte',
+  };
+
+  const etherealSchema = yup.object().shape({
     user: yup.string().required(),
     pass: yup.string().required(),
     host: yup.string().required(),
@@ -39,7 +70,7 @@ export default function Setup() {
     // subject: yup.string().required(),
   });
 
-  const amazonSchema = yup.object().shape({
+  const sesSchema = yup.object().shape({
     accessKeyId: yup.string().required(),
     secretAccessKey: yup.string().required(),
     name: yup.string().required(),
@@ -52,8 +83,8 @@ export default function Setup() {
     from: yup.string().required(),
   });
 
-  const gmailForm = useForm({
-    validationSchema: gmailSchema,
+  const etherealForm = useForm({
+    validationSchema: etherealSchema,
     // defaultValues: {
     //     username: profile.username,
     //     name: profile.name,
@@ -63,8 +94,8 @@ export default function Setup() {
     //   },
   });
 
-  const amazonForm = useForm({
-    validationSchema: amazonSchema,
+  const sesForm = useForm({
+    validationSchema: sesSchema,
     // defaultValues: {
     //     username: profile.username,
     //     name: profile.name,
@@ -85,6 +116,22 @@ export default function Setup() {
     //   },
   });
 
+  function loadEthereal() {
+    etherealForm.setValue('address', ethereal.address);
+    etherealForm.setValue('name', ethereal.name);
+    etherealForm.setValue('host', ethereal.host);
+    etherealForm.setValue('port', ethereal.port);
+    etherealForm.setValue('user', ethereal.user);
+    etherealForm.setValue('pass', ethereal.pass);
+  }
+
+  function loadSes() {
+    sesForm.setValue('accessKeyId', ses.accessKeyId);
+    sesForm.setValue('secretAccessKey', ses.secretAccessKey);
+    sesForm.setValue('region', ses.region);
+    sesForm.setValue('name', ses.name);
+  }
+
   useEffect(() => {
     async function fetchMailer() {
       const response = await api.get('mails', {
@@ -94,26 +141,41 @@ export default function Setup() {
       if (response.data) {
         if (response.data.type === 'ethereal') {
           const { address, host, pass, user, port, name } = response.data;
-          setProvider('gmail');
-          gmailForm.setValue('address', address);
-          gmailForm.setValue('host', host);
-          gmailForm.setValue('pass', pass);
-          gmailForm.setValue('user', user);
-          gmailForm.setValue('port', port);
-          gmailForm.setValue('name', name);
+          setProvider('ethereal');
+          setEthereal({ address, host, pass, user, port, name });
+
+          const dest_response = await api.get('mails/destinataries', {
+            headers: { Authorization: `Bearer ${keycloak.token}` },
+          });
+
+          if (dest_response.data) {
+            setEtherealRecipients(dest_response.data);
+          }
         } else if (response.data.type === 'ses') {
-          setProvider('amazon');
           const { accessKeyId, secretAccessKey, region, name } = response.data;
-          amazonForm.setValue('accessKeyId', accessKeyId);
-          amazonForm.setValue('secretAccessKey', secretAccessKey);
-          amazonForm.setValue('region', region);
-          amazonForm.setValue('name', name);
+          setProvider('ses');
+          setSes({ accessKeyId, secretAccessKey, region, name });
+
+          const dest_response = await api.get('mails/destinataries', {
+            headers: { Authorization: `Bearer ${keycloak.token}` },
+          });
+
+          if (dest_response.data) {
+            setSesRecipients(dest_response.data);
+          }
         }
+
+        setLoaded(true);
+        loadEthereal();
+        loadSes();
+
       } else {
-        setProvider('gmail');
+        setProvider('ethereal');
+        setLoaded(true);
       }
     }
 
+    setLoading(false);
     fetchMailer();
   }, []);
 
@@ -139,20 +201,56 @@ export default function Setup() {
 
     setProvider(value);
 
-    if (value === 'amazon') {
-      gmailForm.setValue('address', '');
-      gmailForm.setValue('name', '');
-      gmailForm.setValue('host', '');
-      gmailForm.setValue('port', '');
-    } else if (value === 'gmail') {
-      amazonForm.setValue('accessKeyId', '');
-      amazonForm.setValue('secretAccessKey', '');
-      amazonForm.setValue('region', '');
-      amazonForm.setValue('name', '');
+    if (value === 'ses') {
+      loadSes();
+    } else if (value === 'ethereal') {
+      loadEthereal();
     }
   }
 
-  function handleOnSubmitGmail(data) {
+  async function setupRecipients() {
+    const usersNotApproved = {
+      destinatary_type: 'usersNotApproved',
+      name: 'usersNotApproved',
+      address: 'address',
+    };
+
+    const suport = {
+      destinatary_type: 'suport',
+      name: 'suport',
+      address: 'address',
+    };
+
+    await api
+      .post('/mails/createDestinataries', usersNotApproved, {
+        headers: {
+          Authorization: `Bearer ${keycloak.token}`,
+        },
+      })
+      .then(() => {
+        toast.success('Destinatário para usuários não aprovados configurado!');
+      })
+      .catch(() => {
+        toast.error(
+          'Erro ao configurar destinatário para Usuários não aprovados!'
+        );
+      });
+
+    await api
+      .post('/mails/createDestinataries', suport, {
+        headers: {
+          Authorization: `Bearer ${keycloak.token}`,
+        },
+      })
+      .then(() => {
+        toast.success('Destinatário para suporte configurado!');
+      })
+      .catch(() => {
+        toast.error('Erro ao configurar destinatário para suporte!');
+      });
+  }
+
+  function handleOnSubmitethereal(data) {
     data.type = 'ethereal';
 
     api
@@ -163,13 +261,15 @@ export default function Setup() {
       })
       .then(() => {
         toast.success('E-mail configurado com sucesso!');
+
+        setupRecipients();
       })
       .catch(() => {
         toast.error('Erro ao configurar email!');
       });
   }
 
-  function handleOnSubmitAmazon(data) {
+  function handleOnSubmitses(data) {
     data.type = 'ses';
 
     api
@@ -191,14 +291,44 @@ export default function Setup() {
     setSmsChanel(value);
   }
 
+  function handleDeleteMailer() {
+    api
+      .delete('/mails/removeMail', {
+        headers: {
+          Authorization: `Bearer ${keycloak.token}`,
+        },
+      })
+      .then(() => {
+        toast.success('Configuração de E-mail deletada!');
+      })
+      .catch(() => {
+        toast.error('Erro ao deletar configuração de E-mail!');
+      });
+  }
+
+  function handleDeleteSms() {
+    api
+      .delete('/sms/delete', {
+        headers: {
+          Authorization: `Bearer ${keycloak.token}`,
+        },
+      })
+      .then(() => {
+        toast.success('Configuração de SMS deletada!');
+      })
+      .catch(() => {
+        toast.error('Erro ao deletar configuração de SMS!');
+      });
+  }
+
   return (
     <>
       {loaded ? (
         <Container>
           <Scroll>
-            {provider === 'gmail' ? (
+            {provider === 'ethereal' ? (
               <form
-                onSubmit={gmailForm.handleSubmit(handleOnSubmitGmail)}
+                onSubmit={etherealForm.handleSubmit(handleOnSubmitethereal)}
                 autoComplete="off"
               >
                 <Card>
@@ -208,22 +338,22 @@ export default function Setup() {
                       <div>
                         <input
                           type="radio"
-                          id="provider-gmail"
+                          id="provider-ethereal"
                           name="provider"
-                          value="gmail"
+                          value="ethereal"
                           onChange={handleChangeProvider}
-                          checked={provider === 'gmail'}
+                          checked={provider === 'ethereal'}
                         />
-                        <label htmlFor="provider-gmail">Gmail</label>
+                        <label htmlFor="provider-ethereal">Gmail</label>
                         <input
                           type="radio"
-                          id="provider-amazon"
+                          id="provider-ses"
                           name="provider"
-                          value="amazon"
+                          value="ses"
                           onChange={handleChangeProvider}
-                          checked={provider === 'amazon'}
+                          checked={provider === 'ses'}
                         />
-                        <label htmlFor="provider-amazon">Amazon</label>
+                        <label htmlFor="provider-ses">Amazon</label>
                       </div>
                     </ChoiceGroup>
                     <InputsGroup>
@@ -233,12 +363,12 @@ export default function Setup() {
                             name="name"
                             placeholder="Nome"
                             autoComplete="off"
-                            ref={gmailForm.register()}
+                            ref={etherealForm.register()}
                           />
                           <label>Nome</label>
                         </InputGroup>
-                        {gmailForm.errors.name &&
-                          gmailForm.errors.name.type === 'required' && (
+                        {etherealForm.errors.name &&
+                          etherealForm.errors.name.type === 'required' && (
                             <span>O nome é obrigatória</span>
                           )}
                       </div>
@@ -248,12 +378,12 @@ export default function Setup() {
                             name="address"
                             placeholder="Endereço"
                             autoComplete="off"
-                            ref={gmailForm.register()}
+                            ref={etherealForm.register()}
                           />
                           <label>Endereço</label>
                         </InputGroup>
-                        {gmailForm.errors.user &&
-                          gmailForm.errors.user.type === 'required' && (
+                        {etherealForm.errors.user &&
+                          etherealForm.errors.user.type === 'required' && (
                             <span>O endereço é obrigatório</span>
                           )}
                       </div>
@@ -265,17 +395,17 @@ export default function Setup() {
                             name="host"
                             placeholder="Endereço do Servidor"
                             autoComplete="off"
-                            ref={gmailForm.register()}
+                            ref={etherealForm.register()}
                           />
                           <label>Endereço do Servidor</label>
                         </InputGroup>
-                        {gmailForm.errors.host &&
-                          gmailForm.errors.host.type === 'required' && (
+                        {etherealForm.errors.host &&
+                          etherealForm.errors.host.type === 'required' && (
                             <span>O endereço do servidor é obrigatório</span>
                           )}
-                        {gmailForm.errors.host &&
-                          gmailForm.errors.host.type === undefined && (
-                            <span>{gmailForm.errors.host.message}</span>
+                        {etherealForm.errors.host &&
+                          etherealForm.errors.host.type === undefined && (
+                            <span>{etherealForm.errors.host.message}</span>
                           )}
                       </div>
                       <div>
@@ -285,17 +415,17 @@ export default function Setup() {
                             type="number"
                             placeholder="Porta"
                             autoComplete="off"
-                            ref={gmailForm.register()}
+                            ref={etherealForm.register()}
                           />
                           <label>Porta</label>
                         </InputGroup>
-                        {gmailForm.errors.port &&
-                          gmailForm.errors.port.type === 'required' && (
+                        {etherealForm.errors.port &&
+                          etherealForm.errors.port.type === 'required' && (
                             <span>A porta é obrigatória</span>
                           )}
-                        {gmailForm.errors.port &&
-                          gmailForm.errors.port.type === undefined && (
-                            <span>{gmailForm.errors.port.message}</span>
+                        {etherealForm.errors.port &&
+                          etherealForm.errors.port.type === undefined && (
+                            <span>{etherealForm.errors.port.message}</span>
                           )}
                       </div>
                     </InputsGroup>
@@ -307,12 +437,12 @@ export default function Setup() {
                             placeholder="Digite seu usuário"
                             autoComplete="chrome-off"
                             autofill="off"
-                            ref={gmailForm.register()}
+                            ref={etherealForm.register()}
                           />
                           <label>Usuário</label>
                         </InputGroup>
-                        {gmailForm.errors.user &&
-                          gmailForm.errors.user.type === 'required' && (
+                        {etherealForm.errors.user &&
+                          etherealForm.errors.user.type === 'required' && (
                             <span>O Usuário é obrigatório</span>
                           )}
                       </div>
@@ -323,16 +453,46 @@ export default function Setup() {
                             type="password"
                             placeholder="Sua senha"
                             autoComplete="off"
-                            ref={gmailForm.register()}
+                            ref={etherealForm.register()}
                           />
                           <label>Senha</label>
                         </InputGroup>
-                        {gmailForm.errors.pass &&
-                          gmailForm.errors.pass.type === 'required' && (
+                        {etherealForm.errors.pass &&
+                          etherealForm.errors.pass.type === 'required' && (
                             <span>A Senha é obrigatória</span>
                           )}
                       </div>
                     </InputsGroup>
+
+                    <List
+                      component="nav"
+                      aria-labelledby="nested-list-subheader"
+                      subheader={
+                        <ListSubheader
+                          component="div"
+                          id="nested-list-subheader"
+                        >
+                          Destinatários
+                        </ListSubheader>
+                      }
+                    >
+                      {etherealRecipients.map(r => (
+                        <ListItem button key={r.name}>
+                          <ListItemIcon>
+                            <Inbox />
+                          </ListItemIcon>
+                          <ListItemText primary={recipientsNames[r.name]} />
+                        </ListItem>
+                      ))}
+                      {etherealRecipients.length ? null : (
+                        <ListItem button>
+                          <ListItemIcon>
+                            <Inbox />
+                          </ListItemIcon>
+                          <ListItemText primary="Não há destinatários cadastrados." />
+                        </ListItem>
+                      )}
+                    </List>
                   </CardContent>
                   <CardActions>
                     <Button
@@ -349,17 +509,17 @@ export default function Setup() {
                       color="white"
                       disabled={loading}
                       onClick={() => {
-                        history.goBack();
+                        handleDeleteMailer();
                       }}
                     >
-                      {loading ? 'Carregando...' : 'Voltar'}
+                      {loading ? 'Carregando...' : 'Deletar'}
                     </Button>
                   </CardActions>
                 </Card>
               </form>
             ) : (
               <form
-                onSubmit={amazonForm.handleSubmit(handleOnSubmitAmazon)}
+                onSubmit={sesForm.handleSubmit(handleOnSubmitses)}
                 autoComplete="off"
               >
                 <Card>
@@ -369,21 +529,21 @@ export default function Setup() {
                       <div>
                         <input
                           type="radio"
-                          id="provider-gmail"
+                          id="provider-ethereal"
                           name="provider"
-                          value="gmail"
+                          value="ethereal"
                           onChange={handleChangeProvider}
                           defaultChecked
                         />
-                        <label htmlFor="provider-gmail">Gmail</label>
+                        <label htmlFor="provider-ethereal">Gmail</label>
                         <input
                           type="radio"
-                          id="provider-amazon"
+                          id="provider-ses"
                           name="provider"
-                          value="amazon"
+                          value="ses"
                           onChange={handleChangeProvider}
                         />
-                        <label htmlFor="provider-amazon">Amazon</label>
+                        <label htmlFor="provider-ses">Amazon</label>
                       </div>
                     </ChoiceGroup>
                     <InputsGroup>
@@ -393,7 +553,7 @@ export default function Setup() {
                             name="name"
                             placeholder="Nome"
                             autoComplete="off"
-                            ref={amazonForm.register()}
+                            ref={sesForm.register()}
                           />
                           <label>Nome</label>
                         </InputGroup>
@@ -404,12 +564,12 @@ export default function Setup() {
                             name="region"
                             placeholder="Região"
                             autoComplete="off"
-                            ref={amazonForm.register()}
+                            ref={sesForm.register()}
                           />
                           <label>Região</label>
                         </InputGroup>
-                        {amazonForm.errors.region &&
-                          amazonForm.errors.region.type === 'required' && (
+                        {sesForm.errors.region &&
+                          sesForm.errors.region.type === 'required' && (
                             <span>Região é obrigatório</span>
                           )}
                       </div>
@@ -421,17 +581,17 @@ export default function Setup() {
                             name="accessKeyId"
                             placeholder="Chave de acesso"
                             autoComplete="off"
-                            ref={amazonForm.register()}
+                            ref={sesForm.register()}
                           />
                           <label>Chave de acesso</label>
                         </InputGroup>
-                        {amazonForm.errors.accessKeyId &&
-                          amazonForm.errors.accessKeyId.type === 'required' && (
+                        {sesForm.errors.accessKeyId &&
+                          sesForm.errors.accessKeyId.type === 'required' && (
                             <span>A Chave é obrigatória!</span>
                           )}
-                        {amazonForm.errors.accessKeyId &&
-                          amazonForm.errors.accessKeyId.type === undefined && (
-                            <span>{amazonForm.errors.accessKeyId.message}</span>
+                        {sesForm.errors.accessKeyId &&
+                          sesForm.errors.accessKeyId.type === undefined && (
+                            <span>{sesForm.errors.accessKeyId.message}</span>
                           )}
                       </div>
                       <div>
@@ -440,24 +600,53 @@ export default function Setup() {
                             name="secretAccessKey"
                             placeholder="Chave de acesso secreta"
                             autoComplete="off"
-                            ref={amazonForm.register()}
+                            ref={sesForm.register()}
                           />
                           <label>Chave de acesso secreta</label>
                         </InputGroup>
-                        {amazonForm.errors.secretAccessKey &&
-                          amazonForm.errors.secretAccessKey.type ===
+                        {sesForm.errors.secretAccessKey &&
+                          sesForm.errors.secretAccessKey.type ===
                             'required' && (
                             <span>A Chave secreta é obrigatória!</span>
                           )}
-                        {amazonForm.errors.secretAccessKey &&
-                          amazonForm.errors.secretAccessKey.type ===
-                            undefined && (
+                        {sesForm.errors.secretAccessKey &&
+                          sesForm.errors.secretAccessKey.type === undefined && (
                             <span>
-                              {amazonForm.errors.secretAccessKey.message}
+                              {sesForm.errors.secretAccessKey.message}
                             </span>
                           )}
                       </div>
                     </InputsGroup>
+
+                    <List
+                      component="nav"
+                      aria-labelledby="nested-list-subheader"
+                      subheader={
+                        <ListSubheader
+                          component="div"
+                          id="nested-list-subheader"
+                        >
+                          Destinatários
+                        </ListSubheader>
+                      }
+                    >
+                      {sesRecipients.map(r => (
+                        <ListItem button key={r.name}>
+                          <ListItemIcon>
+                            <Inbox />
+                          </ListItemIcon>
+                          <ListItemText primary={recipientsNames[r.name]} />
+                        </ListItem>
+                      ))}
+                      {sesRecipients.length ? null : (
+                        <ListItem button>
+                          <ListItemIcon>
+                            <Inbox />
+                          </ListItemIcon>
+                          <ListItemText primary="Não há destinatários cadastrados." />
+                        </ListItem>
+                      )}
+                    </List>
                   </CardContent>
                   <CardActions>
                     <Button
@@ -474,10 +663,10 @@ export default function Setup() {
                       color="white"
                       disabled={loading}
                       onClick={() => {
-                        history.goBack();
+                        handleDeleteSms();
                       }}
                     >
-                      {loading ? 'Carregando...' : 'Voltar'}
+                      {loading ? 'Carregando...' : 'Deletar'}
                     </Button>
                   </CardActions>
                 </Card>
@@ -563,7 +752,7 @@ export default function Setup() {
                       history.goBack();
                     }}
                   >
-                    {loading ? 'Carregando...' : 'Voltar'}
+                    {loading ? 'Carregando...' : 'Deletar'}
                   </Button>
                 </CardActions>
               </Card>

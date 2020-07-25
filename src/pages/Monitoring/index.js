@@ -200,11 +200,10 @@ export default function Monitoring() {
           headers: { Authorization: `Bearer ${keycloak.token}` },
         }
       );
-      // setAccessionData(response.data);
+      setAccessionData(response.data);
       setLoadedAccession(true);
     }
-    setLoadedAccession(true);
-    // fetchData();
+    fetchData();
   }, [startDate, endDate]);
 
   function setLoadedAll() {
@@ -218,7 +217,6 @@ export default function Monitoring() {
 
   const CustomTooltipAccession = ({ active, payload, label }) => {
     if (active) {
-      alert(label)
       return (
         <ContentTooltipChart>
           <p>{format(new Date(parseISO(label)), 'dd/MM/yyyy')}</p>
@@ -294,7 +292,7 @@ export default function Monitoring() {
       {setLoadedAll() ? (
         <Container>
           <Scroll>
-            {/* <Card>
+            <Card>
               <CardHeader title="Adesão" subheader={formatIntervalDate()} />
               <CardContent>
                 <Chart>
@@ -358,7 +356,7 @@ export default function Monitoring() {
                   </ResponsiveContainer>
                 </Chart>
               </CardContent>
-            </Card> */}
+            </Card>
             <Card>
               <CardHeader
                 title="Acesso Permitido X Negado"
