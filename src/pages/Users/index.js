@@ -38,6 +38,8 @@ export default function Users() {
 
   const handleManageUser = user => {
     const role = user.roles.length ? user.roles[0].name : 'desabilitado';
+    if (user.roles.length) setEnabled(true);
+    else setEnabled(false);
     setNewRole(role);
     selectUser(user);
   };
@@ -62,11 +64,6 @@ export default function Users() {
       title: 'Username',
       filtering: false,
     },
-    // {
-    //   field: 'user.emailVerified',
-    //   title: 'E-mail',
-    //   filtering: false,
-    // },
     {
       field: 'roles',
       title: 'Roles',
