@@ -4,6 +4,7 @@ node_modules
 .pnp.js
 tmp/*
 !tmp/.gitkeep
+package-lock.json
 
 # testing
 coverage/*
