@@ -8,9 +8,7 @@ import Qualis from '../pages/Qualis';
 import NotFound from '../pages/NotFound';
 import Monitoring from '~/pages/Monitoring';
 import Panel from '~/pages/Panel';
-import Profile from '~/pages/Profile';
 import Setup from '~/pages/Setup';
-// import Eleicao from '~/pages/Election';
 import Users from '~/pages/Users';
 
 // AuthRoutes
@@ -38,73 +36,46 @@ export default function AppRoutes() {
       />
       <Route
         path="/registrar"
-        roles={['admin']}
+        roles={['']}
         component={SignUp}
         resource={false}
-        isPrivate={false}
       />
       <Route
         path="/configuracoes"
         component={Setup}
-        roles={[]}
+        roles={['admin']}
         resource={false}
-        isPrivate
-      />
-      <Route
-        path="/perfil"
-        roles={['infectologist', 'admin']}
-        component={Profile}
-        resource={false}
-        isPrivate
       />
       <Route
         path="/diario"
-        roles={['admin']}
+        roles={['assisted']}
         component={Diary}
         resource="diary"
-        isPrivate
       />
-      <Route
-        path="/qualis"
-        roles={[]}
-        component={Qualis}
-        resource={false}
-        isPrivate
-      />
+      <Route path="/qualis" roles={[]} component={Qualis} resource={false} />
       <Route
         path="/configuracao"
         roles={['admin']}
         component={Setup}
         resource={false}
-        isPrivate
       />
-      {/* <Route
-        path="/eleicao"
-        roles={['admin']}
-        // component={Eleicao}
-        resource={false}
-        isPrivate
-      /> */}
       <Route
         path="/painel"
         roles={['admin']}
         component={Panel}
         resource="Painel"
-        isPrivate
       />
       <Route
         path="/monitoramento"
         roles={['admin']}
         component={Monitoring}
         resource="monitoring"
-        isPrivate
       />
       <Route
         path="/usuarios"
         roles={['admin']}
         component={Users}
         resource={false}
-        isPrivate
       />
       <Route component={NotFound} roles={[]} />
     </Switch>

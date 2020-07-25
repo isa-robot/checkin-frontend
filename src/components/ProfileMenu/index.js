@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaRegUserCircle } from 'react-icons/fa';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { useKeycloak } from '@react-keycloak/web';
 
 import { kcSignOut } from '~/store/modules/auth/actions';
 
@@ -9,6 +10,9 @@ import { Container, Badge, DropDown } from './styles';
 
 export default function ProfileMenu() {
   const dispatch = useDispatch();
+  const { roles } = useSelector(state => state.user.profile);
+  const [keycloak] = useKeycloak();
+
   const history = useHistory();
   const dropRef = useRef(null);
   const [menuDropdown, setMenuDropDown] = useState(false);
@@ -36,7 +40,7 @@ export default function ProfileMenu() {
 
   function handleProfile() {
     setMenuDropDown(!menuDropdown);
-    history.push('/perfil');
+    keycloak.accountManagement();
   }
 
   function handleSetup() {
@@ -59,9 +63,12 @@ export default function ProfileMenu() {
         <button type="button" onClick={handleProfile}>
           <p>Perfil</p>
         </button>
-        <button type="button" onClick={handleSetup}>
-          <p>Configuração</p>
-        </button>
+        {roles.includes('admin') ? (
+          <button type="button" onClick={handleSetup}>
+            <p>Configuração</p>
+          </button>
+        ) : null}
+
         <button type="button" onClick={handleLogout}>
           <p>Sair</p>
         </button>
