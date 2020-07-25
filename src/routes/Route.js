@@ -10,39 +10,28 @@ import DefaultLayout from '~/pages/_layouts/default';
 
 export default function RouteWrapper({
   component: Component,
-  isPrivate,
   resource,
   roles,
   ...rest
 }) {
   const [keycloak] = useKeycloak();
 
-  console.log(keycloak.token)
+  const { resources } = useSelector(state => state.user.profile);
 
-  const isAuthorized = roles => {
-    if (keycloak && roles) {
+  const isAuthorized = routeRoles => {
+    if (keycloak && routeRoles) {
       return (
-        roles.some(r => {
+        routeRoles.some(r => {
           const realm = keycloak.hasRealmRole(r);
           return realm;
-        }) || roles.length === 0
+        }) || routeRoles.length === 0
       );
     }
     return false;
   };
 
-  const resources = keycloak.realmAcces
-    ? keycloak.resourceAccess
-      ? keycloak.resourceAccess['isa-frontend'].roles
-      : []
-    : [];
-
-  // console.log(keycloak.resourceAccess['isa-frontend'].roles.includes(resource))
-
-
-  // const hasResource = resource ? resources.includes(resource) : true;
-
-  // if (!hasResource) return <Redirect to="/qualis" />;
+  const hasResource = resource ? resources.includes(resource) : true;
+  if (!hasResource) return <Redirect to="/qualis" />;
 
   const Layout = keycloak.authenticated ? DefaultLayout : AuthLayout;
 
@@ -63,8 +52,6 @@ export default function RouteWrapper({
 }
 
 RouteWrapper.propTypes = {
-  isPrivate: PropTypes.bool,
-  isAdmin: PropTypes.bool,
   resource: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   roles: PropTypes.oneOfType([PropTypes.string, PropTypes.any]),
   component: PropTypes.oneOfType([PropTypes.element, PropTypes.func])
@@ -72,8 +59,6 @@ RouteWrapper.propTypes = {
 };
 
 RouteWrapper.defaultProps = {
-  isPrivate: false,
-  isAdmin: false,
   resource: false,
   roles: [],
 };
