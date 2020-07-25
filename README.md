@@ -1,21 +1,38 @@
 # ISA Frontend
 
 ## Keycloak
-Para executar o Frontend é necessário estar com uma instância do Keycloak em execução com a configuração fornecida pelo repositório referente ao Backend.
+Para executar o Frontend é necessário estar com uma instância do Keycloak em execução com a configuração fornecida pelo repositório referente ISA-Backend.
 
 ## Dependencias
 Para a instalação das dependencias da aplicação é necessário executar o comando citada abaixo na pasta raiz da aplicação:
 ```
 npm install
 ```
-
-## Configuração do ambiente
-Após a instalação das dependências é necessário configurar o arquivo com as configurações do ambiente.
-Para isso, é necessário criar um arquivo .env na pasta raiz do diretório.
-Sugere-se copiar o arquivo .env.example, renomeá-lo e alterar as variáveis presentes nele para a configuração desejada.
-
-## Execução
-Para a execução da aplicação é necessário executar o comando citado abaixo:
+logo após execute o comando:
+``` 
+npm run build
 ```
-npm start
+## Buildando e rodando o container
+A inicialização do projeto pode ser feita de dois modos, utilizando containers prontos e disponibilizados pelo projeto ou realizando a sua construção localmente, portanto os dois modos serão apresentados para todos os recursos.
+
+### Construção local da imagem
 ```
+docker build -t isa-frontend .
+```
+
+### Uso de imagem disponibilizada
+UNDER CONSTRUCTION
+
+### Inicialização do container
+```
+docker run \
+       --network isa-net \
+       -d -p 80:80 \
+       -e API_URL="http://172.19.0.5:3333" \
+       -e KEYCLOAK_SERVER_URL="http://172.19.0.4:8080/auth" \
+       -e KEYCLOAK_CLIENT="isa-frontend" \
+       -e KEYCLOAK_REALM="isa-qualis" \
+        --name isa-frontend \
+          isa-frontend
+```
+as variaveis API_URL e KEYCLOAK_SERVER_URL devem ser preenchidas com o ip das mesmas na network criada, descritas no Isa-Backend
