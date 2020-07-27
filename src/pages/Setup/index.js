@@ -6,8 +6,10 @@ import {
   ListItemText,
   ListItemIcon,
   ListSubheader,
+  ListItemSecondaryAction,
+  IconButton,
 } from '@material-ui/core';
-import { Inbox } from '@material-ui/icons';
+import { Inbox, Delete } from '@material-ui/icons';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import * as yup from 'yup';
@@ -39,6 +41,8 @@ export default function Setup() {
   const [smsChanel, setSmsChanel] = useState('whatsapp');
   const [keycloak] = useKeycloak();
 
+  const [hasMailer, setMailer] = useState(false);
+
   const [ethereal, setEthereal] = useState({
     address: '',
     host: '',
@@ -66,19 +70,24 @@ export default function Setup() {
     host: yup.string().required(),
     port: yup.string().required(),
     address: yup.string().required(),
-    name: yup.string().required()
+    name: yup.string().required(),
   });
 
   const sesSchema = yup.object().shape({
     accessKeyId: yup.string().required(),
     secretAccessKey: yup.string().required(),
     name: yup.string().required(),
-    region: yup.string().required()
+    region: yup.string().required(),
   });
 
   const smsSchema = yup.object().shape({
     zenviaSecretKey: yup.string().required(),
     from: yup.string().required(),
+  });
+
+  const recipientSchema = yup.object().shape({
+    address: yup.string().required(),
+    name: yup.string().required(),
   });
 
   const etherealForm = useForm({
@@ -91,6 +100,14 @@ export default function Setup() {
 
   const smsForm = useForm({
     validationSchema: smsSchema,
+  });
+
+  const suportForm = useForm({
+    validationSchema: recipientSchema,
+  });
+
+  const usersForm = useForm({
+    validationSchema: recipientSchema,
   });
 
   function loadEthereal() {
@@ -116,6 +133,7 @@ export default function Setup() {
       });
 
       if (response.data) {
+        setMailer(true);
         if (response.data.type === 'ethereal') {
           const { address, host, pass, user, port, name } = response.data;
           setProvider('ethereal');
@@ -145,7 +163,6 @@ export default function Setup() {
         setLoaded(true);
         loadEthereal();
         loadSes();
-
       } else {
         setProvider('ethereal');
         setLoaded(true);
@@ -185,48 +202,6 @@ export default function Setup() {
     }
   }
 
-  async function setupRecipients() {
-    const usersNotApproved = {
-      destinatary_type: 'usersNotApproved',
-      name: 'usersNotApproved',
-      address: 'address',
-    };
-
-    const suport = {
-      destinatary_type: 'suport',
-      name: 'suport',
-      address: 'address',
-    };
-
-    await api
-      .post('/mails/createDestinataries', usersNotApproved, {
-        headers: {
-          Authorization: `Bearer ${keycloak.token}`,
-        },
-      })
-      .then(() => {
-        toast.success('Destinatário para usuários não aprovados configurado!');
-      })
-      .catch(() => {
-        toast.error(
-          'Erro ao configurar destinatário para Usuários não aprovados!'
-        );
-      });
-
-    await api
-      .post('/mails/createDestinataries', suport, {
-        headers: {
-          Authorization: `Bearer ${keycloak.token}`,
-        },
-      })
-      .then(() => {
-        toast.success('Destinatário para suporte configurado!');
-      })
-      .catch(() => {
-        toast.error('Erro ao configurar destinatário para suporte!');
-      });
-  }
-
   function handleOnSubmitethereal(data) {
     data.type = 'ethereal';
 
@@ -238,8 +213,8 @@ export default function Setup() {
       })
       .then(() => {
         toast.success('E-mail configurado com sucesso!');
-
-        setupRecipients();
+        setEthereal(data);
+        setMailer(true);
       })
       .catch(() => {
         toast.error('Erro ao configurar email!');
@@ -257,9 +232,90 @@ export default function Setup() {
       })
       .then(() => {
         toast.success('E-mail configurado com sucesso!');
+        setSes(data);
+        setMailer(true);
       })
       .catch(() => {
         toast.error('Erro ao configurar email!');
+      });
+  }
+
+  function handleOnSubmitSuport(data) {
+    const suport = {
+      destinatary_type: 'suport',
+      name: data.name,
+      address: data.address,
+    };
+
+    api
+      .post('/mails/createDestinataries', suport, {
+        headers: {
+          Authorization: `Bearer ${keycloak.token}`,
+        },
+      })
+      .then(() => {
+        toast.success('Destinatário para suporte configurado!');
+
+        api
+          .get('mails/destinataries', {
+            headers: { Authorization: `Bearer ${keycloak.token}` },
+          })
+          .then(res => {
+            if (res) setEtherealRecipients(res.data);
+          });
+      })
+      .catch(() => {
+        toast.error('Erro ao configurar destinatário para suporte!');
+      });
+  }
+
+  function handleOnSubmitUsers(data) {
+    const usersNotApproved = {
+      destinatary_type: 'usersNotApproved',
+      name: data.name,
+      address: data.address,
+    };
+
+    api
+      .post('/mails/createDestinataries', usersNotApproved, {
+        headers: {
+          Authorization: `Bearer ${keycloak.token}`,
+        },
+      })
+      .then(() => {
+        toast.success('Destinatário para usuários não aprovados configurado!');
+        api
+          .get('mails/destinataries', {
+            headers: { Authorization: `Bearer ${keycloak.token}` },
+          })
+          .then(res => {
+            if (res) setEtherealRecipients(res.data);
+          });
+      })
+      .catch(() => {
+        toast.error(
+          'Erro ao configurar destinatário para Usuários não aprovados!'
+        );
+      });
+  }
+
+  async function handleDeleteRecipient(r) {
+    api
+      .delete(`mails/removeDestinatary/${r.id}`, {
+        headers: { Authorization: `Bearer ${keycloak.token}` },
+      })
+      .then(() => {
+        toast.success('Destinatário deletado!');
+        api
+          .get('mails/destinataries', {
+            headers: { Authorization: `Bearer ${keycloak.token}` },
+          })
+          .then(res => {
+            if (res) setEtherealRecipients(res.data);
+          });
+      })
+      .catch(() => {
+        toast.error('Erro ao deletar destinatário!');
       });
   }
 
@@ -277,6 +333,7 @@ export default function Setup() {
       })
       .then(() => {
         toast.success('Configuração de E-mail deletada!');
+        setMailer(false);
       })
       .catch(() => {
         toast.error('Erro ao deletar configuração de E-mail!');
@@ -303,353 +360,465 @@ export default function Setup() {
       {loaded ? (
         <Container>
           <Scroll>
-            {provider === 'ethereal' ? (
-              <form
-                onSubmit={etherealForm.handleSubmit(handleOnSubmitethereal)}
-                autoComplete="off"
-              >
-                <Card>
-                  <CardHeader title="Configuração de E-mail" />
-                  <CardContent>
-                    <ChoiceGroup>
-                      <div>
-                        <input
-                          type="radio"
-                          id="provider-ethereal"
-                          name="provider"
-                          value="ethereal"
-                          onChange={handleChangeProvider}
-                          checked={provider === 'ethereal'}
-                        />
-                        <label htmlFor="provider-ethereal">Gmail</label>
-                        <input
-                          type="radio"
-                          id="provider-ses"
-                          name="provider"
-                          value="ses"
-                          onChange={handleChangeProvider}
-                          checked={provider === 'ses'}
-                        />
-                        <label htmlFor="provider-ses">Amazon</label>
-                      </div>
-                    </ChoiceGroup>
-                    <InputsGroup>
-                      <div>
-                        <InputGroup>
+            <Card>
+              <CardHeader title="Configuração de E-mail" />
+              {provider === 'ethereal' ? (
+                <>
+                  <form
+                    onSubmit={etherealForm.handleSubmit(handleOnSubmitethereal)}
+                    autoComplete="off"
+                  >
+                    <CardContent>
+                      <ChoiceGroup>
+                        <div>
                           <input
-                            name="name"
-                            placeholder="Nome"
-                            autoComplete="off"
-                            ref={etherealForm.register()}
+                            type="radio"
+                            id="provider-ethereal"
+                            name="provider"
+                            value="ethereal"
+                            onChange={handleChangeProvider}
+                            checked={provider === 'ethereal'}
                           />
-                          <label>Nome</label>
-                        </InputGroup>
-                        {etherealForm.errors.name &&
-                          etherealForm.errors.name.type === 'required' && (
-                            <span>O nome é obrigatória</span>
-                          )}
-                      </div>
-                      <div>
-                        <InputGroup>
+                          <label htmlFor="provider-ethereal">Gmail</label>
                           <input
-                            name="address"
-                            placeholder="Endereço"
-                            autoComplete="off"
-                            ref={etherealForm.register()}
+                            type="radio"
+                            id="provider-ses"
+                            name="provider"
+                            value="ses"
+                            onChange={handleChangeProvider}
+                            checked={provider === 'ses'}
                           />
-                          <label>Endereço</label>
-                        </InputGroup>
-                        {etherealForm.errors.user &&
-                          etherealForm.errors.user.type === 'required' && (
-                            <span>O endereço é obrigatório</span>
-                          )}
-                      </div>
-                    </InputsGroup>
-                    <InputsGroup>
-                      <div>
-                        <InputGroup>
-                          <input
-                            name="host"
-                            placeholder="Endereço do Servidor"
-                            autoComplete="off"
-                            ref={etherealForm.register()}
-                          />
-                          <label>Endereço do Servidor</label>
-                        </InputGroup>
-                        {etherealForm.errors.host &&
-                          etherealForm.errors.host.type === 'required' && (
-                            <span>O endereço do servidor é obrigatório</span>
-                          )}
-                        {etherealForm.errors.host &&
-                          etherealForm.errors.host.type === undefined && (
-                            <span>{etherealForm.errors.host.message}</span>
-                          )}
-                      </div>
-                      <div>
-                        <InputGroup>
-                          <input
-                            name="port"
-                            type="number"
-                            placeholder="Porta"
-                            autoComplete="off"
-                            ref={etherealForm.register()}
-                          />
-                          <label>Porta</label>
-                        </InputGroup>
-                        {etherealForm.errors.port &&
-                          etherealForm.errors.port.type === 'required' && (
-                            <span>A porta é obrigatória</span>
-                          )}
-                        {etherealForm.errors.port &&
-                          etherealForm.errors.port.type === undefined && (
-                            <span>{etherealForm.errors.port.message}</span>
-                          )}
-                      </div>
-                    </InputsGroup>
-                    <InputsGroup>
-                      <div>
-                        <InputGroup>
-                          <input
-                            name="user"
-                            placeholder="Digite seu usuário"
-                            autoComplete="chrome-off"
-                            autofill="off"
-                            ref={etherealForm.register()}
-                          />
-                          <label>Usuário</label>
-                        </InputGroup>
-                        {etherealForm.errors.user &&
-                          etherealForm.errors.user.type === 'required' && (
-                            <span>O Usuário é obrigatório</span>
-                          )}
-                      </div>
-                      <div>
-                        <InputGroup>
-                          <input
-                            name="pass"
-                            type="password"
-                            placeholder="Sua senha"
-                            autoComplete="off"
-                            ref={etherealForm.register()}
-                          />
-                          <label>Senha</label>
-                        </InputGroup>
-                        {etherealForm.errors.pass &&
-                          etherealForm.errors.pass.type === 'required' && (
-                            <span>A Senha é obrigatória</span>
-                          )}
-                      </div>
-                    </InputsGroup>
-
-                    <List
-                      component="nav"
-                      aria-labelledby="nested-list-subheader"
-                      subheader={
-                        <ListSubheader
-                          component="div"
-                          id="nested-list-subheader"
+                          <label htmlFor="provider-ses">Amazon</label>
+                        </div>
+                      </ChoiceGroup>
+                      <InputsGroup>
+                        <div>
+                          <InputGroup>
+                            <input
+                              name="name"
+                              placeholder="Nome"
+                              autoComplete="off"
+                              ref={etherealForm.register()}
+                            />
+                            <label>Nome</label>
+                          </InputGroup>
+                          {etherealForm.errors.name &&
+                            etherealForm.errors.name.type === 'required' && (
+                              <span>O nome é obrigatória</span>
+                            )}
+                        </div>
+                        <div>
+                          <InputGroup>
+                            <input
+                              name="address"
+                              placeholder="Endereço"
+                              autoComplete="off"
+                              ref={etherealForm.register()}
+                            />
+                            <label>Endereço</label>
+                          </InputGroup>
+                          {etherealForm.errors.user &&
+                            etherealForm.errors.user.type === 'required' && (
+                              <span>O endereço é obrigatório</span>
+                            )}
+                        </div>
+                      </InputsGroup>
+                      <InputsGroup>
+                        <div>
+                          <InputGroup>
+                            <input
+                              name="host"
+                              placeholder="Endereço do Servidor"
+                              autoComplete="off"
+                              ref={etherealForm.register()}
+                            />
+                            <label>Endereço do Servidor</label>
+                          </InputGroup>
+                          {etherealForm.errors.host &&
+                            etherealForm.errors.host.type === 'required' && (
+                              <span>O endereço do servidor é obrigatório</span>
+                            )}
+                          {etherealForm.errors.host &&
+                            etherealForm.errors.host.type === undefined && (
+                              <span>{etherealForm.errors.host.message}</span>
+                            )}
+                        </div>
+                        <div>
+                          <InputGroup>
+                            <input
+                              name="port"
+                              type="number"
+                              placeholder="Porta"
+                              autoComplete="off"
+                              ref={etherealForm.register()}
+                            />
+                            <label>Porta</label>
+                          </InputGroup>
+                          {etherealForm.errors.port &&
+                            etherealForm.errors.port.type === 'required' && (
+                              <span>A porta é obrigatória</span>
+                            )}
+                          {etherealForm.errors.port &&
+                            etherealForm.errors.port.type === undefined && (
+                              <span>{etherealForm.errors.port.message}</span>
+                            )}
+                        </div>
+                      </InputsGroup>
+                      <InputsGroup>
+                        <div>
+                          <InputGroup>
+                            <input
+                              name="user"
+                              placeholder="Digite seu usuário"
+                              autoComplete="chrome-off"
+                              autofill="off"
+                              ref={etherealForm.register()}
+                            />
+                            <label>Usuário</label>
+                          </InputGroup>
+                          {etherealForm.errors.user &&
+                            etherealForm.errors.user.type === 'required' && (
+                              <span>O Usuário é obrigatório</span>
+                            )}
+                        </div>
+                        <div>
+                          <InputGroup>
+                            <input
+                              name="pass"
+                              type="password"
+                              placeholder="Sua senha"
+                              autoComplete="off"
+                              ref={etherealForm.register()}
+                            />
+                            <label>Senha</label>
+                          </InputGroup>
+                          {etherealForm.errors.pass &&
+                            etherealForm.errors.pass.type === 'required' && (
+                              <span>A Senha é obrigatória</span>
+                            )}
+                        </div>
+                      </InputsGroup>
+                      <CardActions>
+                        <Button
+                          type="submit"
+                          backgroundColor="mountainMeadow"
+                          color="white"
+                          disabled={loading}
                         >
-                          Destinatários
-                        </ListSubheader>
-                      }
-                    >
-                      {etherealRecipients.map(r => (
-                        <ListItem button key={r.name}>
-                          <ListItemIcon>
-                            <Inbox />
-                          </ListItemIcon>
-                          <ListItemText primary={recipientsNames[r.name]} />
-                        </ListItem>
-                      ))}
-                      {etherealRecipients.length ? null : (
-                        <ListItem button>
-                          <ListItemIcon>
-                            <Inbox />
-                          </ListItemIcon>
-                          <ListItemText primary="Não há destinatários cadastrados." />
-                        </ListItem>
-                      )}
-                    </List>
-                  </CardContent>
-                  <CardActions>
-                    <Button
-                      type="submit"
-                      backgroundColor="mountainMeadow"
-                      color="white"
-                      disabled={loading}
-                    >
-                      {loading ? 'Carregando...' : 'Atualizar'}
-                    </Button>
-                    <Button
-                      type="button"
-                      backgroundColor="sunset"
-                      color="white"
-                      disabled={loading}
-                      onClick={() => {
-                        handleDeleteMailer();
-                      }}
-                    >
-                      {loading ? 'Carregando...' : 'Deletar'}
-                    </Button>
-                  </CardActions>
-                </Card>
-              </form>
-            ) : (
-              <form
-                onSubmit={sesForm.handleSubmit(handleOnSubmitses)}
-                autoComplete="off"
-              >
-                <Card>
-                  <CardHeader title="Configuração de E-mail" />
-                  <CardContent>
-                    <ChoiceGroup>
-                      <div>
-                        <input
-                          type="radio"
-                          id="provider-ethereal"
-                          name="provider"
-                          value="ethereal"
-                          onChange={handleChangeProvider}
-                          defaultChecked
-                        />
-                        <label htmlFor="provider-ethereal">Gmail</label>
-                        <input
-                          type="radio"
-                          id="provider-ses"
-                          name="provider"
-                          value="ses"
-                          onChange={handleChangeProvider}
-                        />
-                        <label htmlFor="provider-ses">Amazon</label>
-                      </div>
-                    </ChoiceGroup>
-                    <InputsGroup>
-                      <div>
-                        <InputGroup>
-                          <input
-                            name="name"
-                            placeholder="Nome"
-                            autoComplete="off"
-                            ref={sesForm.register()}
-                          />
-                          <label>Nome</label>
-                        </InputGroup>
-                      </div>
-                      <div>
-                        <InputGroup>
-                          <input
-                            name="region"
-                            placeholder="Região"
-                            autoComplete="off"
-                            ref={sesForm.register()}
-                          />
-                          <label>Região</label>
-                        </InputGroup>
-                        {sesForm.errors.region &&
-                          sesForm.errors.region.type === 'required' && (
-                            <span>Região é obrigatório</span>
-                          )}
-                      </div>
-                    </InputsGroup>
-                    <InputsGroup>
-                      <div>
-                        <InputGroup>
-                          <input
-                            name="accessKeyId"
-                            placeholder="Chave de acesso"
-                            autoComplete="off"
-                            ref={sesForm.register()}
-                          />
-                          <label>Chave de acesso</label>
-                        </InputGroup>
-                        {sesForm.errors.accessKeyId &&
-                          sesForm.errors.accessKeyId.type === 'required' && (
-                            <span>A Chave é obrigatória!</span>
-                          )}
-                        {sesForm.errors.accessKeyId &&
-                          sesForm.errors.accessKeyId.type === undefined && (
-                            <span>{sesForm.errors.accessKeyId.message}</span>
-                          )}
-                      </div>
-                      <div>
-                        <InputGroup>
-                          <input
-                            name="secretAccessKey"
-                            placeholder="Chave de acesso secreta"
-                            autoComplete="off"
-                            ref={sesForm.register()}
-                          />
-                          <label>Chave de acesso secreta</label>
-                        </InputGroup>
-                        {sesForm.errors.secretAccessKey &&
-                          sesForm.errors.secretAccessKey.type ===
-                            'required' && (
-                            <span>A Chave secreta é obrigatória!</span>
-                          )}
-                        {sesForm.errors.secretAccessKey &&
-                          sesForm.errors.secretAccessKey.type === undefined && (
-                            <span>
-                              {sesForm.errors.secretAccessKey.message}
-                            </span>
-                          )}
-                      </div>
-                    </InputsGroup>
-
-                    <List
-                      component="nav"
-                      aria-labelledby="nested-list-subheader"
-                      subheader={
-                        <ListSubheader
-                          component="div"
-                          id="nested-list-subheader"
+                          {loading ? 'Carregando...' : 'Atualizar'}
+                        </Button>
+                        <Button
+                          type="button"
+                          backgroundColor="sunset"
+                          color="white"
+                          disabled={loading}
+                          onClick={() => {
+                            handleDeleteMailer();
+                          }}
                         >
-                          Destinatários
-                        </ListSubheader>
-                      }
-                    >
-                      {sesRecipients.map(r => (
-                        <ListItem button key={r.name}>
-                          <ListItemIcon>
-                            <Inbox />
-                          </ListItemIcon>
-                          <ListItemText primary={recipientsNames[r.name]} />
-                        </ListItem>
-                      ))}
-                      {sesRecipients.length ? null : (
-                        <ListItem button>
-                          <ListItemIcon>
-                            <Inbox />
-                          </ListItemIcon>
-                          <ListItemText primary="Não há destinatários cadastrados." />
-                        </ListItem>
-                      )}
-                    </List>
-                  </CardContent>
-                  <CardActions>
-                    <Button
-                      type="submit"
-                      backgroundColor="mountainMeadow"
-                      color="white"
-                      disabled={loading}
-                    >
-                      {loading ? 'Carregando...' : 'Atualizar'}
-                    </Button>
-                    <Button
-                      type="button"
-                      backgroundColor="sunset"
-                      color="white"
-                      disabled={loading}
-                      onClick={() => {
-                        handleDeleteSms();
-                      }}
-                    >
-                      {loading ? 'Carregando...' : 'Deletar'}
-                    </Button>
-                  </CardActions>
-                </Card>
-              </form>
-            )}
+                          {loading ? 'Carregando...' : 'Deletar'}
+                        </Button>
+                      </CardActions>
+                    </CardContent>
+                  </form>
+                  <CardHeader title="Configuração de Destinatários" />
+                  {!etherealRecipients
+                    .map(r => r.destinatary_type)
+                    .includes('suport') && hasMailer ? (
+                    <CardContent>
+                      <form
+                        onSubmit={suportForm.handleSubmit(handleOnSubmitSuport)}
+                      >
+                        <h4>Suporte</h4>
+                        <InputsGroup>
+                          <div>
+                            <InputGroup>
+                              <input
+                                name="name"
+                                placeholder="Nome"
+                                autoComplete="off"
+                                ref={suportForm.register()}
+                              />
+                              <label>Nome</label>
+                            </InputGroup>
+                            {suportForm.errors.name &&
+                              suportForm.errors.name.type === 'required' && (
+                                <span>O nome é obrigatória</span>
+                              )}
+                          </div>
+                          <div>
+                            <InputGroup>
+                              <input
+                                name="address"
+                                placeholder="Endereço"
+                                autoComplete="off"
+                                ref={suportForm.register()}
+                              />
+                              <label>Endereço</label>
+                            </InputGroup>
+                            {suportForm.errors.user &&
+                              suportForm.errors.user.type === 'required' && (
+                                <span>O endereço é obrigatório</span>
+                              )}
+                          </div>
+                          <CardActions>
+                            <Button
+                              type="submit"
+                              backgroundColor="mountainMeadow"
+                              color="white"
+                              disabled={loading}
+                            >
+                              {loading ? 'Carregando...' : 'Adicionar'}
+                            </Button>
+                          </CardActions>
+                        </InputsGroup>
+                      </form>
+                    </CardContent>
+                  ) : null}
 
+                  {!etherealRecipients
+                    .map(r => r.destinatary_type)
+                    .includes('usersNotApproved') && hasMailer ? (
+                    <CardContent>
+                      <form
+                        onSubmit={usersForm.handleSubmit(handleOnSubmitUsers)}
+                      >
+                        <h4>Usuários não aprovados</h4>
+                        <InputsGroup>
+                          <div>
+                            <InputGroup>
+                              <input
+                                name="name"
+                                placeholder="Nome"
+                                autoComplete="off"
+                                ref={usersForm.register()}
+                              />
+                              <label>Nome</label>
+                            </InputGroup>
+                            {usersForm.errors.name &&
+                              usersForm.errors.name.type === 'required' && (
+                                <span>O nome é obrigatória</span>
+                              )}
+                          </div>
+                          <div>
+                            <InputGroup>
+                              <input
+                                name="address"
+                                placeholder="Endereço"
+                                autoComplete="off"
+                                ref={usersForm.register()}
+                              />
+                              <label>Endereço</label>
+                            </InputGroup>
+                            {usersForm.errors.user &&
+                              usersForm.errors.user.type === 'required' && (
+                                <span>O endereço é obrigatório</span>
+                              )}
+                          </div>
+                          <CardActions>
+                            <Button
+                              type="submit"
+                              backgroundColor="mountainMeadow"
+                              color="white"
+                              disabled={loading}
+                            >
+                              {loading ? 'Carregando...' : 'Adicionar'}
+                            </Button>
+                          </CardActions>
+                        </InputsGroup>
+                      </form>
+                    </CardContent>
+                  ) : null}
+                  <List
+                    component="nav"
+                    aria-labelledby="nested-list-subheader"
+                    subheader={
+                      <ListSubheader component="div" id="nested-list-subheader">
+                        Destinatários
+                      </ListSubheader>
+                    }
+                  >
+                    {etherealRecipients.map(r => (
+                      <ListItem button key={r.name}>
+                        <ListItemIcon>
+                          <Inbox />
+                        </ListItemIcon>
+                        <ListItemText primary={`${r.name}: ${r.address}`} />
+                        <ListItemSecondaryAction>
+                          <IconButton
+                            edge="end"
+                            aria-label="delete"
+                            onClick={() => handleDeleteRecipient(r)}
+                          >
+                            <Delete />
+                          </IconButton>
+                        </ListItemSecondaryAction>
+                      </ListItem>
+                    ))}
+                    {etherealRecipients.length ? null : (
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Inbox />
+                        </ListItemIcon>
+                        <ListItemText primary="Não há destinatários cadastrados." />
+                      </ListItem>
+                    )}
+                  </List>
+                </>
+              ) : (
+                <>
+                  <form
+                    onSubmit={sesForm.handleSubmit(handleOnSubmitses)}
+                    autoComplete="off"
+                  >
+                    <CardContent>
+                      <ChoiceGroup>
+                        <div>
+                          <input
+                            type="radio"
+                            id="provider-ethereal"
+                            name="provider"
+                            value="ethereal"
+                            onChange={handleChangeProvider}
+                            defaultChecked
+                          />
+                          <label htmlFor="provider-ethereal">Gmail</label>
+                          <input
+                            type="radio"
+                            id="provider-ses"
+                            name="provider"
+                            value="ses"
+                            onChange={handleChangeProvider}
+                          />
+                          <label htmlFor="provider-ses">Amazon</label>
+                        </div>
+                      </ChoiceGroup>
+                      <InputsGroup>
+                        <div>
+                          <InputGroup>
+                            <input
+                              name="name"
+                              placeholder="Nome"
+                              autoComplete="off"
+                              ref={sesForm.register()}
+                            />
+                            <label>Nome</label>
+                          </InputGroup>
+                        </div>
+                        <div>
+                          <InputGroup>
+                            <input
+                              name="region"
+                              placeholder="Região"
+                              autoComplete="off"
+                              ref={sesForm.register()}
+                            />
+                            <label>Região</label>
+                          </InputGroup>
+                          {sesForm.errors.region &&
+                            sesForm.errors.region.type === 'required' && (
+                              <span>Região é obrigatório</span>
+                            )}
+                        </div>
+                      </InputsGroup>
+                      <InputsGroup>
+                        <div>
+                          <InputGroup>
+                            <input
+                              name="accessKeyId"
+                              placeholder="Chave de acesso"
+                              autoComplete="off"
+                              ref={sesForm.register()}
+                            />
+                            <label>Chave de acesso</label>
+                          </InputGroup>
+                          {sesForm.errors.accessKeyId &&
+                            sesForm.errors.accessKeyId.type === 'required' && (
+                              <span>A Chave é obrigatória!</span>
+                            )}
+                          {sesForm.errors.accessKeyId &&
+                            sesForm.errors.accessKeyId.type === undefined && (
+                              <span>{sesForm.errors.accessKeyId.message}</span>
+                            )}
+                        </div>
+                        <div>
+                          <InputGroup>
+                            <input
+                              name="secretAccessKey"
+                              placeholder="Chave de acesso secreta"
+                              autoComplete="off"
+                              ref={sesForm.register()}
+                            />
+                            <label>Chave de acesso secreta</label>
+                          </InputGroup>
+                          {sesForm.errors.secretAccessKey &&
+                            sesForm.errors.secretAccessKey.type ===
+                              'required' && (
+                              <span>A Chave secreta é obrigatória!</span>
+                            )}
+                          {sesForm.errors.secretAccessKey &&
+                            sesForm.errors.secretAccessKey.type ===
+                              undefined && (
+                              <span>
+                                {sesForm.errors.secretAccessKey.message}
+                              </span>
+                            )}
+                        </div>
+                      </InputsGroup>
+                    </CardContent>
+                    <CardActions>
+                      <Button
+                        type="submit"
+                        backgroundColor="mountainMeadow"
+                        color="white"
+                        disabled={loading}
+                      >
+                        {loading ? 'Carregando...' : 'Atualizar'}
+                      </Button>
+                      <Button
+                        type="button"
+                        backgroundColor="sunset"
+                        color="white"
+                        disabled={loading}
+                        onClick={() => {
+                          handleDeleteSms();
+                        }}
+                      >
+                        {loading ? 'Carregando...' : 'Deletar'}
+                      </Button>
+                    </CardActions>
+                  </form>
+
+                  <List
+                    component="nav"
+                    aria-labelledby="nested-list-subheader"
+                    subheader={
+                      <ListSubheader component="div" id="nested-list-subheader">
+                        Destinatários
+                      </ListSubheader>
+                    }
+                  >
+                    {sesRecipients.map(r => (
+                      <ListItem button key={r.name}>
+                        <ListItemIcon>
+                          <Inbox />
+                        </ListItemIcon>
+                        <ListItemText primary={recipientsNames[r.name]} />
+                      </ListItem>
+                    ))}
+                    {sesRecipients.length ? null : (
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Inbox />
+                        </ListItemIcon>
+                        <ListItemText primary="Não há destinatários cadastrados." />
+                      </ListItem>
+                    )}
+                  </List>
+
+                </>
+              )}
+            </Card>
             <form
               onSubmit={smsForm.handleSubmit(handleOnSubmitSms)}
               autoComplete="off"

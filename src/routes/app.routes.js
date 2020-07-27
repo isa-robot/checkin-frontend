@@ -32,12 +32,7 @@ export default function AppRoutes() {
         component={ResetPassword}
         resource={false}
       />
-      <Route
-        path="/registrar"
-        roles={['']}
-        component={SignUp}
-        resource={false}
-      />
+      <Route path="/registrar" roles={[]} component={SignUp} resource={false} />
       <Route
         path="/configuracoes"
         component={Setup}
@@ -45,12 +40,12 @@ export default function AppRoutes() {
         resource={false}
       />
       <Route
-        path="/diario"
-        roles={['assisted']}
+        path="#/diario"
+        roles={['assisted', 'infectologist', 'responsible']}
         component={Diary}
         resource="diary"
       />
-      <Route path="/qualis" roles={[]} component={Qualis} resource={false} />
+      <Route path="#/qualis" roles={[]} component={Qualis} resource={false} />
       <Route
         path="/configuracao"
         roles={['admin']}
@@ -65,7 +60,7 @@ export default function AppRoutes() {
       />
       <Route
         path="/monitoramento"
-        roles={['admin']}
+        roles={['admin', 'responsible']}
         component={Monitoring}
         resource="monitoring"
       />
