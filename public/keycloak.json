@@ -1,6 +1,6 @@
 {
   "realm": "isa-qualis",
-  "auth-server-url": "http://172.19.0.4:8080/auth",
+  "auth-server-url": "http://192.168.25.15:8080/auth/",
   "ssl-required": "external",
   "resource": "isa-frontend",
   "public-client": true,

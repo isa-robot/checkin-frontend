@@ -3,8 +3,8 @@ FROM nginx:alpine
 RUN rm -rf /usr/share/nginx/html/index.html
 RUN rm -rf /usr/share/nginx/html/50x.html
 
-ENV REACT_APP_API_URL='http://isa-api:8080/'
-ENV KEYCLOAK_SERVER_URL="http://keycloak:8090/"
+ENV REACT_APP_API_URL='http://localhost:3333/'
+ENV KEYCLOAK_SERVER_URL="http://localhost:8080/"
 ENV KEYCLOAK_CLIENT="isa-frontend"
 
 
