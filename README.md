@@ -29,9 +29,9 @@ docker run \
        --network isa-net \
        -d -p 80:80 \
        -e REACT_APP_API_URL="http://localhost:3333" \
-       -e KEYCLOAK_SERVER_URL="http://$(hostname -I | awk '{print $1}'):8080/auth" \
-       -e KEYCLOAK_CLIENT="isa-frontend" \
-       -e KEYCLOAK_REALM="isa-qualis" \
+       -e REACT_APP_KEYCLOAK_SERVER_URL="http://$(hostname -I | awk '{print $1}'):8080/auth" \
+       -e REACT_APP_KEYCLOAK_CLIENT="isa-frontend" \
+       -e REACT_APP_KEYCLOAK_REALM="isa-qualis" \
         --name isa-frontend \
           isa-frontend
 ```
