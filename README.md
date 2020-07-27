@@ -8,7 +8,7 @@ Para a instalação das dependencias da aplicação é necessário executar o co
 ```
 npm install
 ```
-logo após execute o comando:
+logo após execute o comando para fazer o build do projeto:
 ``` 
 npm run build
 ```
@@ -36,3 +36,9 @@ docker run \
           isa-frontend
 ```
 As variáveis API_URL e KEYCLOAK_SERVER_URL devem ser preenchidas com o ip das mesmas na network criada, descritas no Isa-Backend
+
+### Opção em ambiente de desenvolvimento com start
+para rodar o projeto em ambiente de desenvolvimento, sem container, execute o seguinte comando:
+```
+REACT_APP_KEYCLOAK_SERVER_URL="http://$(hostname -I | awk '{print $1}'):8080/auth" REACT_APP_KEYCLOAK_CLIENT="isa-frontend" REACT_APP_KEYCLOAK_REALM="isa-qualis" REACT_APP_API_URL="http://localhost:3333/"  npm start
+```
