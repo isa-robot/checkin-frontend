@@ -40,7 +40,7 @@ export default function AppRoutes() {
         resource={false}
       />
       <Route
-        path="#/diario"
+        path="/diario"
         roles={['assisted', 'infectologist', 'responsible']}
         component={Diary}
         resource="diary"

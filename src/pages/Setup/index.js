@@ -32,12 +32,12 @@ import {
 import api from '~/services/api';
 
 export default function Setup() {
-  const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(true);
   const [loading, setLoading] = useState(false);
   const [etherealRecipients, setEtherealRecipients] = useState([]);
   const [sesRecipients, setSesRecipients] = useState([]);
   const history = useHistory();
-  const [provider, setProvider] = useState('');
+  const [provider, setProvider] = useState('ethereal');
   const [smsChanel, setSmsChanel] = useState('whatsapp');
   const [keycloak] = useKeycloak();
 
@@ -131,8 +131,8 @@ export default function Setup() {
         setMailer(true);
         if (response.data.type === 'ethereal') {
           const { address, host, pass, user, port, name } = response.data;
-          setProvider('ethereal');
           setEthereal({ address, host, pass, user, port, name });
+          setProvider('ethereal');
 
           const dest_response = await api.get('mails/destinataries', {
             headers: { Authorization: `Bearer ${keycloak.token}` },
@@ -143,8 +143,8 @@ export default function Setup() {
           }
         } else if (response.data.type === 'ses') {
           const { accessKeyId, secretAccessKey, region, name } = response.data;
-          setProvider('ses');
           setSes({ accessKeyId, secretAccessKey, region, name });
+          setProvider('ses');
 
           const dest_response = await api.get('mails/destinataries', {
             headers: { Authorization: `Bearer ${keycloak.token}` },
@@ -155,17 +155,14 @@ export default function Setup() {
           }
         }
 
-        await loadEthereal();
-        await loadSes();
         setLoaded(true);
         setLoading(false);
       } else {
         setProvider('ethereal');
-        setLoaded(false);
+        setLoaded(true);
         setLoading(false);
       }
     }
-
     setLoading(true);
     setLoaded(false);
     fetchMailer();
@@ -786,7 +783,7 @@ export default function Setup() {
                           color="white"
                           disabled={loading}
                           onClick={() => {
-                            handleDeleteSms();
+                            handleDeleteMailer();
                           }}
                         >
                           {loading ? 'Carregando...' : 'Deletar'}
@@ -1015,9 +1012,7 @@ export default function Setup() {
                     backgroundColor="sunset"
                     color="white"
                     disabled={loading}
-                    onClick={() => {
-                      history.goBack();
-                    }}
+                    onClick={handleDeleteSms}
                   >
                     {loading ? 'Carregando...' : 'Deletar'}
                   </Button>
