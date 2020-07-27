@@ -4,8 +4,9 @@ RUN rm -rf /usr/share/nginx/html/index.html
 RUN rm -rf /usr/share/nginx/html/50x.html
 
 ENV REACT_APP_API_URL='http://localhost:3333/'
-ENV KEYCLOAK_SERVER_URL="http://localhost:8080/"
-ENV KEYCLOAK_CLIENT="isa-frontend"
+ENV REACT_APP_KEYCLOAK_SERVER_URL="http://localhost:8080/auth"
+ENV REACT_APP_KEYCLOAK_CLIENT="isa-frontend"
+ENV REACT_APP_KEYCLOAK_REALM='isa-qualis'
 
 
 COPY build /usr/share/nginx/html

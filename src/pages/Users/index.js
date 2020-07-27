@@ -230,7 +230,6 @@ export default function Users() {
                       backgroundColor="sunset"
                       color="white"
                       onClick={() => selectUser(null)}
-                      // disabled={loading}
                     >
                       <strong>Voltar</strong>
                     </Button>
@@ -254,7 +253,6 @@ export default function Users() {
                   }}
                   options={options}
                   actions={actions}
-                  // detailPanel={detailPanel}
                 />
               </MyCard>
             </Scroll>

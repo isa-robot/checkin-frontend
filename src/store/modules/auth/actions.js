@@ -4,18 +4,6 @@ export function kcSignInRequest() {
   };
 }
 
-// export function kcSignInSuccess() {
-//   return {
-//     type: '@auth/KC_SIGN_IN_SUCCESS',
-//   };
-// }
-
-// export function kcSignInFailure() {
-//   return {
-//     type: '@auth/KC_SIGN_IN_FAILURE',
-//   };
-// }
-
 export function kcSignOut() {
   return {
     type: '@auth/KC_SIGN_OUT',

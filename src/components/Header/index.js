@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import { useSelector } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import { ListSubheader, Divider } from '@material-ui/core';
 import ListItem from '@material-ui/core/ListItem';
@@ -11,7 +10,6 @@ import { useKeycloak } from '@react-keycloak/web';
 
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { IconContext } from 'react-icons';
-// import { signInRequest, signOut } from '~/store/modules/auth/actions';
 
 import {
   Container,
@@ -27,21 +25,11 @@ import Icon from '~/components/Icon';
 import logo from '~/assets/images/header-logo.png';
 
 export default function Header() {
-  // const dispatch = useDispatch();
-  // const user = useSelector(state => state.user);
-  // const { name, establishments } = useSelector(state => state.user.profile);
   const [keycloak] = useKeycloak();
 
   const resources = keycloak.resourceAccess['isa-frontend']
     ? keycloak.resourceAccess['isa-frontend'].roles
     : [];
-
-  // const establishment = '';
-  // if (establishments?.length > 0) {
-  //   establishment = establishments[0].name;
-  // }
-
-  // dispatch(signOut());
 
   const resourcesMapping = {
     diary: { name: 'Diário', to: '/diario', icon: 'diary' },
@@ -109,8 +97,6 @@ export default function Header() {
       <Profile>
         <ProfileData>
           <strong>{keycloak.tokenParsed.preferred_username}</strong>
-          {/* <strong>{name}</strong> */}
-          {/* <span>{establishment}</span> */}
         </ProfileData>
         <ProfileMenu />
       </Profile>

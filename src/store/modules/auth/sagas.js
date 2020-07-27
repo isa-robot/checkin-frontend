@@ -17,10 +17,6 @@ function getBaseline(id) {
     .catch(error => ({ error }));
 }
 
-// function getUser(id) {
-//   return api.get(`/users/user/${id}`);
-// }
-
 export function* kcAuth() {
   api.defaults.headers.Authorization = `Bearer ${keycloak.token}`;
 
@@ -62,15 +58,10 @@ export function* kcSignOut() {
 export function setToken({ payload }) {
   if (!payload) return;
 
-  // const { profile } = payload.user;
-
   if (keycloak && keycloak.authenticated) {
     api.defaults.headers.Authorization = `Bearer ${keycloak.token}`;
   }
 
-  // if (profile && profile.establishments?.length > 0) {
-  //   api.defaults.headers.establishment = profile.establishments[0].id;
-  // }
 }
 
 export default all([

@@ -66,16 +66,14 @@ export default function Setup() {
     host: yup.string().required(),
     port: yup.string().required(),
     address: yup.string().required(),
-    name: yup.string().required(),
-    // subject: yup.string().required(),
+    name: yup.string().required()
   });
 
   const sesSchema = yup.object().shape({
     accessKeyId: yup.string().required(),
     secretAccessKey: yup.string().required(),
     name: yup.string().required(),
-    region: yup.string().required(),
-    // subject: yup.string().required(),
+    region: yup.string().required()
   });
 
   const smsSchema = yup.object().shape({
@@ -85,35 +83,14 @@ export default function Setup() {
 
   const etherealForm = useForm({
     validationSchema: etherealSchema,
-    // defaultValues: {
-    //     username: profile.username,
-    //     name: profile.name,
-    //     cpf: profile.cpf,
-    //     phone: profile.phone,
-    //     email: profile.email,
-    //   },
   });
 
   const sesForm = useForm({
     validationSchema: sesSchema,
-    // defaultValues: {
-    //     username: profile.username,
-    //     name: profile.name,
-    //     cpf: profile.cpf,
-    //     phone: profile.phone,
-    //     email: profile.email,
-    //   },
   });
 
   const smsForm = useForm({
     validationSchema: smsSchema,
-    // defaultValues: {
-    //     username: profile.username,
-    //     name: profile.name,
-    //     cpf: profile.cpf,
-    //     phone: profile.phone,
-    //     email: profile.email,
-    //   },
   });
 
   function loadEthereal() {

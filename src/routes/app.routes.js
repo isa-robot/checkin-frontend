@@ -2,7 +2,6 @@ import React from 'react';
 import { Switch } from 'react-router-dom';
 import Route from './Route';
 
-// AppRoutes
 import Diary from '../pages/Diary';
 import Qualis from '../pages/Qualis';
 import NotFound from '../pages/NotFound';
@@ -11,7 +10,6 @@ import Panel from '~/pages/Panel';
 import Setup from '~/pages/Setup';
 import Users from '~/pages/Users';
 
-// AuthRoutes
 import SignIn from '../pages/SignIn';
 import SignUp from '../pages/SignUp';
 import Forgot from '~/pages/Forgot';

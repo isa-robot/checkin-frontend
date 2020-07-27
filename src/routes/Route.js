@@ -62,15 +62,3 @@ RouteWrapper.defaultProps = {
   resource: false,
   roles: [],
 };
-
-// let admin;
-
-// if (store.getState().user.profile !== null) {
-//   admin = store.getState().user.profile.user.admin;
-// } else {
-//   admin = 'N';
-// }
-
-// if (admin !== 'Y' && isAdmin) {
-//   return <Redirect to="/eleicao" />;
-// }

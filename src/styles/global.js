@@ -1,11 +1,4 @@
 import { createGlobalStyle } from 'styled-components';
-// import Roboto from '~/assets/fonts/Roboto/Roboto-Regular.ttf';
-// import RobotoBold from '~/assets/fonts/Roboto/Roboto-Bold.ttf';
-// import RobotoLight from '~/assets/fonts/Roboto/Roboto-Light.ttf';
-// import Poppins from '~/assets/fonts/Poppins/Poppins-Regular.ttf';
-// import PoppinsBold from '~/assets/fonts/Poppins/Poppins-Bold.ttf';
-// import PoppinsLight from '~/assets/fonts/Poppins/Poppins-Light.ttf';
-// import PoppinsItalic from '~/assets/fonts/Poppins/Poppins-Italic.ttf';
 
 import 'react-toastify/dist/ReactToastify.css';
 

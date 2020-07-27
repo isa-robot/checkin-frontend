@@ -28,25 +28,10 @@ export default function Profile() {
   const history = useHistory();
 
   const schema = yup.object().shape({
-    // username: yup.string().required(),
-    // name: yup.string().required(),
-    // cpf: yup.string().required(),
-    // phone: yup.string().required(),
-    // email: yup
-    //   .string()
-    //   .email()
-    //   .required(),
   });
 
   const { register, handleSubmit, errors, control } = useForm({
     validationSchema: schema,
-    // defaultValues: {
-    //   username: profile.username,
-    //   name: profile.name,
-    //   cpf: profile.cpf,
-    //   phone: profile.phone,
-    //   email: profile.email,
-    // },
   });
 
   function validateUpdate(data) {
