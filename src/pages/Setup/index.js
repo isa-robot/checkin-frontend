@@ -59,11 +59,6 @@ export default function Setup() {
     name: '',
   });
 
-  const recipientsNames = {
-    usersNotApproved: 'Usuários não aprovados',
-    suport: 'Suporte',
-  };
-
   const etherealSchema = yup.object().shape({
     user: yup.string().required(),
     pass: yup.string().required(),
@@ -110,7 +105,7 @@ export default function Setup() {
     validationSchema: recipientSchema,
   });
 
-  function loadEthereal() {
+  async function loadEthereal() {
     etherealForm.setValue('address', ethereal.address);
     etherealForm.setValue('name', ethereal.name);
     etherealForm.setValue('host', ethereal.host);
@@ -119,7 +114,7 @@ export default function Setup() {
     etherealForm.setValue('pass', ethereal.pass);
   }
 
-  function loadSes() {
+  async function loadSes() {
     sesForm.setValue('accessKeyId', ses.accessKeyId);
     sesForm.setValue('secretAccessKey', ses.secretAccessKey);
     sesForm.setValue('region', ses.region);
@@ -160,16 +155,19 @@ export default function Setup() {
           }
         }
 
+        await loadEthereal();
+        await loadSes();
         setLoaded(true);
-        loadEthereal();
-        loadSes();
+        setLoading(false);
       } else {
         setProvider('ethereal');
-        setLoaded(true);
+        setLoaded(false);
+        setLoading(false);
       }
     }
 
-    setLoading(false);
+    setLoading(true);
+    setLoaded(false);
     fetchMailer();
   }, []);
 
@@ -261,7 +259,10 @@ export default function Setup() {
             headers: { Authorization: `Bearer ${keycloak.token}` },
           })
           .then(res => {
-            if (res) setEtherealRecipients(res.data);
+            if (res) {
+              if (provider === 'ethereal') setEtherealRecipients(res.data);
+              else setSesRecipients(res.data);
+            }
           });
       })
       .catch(() => {
@@ -289,7 +290,10 @@ export default function Setup() {
             headers: { Authorization: `Bearer ${keycloak.token}` },
           })
           .then(res => {
-            if (res) setEtherealRecipients(res.data);
+            if (res) {
+              if (provider === 'ethereal') setEtherealRecipients(res.data);
+              else setSesRecipients(res.data);
+            }
           });
       })
       .catch(() => {
@@ -311,7 +315,8 @@ export default function Setup() {
             headers: { Authorization: `Bearer ${keycloak.token}` },
           })
           .then(res => {
-            if (res) setEtherealRecipients(res.data);
+            if (provider === 'ethereal') setEtherealRecipients(res.data);
+            else setSesRecipients(res.data);
           });
       })
       .catch(() => {
@@ -765,30 +770,138 @@ export default function Setup() {
                             )}
                         </div>
                       </InputsGroup>
-                    </CardContent>
-                    <CardActions>
-                      <Button
-                        type="submit"
-                        backgroundColor="mountainMeadow"
-                        color="white"
-                        disabled={loading}
-                      >
-                        {loading ? 'Carregando...' : 'Atualizar'}
-                      </Button>
-                      <Button
-                        type="button"
-                        backgroundColor="sunset"
-                        color="white"
-                        disabled={loading}
-                        onClick={() => {
-                          handleDeleteSms();
-                        }}
-                      >
-                        {loading ? 'Carregando...' : 'Deletar'}
-                      </Button>
-                    </CardActions>
-                  </form>
 
+                      <CardActions>
+                        <Button
+                          type="submit"
+                          backgroundColor="mountainMeadow"
+                          color="white"
+                          disabled={loading}
+                        >
+                          {loading ? 'Carregando...' : 'Atualizar'}
+                        </Button>
+                        <Button
+                          type="button"
+                          backgroundColor="sunset"
+                          color="white"
+                          disabled={loading}
+                          onClick={() => {
+                            handleDeleteSms();
+                          }}
+                        >
+                          {loading ? 'Carregando...' : 'Deletar'}
+                        </Button>
+                      </CardActions>
+                    </CardContent>
+                  </form>
+                  <CardHeader title="Configuração de Destinatários" />
+                  {!sesRecipients
+                    .map(r => r.destinatary_type)
+                    .includes('suport') && hasMailer ? (
+                    <CardContent>
+                      <form
+                        onSubmit={suportForm.handleSubmit(handleOnSubmitSuport)}
+                      >
+                        <h4>Suporte</h4>
+                        <InputsGroup>
+                          <div>
+                            <InputGroup>
+                              <input
+                                name="name"
+                                placeholder="Nome"
+                                autoComplete="off"
+                                ref={suportForm.register()}
+                              />
+                              <label>Nome</label>
+                            </InputGroup>
+                            {suportForm.errors.name &&
+                              suportForm.errors.name.type === 'required' && (
+                                <span>O nome é obrigatória</span>
+                              )}
+                          </div>
+                          <div>
+                            <InputGroup>
+                              <input
+                                name="address"
+                                placeholder="Endereço"
+                                autoComplete="off"
+                                ref={suportForm.register()}
+                              />
+                              <label>Endereço</label>
+                            </InputGroup>
+                            {suportForm.errors.user &&
+                              suportForm.errors.user.type === 'required' && (
+                                <span>O endereço é obrigatório</span>
+                              )}
+                          </div>
+                          <CardActions>
+                            <Button
+                              type="submit"
+                              backgroundColor="mountainMeadow"
+                              color="white"
+                              disabled={loading}
+                            >
+                              {loading ? 'Carregando...' : 'Adicionar'}
+                            </Button>
+                          </CardActions>
+                        </InputsGroup>
+                      </form>
+                    </CardContent>
+                  ) : null}
+
+                  {!sesRecipients
+                    .map(r => r.destinatary_type)
+                    .includes('usersNotApproved') && hasMailer ? (
+                    <CardContent>
+                      <form
+                        onSubmit={usersForm.handleSubmit(handleOnSubmitUsers)}
+                      >
+                        <h4>Usuários não aprovados</h4>
+                        <InputsGroup>
+                          <div>
+                            <InputGroup>
+                              <input
+                                name="name"
+                                placeholder="Nome"
+                                autoComplete="off"
+                                ref={usersForm.register()}
+                              />
+                              <label>Nome</label>
+                            </InputGroup>
+                            {usersForm.errors.name &&
+                              usersForm.errors.name.type === 'required' && (
+                                <span>O nome é obrigatória</span>
+                              )}
+                          </div>
+                          <div>
+                            <InputGroup>
+                              <input
+                                name="address"
+                                placeholder="Endereço"
+                                autoComplete="off"
+                                ref={usersForm.register()}
+                              />
+                              <label>Endereço</label>
+                            </InputGroup>
+                            {usersForm.errors.user &&
+                              usersForm.errors.user.type === 'required' && (
+                                <span>O endereço é obrigatório</span>
+                              )}
+                          </div>
+                          <CardActions>
+                            <Button
+                              type="submit"
+                              backgroundColor="mountainMeadow"
+                              color="white"
+                              disabled={loading}
+                            >
+                              {loading ? 'Carregando...' : 'Adicionar'}
+                            </Button>
+                          </CardActions>
+                        </InputsGroup>
+                      </form>
+                    </CardContent>
+                  ) : null}
                   <List
                     component="nav"
                     aria-labelledby="nested-list-subheader"
@@ -803,7 +916,16 @@ export default function Setup() {
                         <ListItemIcon>
                           <Inbox />
                         </ListItemIcon>
-                        <ListItemText primary={recipientsNames[r.name]} />
+                        <ListItemText primary={`${r.name}: ${r.address}`} />
+                        <ListItemSecondaryAction>
+                          <IconButton
+                            edge="end"
+                            aria-label="delete"
+                            onClick={() => handleDeleteRecipient(r)}
+                          >
+                            <Delete />
+                          </IconButton>
+                        </ListItemSecondaryAction>
                       </ListItem>
                     ))}
                     {sesRecipients.length ? null : (
@@ -815,7 +937,6 @@ export default function Setup() {
                       </ListItem>
                     )}
                   </List>
-
                 </>
               )}
             </Card>
