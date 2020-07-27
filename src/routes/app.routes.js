@@ -45,7 +45,7 @@ export default function AppRoutes() {
         component={Diary}
         resource="diary"
       />
-      <Route path="#/qualis" roles={[]} component={Qualis} resource={false} />
+      <Route path="/qualis" roles={[]} component={Qualis} resource={false} />
       <Route
         path="/configuracao"
         roles={['admin']}
