@@ -11,6 +11,7 @@ export const Container = styled.div``;
 
 export const CardActions = styled(CardActionsMaterial)`
   justify-content: flex-end;
+  margin-right: 60px;
 `;
 
 export const CardContent = styled(CardContentMaterial)``;
