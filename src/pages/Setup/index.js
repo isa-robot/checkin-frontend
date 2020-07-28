@@ -730,7 +730,7 @@ export default function Setup() {
         sesForm.setValue('name', ses.name);
       }
     }
-  }, [hasMailer, mailer, loaded]);
+  }, [hasMailer, mailer, loaded, etherealForm, sesForm]);
 
   useEffect(() => {
     async function fetchSms() {
@@ -750,12 +750,12 @@ export default function Setup() {
     fetchSms();
   }, []);
 
-  // useEffect(() => {
-  //   if (hasSms && smsLoaded) {
-  //     smsForm.setValue('zenviaSecretKey', sms.zenviaSecretKey);
-  //     smsForm.setValue('from', sms.from);
-  //   }
-  // }, [hasSms, sms, smsLoaded, smsForm]);
+  useEffect(() => {
+    if (hasSms && smsLoaded) {
+      smsForm.setValue('zenviaSecretKey', sms.zenviaSecretKey);
+      smsForm.setValue('from', sms.from);
+    }
+  }, [hasSms, sms, smsLoaded, smsForm]);
 
   const handleChangeTab = (event, newValue) => {
     setTab(newValue);
