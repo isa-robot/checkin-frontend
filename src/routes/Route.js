@@ -31,7 +31,7 @@ export default function RouteWrapper({
   };
 
   const hasResource = resource ? resources.includes(resource) : true;
-  if (!hasResource) return <Redirect to="/qualis" />;
+  if (!hasResource) return <Redirect to="/" />;
 
   const Layout = keycloak.authenticated ? DefaultLayout : AuthLayout;
 
