@@ -16,22 +16,18 @@ export default function RouteWrapper({
 }) {
   const [keycloak] = useKeycloak();
 
-  const { resources } = useSelector(state => state.user.profile);
-
   const isAuthorized = routeRoles => {
     if (keycloak && routeRoles) {
       return (
         routeRoles.some(r => {
           const realm = keycloak.hasRealmRole(r);
-          return realm;
+          const realResource = keycloak.hasResourceRole(resource);
+          return realm && (realResource || resource === false);
         }) || routeRoles.length === 0
       );
     }
     return false;
   };
-
-  const hasResource = resource ? resources.includes(resource) : true;
-  if (!hasResource) return <Redirect to="/qualis" />;
 
   const Layout = keycloak.authenticated ? DefaultLayout : AuthLayout;
 
