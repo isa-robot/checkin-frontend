@@ -14,7 +14,7 @@ export default function RouteWrapper({
   roles,
   ...rest
 }) {
-  const [keycloak] = useKeycloak();
+  const [keycloak] = useKeycloak()
 
   const isAuthorized = routeRoles => {
     if (keycloak && routeRoles) {
