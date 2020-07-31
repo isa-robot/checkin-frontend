@@ -4,7 +4,6 @@ import { Route, Redirect } from 'react-router-dom';
 
 import { useKeycloak } from '@react-keycloak/web';
 
-import { useSelector } from 'react-redux';
 import AuthLayout from '~/pages/_layouts/auth';
 import DefaultLayout from '~/pages/_layouts/default';
 

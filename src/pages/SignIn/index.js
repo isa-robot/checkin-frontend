@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { CircularProgress } from '@material-ui/core';
@@ -14,14 +14,16 @@ export default function SignIn() {
 
   const [keycloak, initialized] = useKeycloak();
 
-  if (initialized) {
-    if (keycloak.authenticated) {
-      dispatch(kcOnAuth());
-      history.push('/qualis');
-    } else {
-      dispatch(kcSignInRequest());
+  useEffect(() => {
+    if (initialized) {
+      if (keycloak.authenticated) {
+        dispatch(kcOnAuth());
+        history.push('/qualis');
+      } else {
+        dispatch(kcSignInRequest());
+      }
     }
-  }
+  }, [initialized, keycloak, history]);
 
   return (
     <Loading>
