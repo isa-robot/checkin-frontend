@@ -18,7 +18,7 @@ import ResetPassword from '~/pages/ResetPassword';
 export default function AppRoutes() {
   return (
     <Switch>
-      <Route path="/" exact component={SignIn} resource={false} />
+      <Route path="/" exact roles={[]} component={SignIn} resource={false} />
       <Route
         path="/esqueci-minha-senha"
         roles={[]}

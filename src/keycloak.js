@@ -17,4 +17,5 @@ export const keycloakProviderInitConfig = {
   'use-resource-role-mappings': true,
   'confidential-port': 0,
   onLoad: 'login-required',
+  checkLoginIframe: false,
 };
