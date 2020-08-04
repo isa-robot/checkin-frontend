@@ -4,7 +4,6 @@ import { Route, Redirect } from 'react-router-dom';
 
 import { useKeycloak } from '@react-keycloak/web';
 
-import { useSelector } from 'react-redux';
 import AuthLayout from '~/pages/_layouts/auth';
 import DefaultLayout from '~/pages/_layouts/default';
 
@@ -14,24 +13,20 @@ export default function RouteWrapper({
   roles,
   ...rest
 }) {
-  const [keycloak] = useKeycloak();
-
-  const { resources } = useSelector(state => state.user.profile);
+  const [keycloak] = useKeycloak()
 
   const isAuthorized = routeRoles => {
     if (keycloak && routeRoles) {
       return (
         routeRoles.some(r => {
           const realm = keycloak.hasRealmRole(r);
-          return realm;
+          const realResource = keycloak.hasResourceRole(resource);
+          return realm && (realResource || resource === false);
         }) || routeRoles.length === 0
       );
     }
     return false;
   };
-
-  const hasResource = resource ? resources.includes(resource) : true;
-  if (!hasResource) return <Redirect to="/qualis" />;
 
   const Layout = keycloak.authenticated ? DefaultLayout : AuthLayout;
 

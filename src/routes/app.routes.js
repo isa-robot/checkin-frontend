@@ -68,7 +68,7 @@ export default function AppRoutes() {
         path="/usuarios"
         roles={['admin']}
         component={Users}
-        resource={false}
+        resource="management-user"
       />
       <Route component={NotFound} roles={[]} />
     </Switch>
