@@ -60,7 +60,7 @@ export default function AppRoutes() {
       />
       <Route
         path="/monitoramento"
-        roles={['admin', 'responsible']}
+        roles={['admin', 'responsible', 'infectologist']}
         component={Monitoring}
         resource="monitoring"
       />
