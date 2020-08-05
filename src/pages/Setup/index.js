@@ -374,17 +374,17 @@ function AmazonForm(props) {
                 <div>
                   <InputGroup>
                     <input
-                      name="region"
-                      placeholder="Região"
+                      name="address"
+                      placeholder="Endereço de E-mail"
                       autoComplete="off"
                       ref={form.register()}
                     />
-                    <label>Região</label>
+                    <label>Endereço de E-mail</label>
                   </InputGroup>
-                  {form.errors.region &&
-                    form.errors.region.type === 'required' && (
-                      <span>Região é obrigatório</span>
-                    )}
+                  {form.errors.address &&
+                  form.errors.address.type === 'required' && (
+                    <span>O endereço de e-mail é obrigatório</span>
+                  )}
                 </div>
               </InputsGroup>
               <InputsGroup>
@@ -425,6 +425,21 @@ function AmazonForm(props) {
                     form.errors.secretAccessKey.type === undefined && (
                       <span>{form.errors.secretAccessKey.message}</span>
                     )}
+                </div>
+                <div>
+                  <InputGroup>
+                    <input
+                      name="region"
+                      placeholder="Região"
+                      autoComplete="off"
+                      ref={form.register()}
+                    />
+                    <label>Região</label>
+                  </InputGroup>
+                  {form.errors.region &&
+                  form.errors.region.type === 'required' && (
+                    <span>Região é obrigatório</span>
+                  )}
                 </div>
               </InputsGroup>
               <CardActions>
@@ -621,6 +636,7 @@ export default function Setup() {
     secretAccessKey: '',
     region: '',
     name: '',
+    address:'',
   });
 
   const [sms, setSms] = useState({
@@ -646,6 +662,7 @@ export default function Setup() {
     secretAccessKey: yup.string().required(),
     name: yup.string().required(),
     region: yup.string().required(),
+    address: yup.string().required(),
   });
 
   const sesForm = useForm({
@@ -700,8 +717,8 @@ export default function Setup() {
 
           getRecipients();
         } else if (response.data.type === 'ses') {
-          const { accessKeyId, secretAccessKey, region, name } = response.data;
-          setSes({ accessKeyId, secretAccessKey, region, name });
+          const { accessKeyId, secretAccessKey, region, name, address } = response.data;
+          setSes({ accessKeyId, secretAccessKey, region, name, address });
           setMailer('ses');
           setTab(1);
 
@@ -728,6 +745,7 @@ export default function Setup() {
         sesForm.setValue('secretAccessKey', ses.secretAccessKey);
         sesForm.setValue('region', ses.region);
         sesForm.setValue('name', ses.name);
+        sesForm.setValue('address', ses.address);
       }
     }
   }, [hasMailer, mailer, loaded, etherealForm, sesForm]);
@@ -818,8 +836,8 @@ export default function Setup() {
       })
       .then(() => {
         toast.success('E-mail configurado com sucesso!');
-        const { accessKeyId, secretAccessKey, region, name } = data;
-        setSes({ accessKeyId, secretAccessKey, region, name });
+        const { accessKeyId, secretAccessKey, region, name, address } = data;
+        setSes({ accessKeyId, secretAccessKey, region, name, address });
         setHasMailer(true);
         setMailer('ses');
         setTab(1);

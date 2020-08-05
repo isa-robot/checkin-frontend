@@ -73,6 +73,7 @@ export default function Setup() {
     secretAccessKey: yup.string().required(),
     name: yup.string().required(),
     region: yup.string().required(),
+    address: yup.string().required(),
   });
 
   const smsSchema = yup.object().shape({
@@ -119,6 +120,7 @@ export default function Setup() {
     sesForm.setValue('secretAccessKey', ses.secretAccessKey);
     sesForm.setValue('region', ses.region);
     sesForm.setValue('name', ses.name);
+    sesForm.setValue('address', ses.address);
   }
 
   useEffect(() => {

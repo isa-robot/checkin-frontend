@@ -28,7 +28,7 @@ export const ModalCard = styled(Card)`
   max-width: 700px;
   padding: 3rem;
   margin-top: 100px;
-  background: #e11400aa;
+  background: #b7b7b7;
 
   div {
     display: flex;
