@@ -67,7 +67,7 @@ export default function Users() {
     {
       field: 'roles',
       title: 'Roles',
-      render: rowData => rowData.roles.map(role => role.name).join(', '),
+      render: rowData => rowData.roles.map(role => translateRoles(role.name)).join(', '),
     },
     {
       field: 'enabled',
@@ -159,6 +159,13 @@ export default function Users() {
     setNewRole(value);
   };
 
+  const translateRoles = (roleName) => {
+    return roleName === 'admin' ? 'administrador' :
+      roleName === 'infectologist' ? 'infectologista' :
+        roleName === 'responsible' ? 'responsável' :
+          roleName === 'assisted' ? 'assistido' : ''
+  }
+
   return (
     <>
       {loaded ? (
@@ -205,7 +212,7 @@ export default function Users() {
                       </option>
                       {roles.map(role => (
                         <option key={role.name} value={role.name}>
-                          {role.name}
+                          {translateRoles(role.name)}
                         </option>
                       ))}
                     </select>
