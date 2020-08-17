@@ -48,3 +48,5 @@ para rodar o projeto em ambiente de desenvolvimento, sem container, execute o se
 ```
 REACT_APP_KEYCLOAK_SERVER_URL="http://$(hostname -I | awk '{print $1}'):8080/auth" REACT_APP_KEYCLOAK_CLIENT="isa-frontend" REACT_APP_KEYCLOAK_REALM="isa-qualis" REACT_APP_API_URL="http://localhost:3333/"  npm start
 ```
+
+<a href="https://github.com/isa-robot/checkin-frontend/commits"> <img src="https://img.shields.io/badge/GitHub%20commit%20activity-up-green.svg?style=flat" href="https://github.com/isa-robot/checkin-frontend/commits" alt="GitHub commit activity"> </a>
