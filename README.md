@@ -50,13 +50,13 @@ REACT_APP_KEYCLOAK_SERVER_URL="http://$(hostname -I | awk '{print $1}'):8080/aut
 ```
 
 <a href="https://github.com/isa-robot/checkin-frontend/blob/master/package.json"> 
-<img src="https://img.shields.io/badge/package.json%20version%20-1.0.0-green.svg?style=flat" href="https://github.com/isa-robot/checkin-frontend/blob/master/package.json" alt="package.json version"></img>
+<img src="https://img.shields.io/badge/package.json%20version%20-1.0.0-green.svg?style=flat" alt="package.json version">
 </a>
 
 <a href="https://github.com/isa-robot/checkin-frontend/commits">
-<img src="https://img.shields.io/badge/GitHub%20commit%20activity-up-green.svg?style=flat" href="https://github.com/isa-robot/checkin-frontend/commits" alt="GitHub commit activity"></img>
+<img src="https://img.shields.io/badge/GitHub%20commit%20activity-up-green.svg?style=flat" alt="GitHub commit activity">
 </a>
   
 <a href="https://github.com/isa-robot/checkin-frontend/commit/">
-<img src="https://img.shields.io/badge/GitHub%20last%20commit-up-green.svg?style=flat" href="https://github.com/isa-robot/checkin-frontend/commit/" alt="GitHub last commit"></img>
+<img src="https://img.shields.io/badge/GitHub%20last%20commit-up-green.svg?style=flat" alt="GitHub last commit">
 </a>
