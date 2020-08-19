@@ -11,7 +11,7 @@ script:
   - yarn run build
 
 deploy:
-  provider: pages
+  provider: isa-robot
   skip-cleanup: true
   github-token: $GITHUB_TOKEN
   on:
