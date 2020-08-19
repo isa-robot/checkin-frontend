@@ -5,6 +5,8 @@ cache: yarn
 
 install:
   - yarn install
+  - yarn upgrade
+  - yarn add yarn
 
 script:
   - yarn test
