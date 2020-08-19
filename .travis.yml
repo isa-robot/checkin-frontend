@@ -5,6 +5,7 @@ cache: yarn
 
 install:
   - yarn install
+  - yarn info
   - yarn upgrade
   - yarn add yarn
 
@@ -13,7 +14,7 @@ script:
   - yarn run build
 
 deploy:
-  provider: pages
+  provider: isa-robot
   skip-cleanup: true
   github-token: $GITHUB_TOKEN
   on:
