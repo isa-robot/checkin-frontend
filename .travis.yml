@@ -11,6 +11,7 @@ cache: npm #yarn
 
 #script:
   - npm test --passWithNoTests
+  - npm run build
 #  - yarn test
 #  - yarn run build
 
