@@ -4,7 +4,7 @@ node_js:
 cache: yarn
 
 install:
-  - npm install --frozen-lockfile
+  - yarn install --frozen-lockfile
 #  - yarn upgrade
 #  - yarn add yarn
 
