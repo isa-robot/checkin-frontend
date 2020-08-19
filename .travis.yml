@@ -5,6 +5,8 @@ cache: npm
 
 install:
   - npm install
+  - yarn upgrade
+  - yarn add yarn
 
 script:
   - npm test
