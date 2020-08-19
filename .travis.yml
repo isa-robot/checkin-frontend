@@ -3,21 +3,21 @@ node_js:
   - 12
 cache: yarn
 
-install:
+#install:
 #  - npm install
-  - yarn install --frozen-lockfile
+#  - yarn install --frozen-lockfile
 #  - yarn upgrade
 #  - yarn add yarn
 
-script:
+#script:
 #  - npm test
-  - yarn test
-  - yarn run build
+#  - yarn test
+#  - yarn run build
 
-deploy:
-  provider: pages
-  skip-cleanup: true
-  github-token: $GITHUB_TOKEN
-  on:
-    all_branches: true
+#deploy:
+#  provider: pages
+#  skip-cleanup: true
+#  github-token: $GITHUB_TOKEN
+#  on:
+#    all_branches: true
 #    branch: master
