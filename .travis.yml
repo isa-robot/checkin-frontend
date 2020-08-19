@@ -11,8 +11,8 @@ script:
   - yarn run build
 
 deploy:
-  provider: isa-robot
+  provider: pages
   skip-cleanup: true
   github-token: $GITHUB_TOKEN
   on:
-    branch: master
+    branch: arateus2-patch-2
