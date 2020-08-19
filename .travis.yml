@@ -4,13 +4,13 @@ node_js:
 cache: npm #yarn
 
 #install:
-#  - npm install
+  - npm install
 #  - yarn install --frozen-lockfile
 #  - yarn upgrade
 #  - yarn add yarn
 
 #script:
-#  - npm test
+  - npm test --passWithNoTests
 #  - yarn test
 #  - yarn run build
 
