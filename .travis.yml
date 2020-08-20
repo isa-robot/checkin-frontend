@@ -12,8 +12,9 @@ install:
 script:
 #  - npm test #--passWithNoTests
 #  - npm run build
-  - yarn test
-  - yarn run build
+  - yarn start
+#  - yarn test
+#  - yarn run build
 
 deploy:
   provider: pages
