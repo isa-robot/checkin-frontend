@@ -10,7 +10,7 @@ install:
 #  - yarn add yarn
 
 script:
-  - npm test --passWithNoTests
+  - npm test #--passWithNoTests
   - npm run build
 #  - yarn test
 #  - yarn run build
