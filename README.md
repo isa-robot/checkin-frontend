@@ -53,6 +53,14 @@ REACT_APP_KEYCLOAK_SERVER_URL="http://$(hostname -I | awk '{print $1}'):8080/aut
 <img src="https://img.shields.io/badge/package.json%20version%20-1.0.0-green.svg?style=flat" alt="package.json version">
 </a>
 
+<a href="https://observatory.mozilla.org/analyze/isarobot.ai"> 
+<img src="https://img.shields.io/badge/Mozilla%20Observatory-F-red.svg?style=flat" alt="Mozilla Observatory">
+</a>
+
+<a href="https://securityheaders.com/?q=isarobot.ai&followRedirects=on"> 
+<img src="https://img.shields.io/badge/Security%20Headers-F-red.svg?style=flat" alt="Security Headers">
+</a>
+
 <a href="https://github.com/isa-robot/checkin-frontend/commits">
 <img src="https://img.shields.io/badge/GitHub%20commit%20activity-up-green.svg?style=flat" alt="GitHub commit activity">
 </a>
