@@ -3,6 +3,9 @@ node_js:
   - 12
 cache: yarn
 
+before_install:
+  - curl -s https://codecov.io/bash
+
 install:
 #  - npm install
   - yarn install --frozen-lockfile
