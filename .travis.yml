@@ -9,6 +9,7 @@ before_install:
 install:
 #  - npm install
   - yarn install --frozen-lockfile
+#  - yarn install -g codecov
 #  - yarn upgrade
 #  - yarn add yarn
 
