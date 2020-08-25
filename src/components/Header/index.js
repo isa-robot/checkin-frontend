@@ -26,7 +26,7 @@ import logo from '~/assets/images/header-logo.png';
 
 export default function Header() {
   const [keycloak] = useKeycloak();
-
+  console.info(keycloak.tokenParsed)
   const resources = keycloak.resourceAccess['isa-frontend']
     ? keycloak.resourceAccess['isa-frontend'].roles
     : [];
@@ -96,7 +96,7 @@ export default function Header() {
       </Menu>
       <Profile>
         <ProfileData>
-          <strong>{keycloak.tokenParsed.preferred_username}</strong>
+          <strong>{keycloak.tokenParsed.given_name}</strong>
         </ProfileData>
         <ProfileMenu />
       </Profile>
