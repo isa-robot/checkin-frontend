@@ -63,7 +63,7 @@ REACT_APP_KEYCLOAK_SERVER_URL="http://$(hostname -I | awk '{print $1}'):8080/aut
   </a>
   
   <a href="https://opensource.org/licenses/MIT">
-    <img src="https://img.shields.io/badge/License-MIT-light.svg?style=flat" href="https://opensource.org/licenses/MIT" alt="MIT License">
+    <img src="https://img.shields.io/badge/License-MIT-Chartreuse.svg?style=flat" href="https://opensource.org/licenses/MIT" alt="MIT License">
   </a>
   
   
