@@ -66,7 +66,10 @@ REACT_APP_KEYCLOAK_SERVER_URL="http://$(hostname -I | awk '{print $1}'):8080/aut
     <img src="https://img.shields.io/badge/License-MIT-DarkSlateBlue.svg?style=flat" href="https://opensource.org/licenses/MIT" alt="MIT License">
   </a>
   
-  
+  <a href="https://snyk.io/test/github/arateus2/checkin-frontend">
+    <img src="hhttps://snyk.io/test/github/arateus2/checkin-frontend/badge.svg?style=flat" href="https://snyk.io/test/github/arateus2/checkin-frontend" alt="Snyk Consistency">
+  </a>
+
 
 </div>
 
