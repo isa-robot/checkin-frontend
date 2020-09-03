@@ -59,7 +59,14 @@ REACT_APP_KEYCLOAK_SERVER_URL="http://$(hostname -I | awk '{print $1}'):8080/aut
   </a>
   
   <a href="https://travis-ci.org/arateus2/checkin-frontend.svg?branch=master">
-    <img src="https://travis-ci.org/arateus2/checkin-frontend.svg?branch=master" href="https://travis-ci.org/arateus2/checkin-frontend" alt="Build Status">
+    <img src="https://travis-ci.org/arateus2/checkin-frontend.svg?branch=master&style=flat" href="https://travis-ci.org/arateus2/checkin-frontend" alt="Build Status">
   </a>
+  
+  <a href="https://opensource.org/licenses/MIT">
+    <img src="https://img.shields.io/badge/License-MIT-yellow.svg" href="https://opensource.org/licenses/MIT" alt="MIT License">
+  </a>
+  
+  
+
 </div>
 
