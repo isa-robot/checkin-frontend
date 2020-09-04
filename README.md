@@ -61,6 +61,10 @@ REACT_APP_KEYCLOAK_SERVER_URL="http://$(hostname -I | awk '{print $1}'):8080/aut
 <img src="https://img.shields.io/badge/Security%20Headers-F-red.svg?style=flat" alt="Security Headers">
 </a>
 
+<a href="https://codeclimate.com/github/isa-robot/checkin-frontend"> 
+<img src="https://img.shields.io/badge/Code%20Climate-F-red.svg?style=flat" alt="Code Climate">
+</a>
+
 <a href="https://github.com/isa-robot/checkin-frontend/commits">
 <img src="https://img.shields.io/badge/GitHub%20commit%20activity-up-green.svg?style=flat" alt="GitHub commit activity">
 </a>
