@@ -49,4 +49,26 @@ para rodar o projeto em ambiente de desenvolvimento, sem container, execute o se
 REACT_APP_KEYCLOAK_SERVER_URL="http://$(hostname -I | awk '{print $1}'):8080/auth" REACT_APP_KEYCLOAK_CLIENT="isa-frontend" REACT_APP_KEYCLOAK_REALM="isa-qualis" REACT_APP_API_URL="http://localhost:3333/"  npm start
 ```
 
-<a href="https://github.com/isa-robot/checkin-frontend/commits"> <img src="https://img.shields.io/badge/GitHub%20commit%20activity-up-green.svg?style=flat" href="https://github.com/isa-robot/checkin-frontend/commits" alt="GitHub commit activity"> </a>
+<a href="https://github.com/isa-robot/checkin-frontend/blob/master/package.json"> 
+<img src="https://img.shields.io/badge/package.json%20version%20-1.0.0-green.svg?style=flat" alt="package.json version">
+</a>
+
+<a href="https://observatory.mozilla.org/analyze/isarobot.ai"> 
+<img src="https://img.shields.io/badge/Mozilla%20Observatory-F-red.svg?style=flat" alt="Mozilla Observatory">
+</a>
+
+<a href="https://securityheaders.com/?q=isarobot.ai&followRedirects=on"> 
+<img src="https://img.shields.io/badge/Security%20Headers-F-red.svg?style=flat" alt="Security Headers">
+</a>
+
+<a href="https://codeclimate.com/github/isa-robot/checkin-frontend"> 
+<img src="https://img.shields.io/badge/Code%20Climate-F-red.svg?style=flat" alt="Code Climate">
+</a>
+
+<a href="https://github.com/isa-robot/checkin-frontend/commits">
+<img src="https://img.shields.io/badge/GitHub%20commit%20activity-up-green.svg?style=flat" alt="GitHub commit activity">
+</a>
+  
+<a href="https://github.com/isa-robot/checkin-frontend/commit/">
+<img src="https://img.shields.io/badge/GitHub%20last%20commit-up-green.svg?style=flat" alt="GitHub last commit">
+</a>
