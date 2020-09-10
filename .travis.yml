@@ -12,6 +12,7 @@ install:
 #  - yarn install -g codecov
 #  - yarn upgrade
 #  - yarn add yarn
+  - npm install -g codecov
 
 script:
 #  - npm test #--passWithNoTests
@@ -19,6 +20,7 @@ script:
 #  - yarn start
 #  - yarn test
 #  - yarn run build
+  - codecov
 
 deploy:
   - provider: script
