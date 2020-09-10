@@ -82,7 +82,7 @@ REACT_APP_KEYCLOAK_SERVER_URL="http://$(hostname -I | awk '{print $1}'):8080/aut
 </a>
 
 <a href="https://snyk.io/test/github/isa-robot/checkin-frontend">
-<img src="https://snyk.io/test/github/isa-robot/checkin-frontend/badge.svg?style=flat" href="https://snyk.io/test/github/isa-robot/checkin-frontend" alt="Known Vulnerabilities">
+<img src="https://snyk.io/test/github/isa-robot/checkin-frontend/badge.svg" href="https://snyk.io/test/github/isa-robot/checkin-frontend" alt="Known Vulnerabilities">
 </a>
 
 <a href="https://deepscan.io/dashboard#view=project&tid=10666&pid=13767&bid=240493"><img src="https://deepscan.io/api/teams/10666/projects/13767/branches/240493/badge/grade.svg" alt="DeepScan grade">
