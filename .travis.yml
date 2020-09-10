@@ -21,9 +21,9 @@ script:
 #  - yarn run build
 
 deploy:
-  provider: script
-  script: bash <(curl -s https://codecov.io/bash)
-  on:
+  - provider: script
+    script: bash <(curl -s https://codecov.io/bash)
+    on:
       branch: master
 #    tags: true
 #    all_branches: true
