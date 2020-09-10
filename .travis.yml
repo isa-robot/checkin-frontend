@@ -3,8 +3,8 @@ node_js:
   - 12
 cache: npm #yarn
 
-before_install:
-  - curl -s https://codecov.io/bash
+#before_install:
+#  - curl -s https://codecov.io/bash
 
 install:
   - npm install
@@ -20,10 +20,10 @@ script:
 #  - yarn test
 #  - yarn run build
 
-deploy:
-  provider: pages
-  skip-cleanup: true
-  github-token: $GITHUB_TOKEN
-  on:
-    branch: master
+#deploy:
+#  provider: pages
+#  skip-cleanup: true
+#  github-token: $GITHUB_TOKEN
+#  on:
+#    branch: master
 #    all_branches: true
