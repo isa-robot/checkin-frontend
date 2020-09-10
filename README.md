@@ -79,17 +79,18 @@ REACT_APP_KEYCLOAK_SERVER_URL="http://$(hostname -I | awk '{print $1}'):8080/aut
 </a>
 
 <a href="https://snyk.io/test/github/isa-robot/checkin-frontend">
-<img src="https://snyk.io/test/github/isa-robot/checkin-frontend/badge.svg" href="https://snyk.io/test/github/isa-robot/checkin-frontend" alt="Known Vulnerabilities">
+  <img src="https://snyk.io/test/github/isa-robot/checkin-frontend/badge.svg?style=flat" href="https://snyk.io/test/github/isa-robot/checkin-frontend" alt="Known Vulnerabilities">
 </a>
 
-<a href="https://deepscan.io/dashboard#view=project&tid=10666&pid=13767&bid=240493"><img src="https://deepscan.io/api/teams/10666/projects/13767/branches/240493/badge/grade.svg" alt="DeepScan grade">
+<a href="https://deepscan.io/dashboard#view=project&tid=10666&pid=13767&bid=240493">
+  <img src="https://deepscan.io/api/teams/10666/projects/13767/branches/240493/badge/grade.svg?style=flat" alt="DeepScan grade">
 </a>
 
 <a href="https://github.com/isa-robot/checkin-frontend/commits">
-<img src="https://img.shields.io/badge/GitHub%20commit%20activity-up-green.svg?style=flat" alt="GitHub commit activity">
+  <img src="https://img.shields.io/badge/GitHub%20commit%20activity-up-green.svg?style=flat" alt="GitHub commit activity">
 </a>
   
 <a href="https://github.com/isa-robot/checkin-frontend/commit/">
-<img src="https://img.shields.io/badge/GitHub%20last%20commit-up-green.svg?style=flat" alt="GitHub last commit">
+  <img src="https://img.shields.io/badge/GitHub%20last%20commit-up-green.svg?style=flat" alt="GitHub last commit">
 </a>
 
