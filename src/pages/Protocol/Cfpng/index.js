@@ -35,7 +35,7 @@ export const GreenCheckbox = withStyles({
 })((props) => <Checkbox color="default" {...props} />);
 
 
-export default function Protocol() {
+export default function Cfpng() {
   const initialState = {
     breathLess: false,
     breathDifficulty: false,
@@ -91,21 +91,6 @@ export default function Protocol() {
       setApproved(true)
     }
     setAnswered(true)
-      // api
-    //   .post(`/users/diaries`, formState, {
-    //     headers: {
-    //       Authorization: `Bearer ${keycloak.token}`,
-    //     },
-    //   })
-    //   .then(response => {
-    //     toast.success('Resposta enviada com sucesso!');
-    //     setApproved(response.data.approved);
-    //     setDate(response.data.date);
-    //     setAnswered(true);
-    //   })
-    //   .catch(() => {
-    //     toast.error('Houve um problema, contate o suporte!');
-    //   });
     setLoading(false);
   }
 
@@ -128,36 +113,11 @@ export default function Protocol() {
     setForm(!form);
   }
 
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     const newDate = formatISO(new Date(), { representation: 'date' });
-  //     const dailyAnswer = await api.get(`/users/diaries/date/${newDate}`, {
-  //       headers: {
-  //         Authorization: `Bearer ${keycloak.token}`,
-  //       },
-  //     });
-  //
-  //     if (dailyAnswer.data) {
-  //       setAnswered(true);
-  //       setApproved(dailyAnswer.data.approved);
-  //       setDate(dailyAnswer.data.date);
-  //     }
-  //     setLoaded(true);
-  //   }
-  //   fetchData();
-  // }, []);
-  //
-  // useEffect(() => {
-  //   if (clearAndSend) {
-  //     handleFormAnswer();
-  //   }
-  // }, [clearAndSend]);
-
-    useEffect(() => {
-      setLoading(true)
-      setDate(new Date())
-      setLoading(false)
-    },[])
+  useEffect(() => {
+    setLoading(true)
+    setDate(new Date())
+    setLoading(false)
+  },[])
   return (
     <>
       {loading ? (
