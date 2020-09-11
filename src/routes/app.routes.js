@@ -2,6 +2,7 @@ import React from 'react';
 import { Switch } from 'react-router-dom';
 import Route from './Route';
 
+import Protocol from '../pages/Protocol'
 import Diary from '../pages/Diary';
 import Qualis from '../pages/Qualis';
 import NotFound from '../pages/NotFound';
@@ -44,6 +45,12 @@ export default function AppRoutes() {
         roles={['assisted', 'infectologist', 'responsible']}
         component={Diary}
         resource="diary"
+      />
+      <Route
+        path="/protocolo"
+        roles={['assisted']}
+        component={Protocol}
+        resource={false}
       />
       <Route path="/qualis" roles={[]} component={Qualis} resource={false} />
       <Route

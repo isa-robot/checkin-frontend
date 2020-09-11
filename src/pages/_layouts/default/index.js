@@ -20,8 +20,9 @@ export default function DefaultLayout({ children }) {
 
   useEffect(() => {
     if (!loading) {
-      if (roles.length === 0) setToggleNoAccess(true);
-      else {
+      if (roles.length === 0) {
+        setToggleNoAccess(true);
+      } else {
         setToggleNoAccess(false);
         if (resources.includes('diary') && baseline === null)
           setToggleBaseline(true);
