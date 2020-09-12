@@ -23,6 +23,8 @@ import api from '~/services/api';
 import Button from '~/components/Buttons/Button';
 import ProtocolCard from '~/components/ProtocolCard';
 import Modal from '~/components/ConfirmationModal';
+import ApprovalCard from '~/components/ApprovalCard';
+import { toast } from 'react-toastify';
 
 export const GreenCheckbox = withStyles({
   root: {
@@ -57,8 +59,13 @@ export default function Cfpng() {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState(false);
   const [answered, setAnswered] = useState(false);
+  const [diaryAnswered, setDiaryAnswered] = useState(true);
   const [approved, setApproved] = useState();
-  const [date, setDate] = useState();
+  const [approvedDiary, setApprovedDiary] = useState();
+  const [dateDiary, setDateDiary] = useState(new Date());
+  const [newSympt, setNewSympt] = useState("")
+  const [dateExp, setDateExp] = useState(false);
+  const [date, setDate] = useState(new Date());
   const [toggle, setToggle] = useState(false);
   const [formState, setFormState] = useState(initialState);
   const [clearAndSend, setClearAndSend] = useState(false);
@@ -70,27 +77,22 @@ export default function Cfpng() {
   }
 
   async function handleFormAnswer() {
-    setLoading(true);
-    if(formState.breathLess != false||
-      formState.breathDifficulty != false||
-      formState.chestTightness != false||
-      formState.breathPressure != false||
-      formState.mentalConfusion != false||
-      formState.dizziness != false||
-      formState.draggedVoice != false||
-      formState.awakeDifficulty != false||
-      formState.blueSkin != false||
-      formState.lowPressure != false||
-      formState.pallor != false||
-      formState.sweating != false||
-      formState.oximetry != false||
-      formState.extraSymptom != false||
-      formState.newSymptom){
-      setApproved(false)
-    }else {
-      setApproved(true)
-    }
-    setAnswered(true)
+    formState.newSymptom = newSympt
+    api
+      .post(`/protocols/cfpng`, formState, {
+        headers: {
+          Authorization: `Bearer ${keycloak.token}`,
+        },
+      })
+      .then(response => {
+        toast.success('Resposta enviada com sucesso!');
+        setApproved(response.data.approved);
+        setDate(response.data.date);
+        setAnswered(true);
+      })
+      .catch((e) => {
+        console.info(e)
+      });
     setLoading(false);
   }
 
@@ -114,15 +116,82 @@ export default function Cfpng() {
   }
 
   useEffect(() => {
-    setLoading(true)
-    setDate(new Date())
-    setLoading(false)
-  },[])
+    async function loadDiaryAnswer(){
+
+      const diary = await api.get(`/users/diaries/lastbyuser/last`, {
+        headers: {
+          Authorization: `Bearer ${keycloak.token}`
+        }
+      })
+
+      if(!diary.data.diary.hasOwnProperty("approved")){
+        return setDiaryAnswered(false)
+      }
+
+      const diaryDate = new Date(diary.data.diary.created_at)
+      diaryDate.setDate(diaryDate.getDate() + 13)
+      const today = new Date()
+      if(today >= diaryDate){
+        return setDateExp(true)
+      } else if (diary.data.approved){
+        setApprovedDiary(diary.data.approved)
+        setDateDiary(diary.data.created_at)
+      }else{
+        setApprovedDiary(false)
+        setDateDiary(diary.data.created_at)
+      }
+      setLoading(false)
+    }
+    async function loadDaily() {
+      const newDate = formatISO(new Date(), { representation: 'date' });
+      const dailyAnswer = await api.get(`/protocols/cfpng/date/${newDate}`, {
+        headers: {
+          Authorization: `Bearer ${keycloak.token}`,
+        },
+      });
+      if (dailyAnswer.data) {
+        setAnswered(true);
+        setApproved(dailyAnswer.data.approved);
+        setDate(dailyAnswer.data.date)
+      }
+      setLoading(false);
+    }
+    loadDiaryAnswer();
+    loadDaily();
+  }, []);
+
+  useEffect(() => {
+    if (clearAndSend) {
+      handleFormAnswer();
+    }
+  }, [clearAndSend]);
+
   return (
     <>
       {loading ? (
           <Loading></Loading>
         ) : (
+        !diaryAnswered ? (
+          <Container>
+            <Content>
+              <ApprovalCard answered={false} date={dateDiary}></ApprovalCard>
+            </Content>
+          </Container>
+        ): (
+        approvedDiary ? (
+          <Container>
+            <Content>
+              <ApprovalCard approved={approvedDiary} date={dateDiary}></ApprovalCard>
+            </Content>
+          </Container>
+        ) : (
+        dateExp ? (
+          <Container>
+            <Content>
+              <ApprovalCard dateExpired={true} date={new Date()}></ApprovalCard>
+            </Content>
+          </Container>
+          ) :
         answered ? (
           <Container>
             <Content>
@@ -389,7 +458,9 @@ export default function Cfpng() {
                     <ChoiceGroup key={15} visible={formState.extraSymptom}>
                       <p>Qual?</p>
                       <div>
-                        <TextField id="outlined-basic" variant="outlined"/>
+                        <TextField onChange={(e) => {
+                          setNewSympt(e.target.value)
+                        }}  id="newSymptom" name="newSymptom" value={newSympt} variant="outlined"/>
                       </div>
                     </ChoiceGroup>
                   </InputGroup>
@@ -433,6 +504,8 @@ export default function Cfpng() {
               formStateFunction={handleFormAnswer}
             />
           </Container>
+          )
+         )
         )
       )}
     </>

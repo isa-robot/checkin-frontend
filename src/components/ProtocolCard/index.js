@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import { Container } from './styles';
 
 function ProtocolCard({ approved, date }) {
+  console.info(date)
   if (approved) {
     return (
       <Container approved={approved}>

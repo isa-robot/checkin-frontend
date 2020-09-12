@@ -102,7 +102,6 @@ export default function Dairy() {
           Authorization: `Bearer ${keycloak.token}`,
         },
       });
-
       if (dailyAnswer.data) {
         setAnswered(true);
         setApproved(dailyAnswer.data.approved);

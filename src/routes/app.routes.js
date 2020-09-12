@@ -47,7 +47,7 @@ export default function AppRoutes() {
         resource="diary"
       />
       <Route
-        path="/Cfpng"
+        path="/protocolo-cfpng"
         roles={['assisted']}
         component={Cfpng}
         resource={false}
