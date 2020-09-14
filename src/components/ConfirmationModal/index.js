@@ -59,6 +59,34 @@ export default function Modal({
           return 'Dor Abdominal';
         case 'chestPain':
           return 'Dor no Peito';
+        case 'breathLess':
+          return 'Falta de ar';
+        case 'breathDifficulty':
+          return 'Dificuldade para respirar';
+        case 'chestTightness':
+          return 'Aperto no peito';
+        case 'breathPressure':
+          return 'pressão para respirar';
+        case 'mentalConfusion':
+          return 'Confusão mental';
+        case 'dizziness':
+          return 'Tonturas';
+        case 'draggedVoice':
+          return 'Voz arrastada';
+        case 'awakeDifficulty':
+          return 'Dificuldade para se manter acordado';
+        case 'blueSkin':
+          return 'Lábios ou face com coloração mais azulada';
+        case 'lowPressure':
+          return 'pressão baixa';
+        case 'pallor':
+          return 'palidez';
+        case 'sweating':
+          return 'sudorese';
+        case 'oximetry':
+          return 'Fez oximetria';
+        case 'extraSymptom':
+          return 'Você apresentou algum sintoma a mais';
         default:
           return '';
       }
@@ -80,8 +108,8 @@ export default function Modal({
         <ModalBody>
           <ul>
             {list.length !== 0 ? (
-              list.map(val => (
-                <li key={val}>
+              list.map((val, index) => (
+                <li key={index}>
                   <p>{val}</p>
                 </li>
               ))

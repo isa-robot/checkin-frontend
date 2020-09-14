@@ -1,7 +1,7 @@
 {
   "name": "frontend",
   "version": "1.0.0",
-  "author": "Igor Moraes <igor@portalqualis.com.br>",
+  "author": "Qualis Infectologia Ltda. <contato@portalqualis.com.br>",
   "scripts": {
     "start": "react-app-rewired start",
     "build:dev": "env-cmd -f ./.env.development react-app-rewired build",
