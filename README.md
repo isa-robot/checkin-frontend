@@ -49,7 +49,12 @@ para rodar o projeto em ambiente de desenvolvimento, sem container, execute o se
 REACT_APP_KEYCLOAK_SERVER_URL="http://localhost:8080/auth" REACT_APP_KEYCLOAK_CLIENT="isa-frontend" REACT_APP_KEYCLOAK_REALM="isa-qualis" REACT_APP_API_URL="http://localhost:3333/"  npm start
 ```
 
+<a href="https://opensource.org/licenses/MIT">
+<img src="https://img.shields.io/badge/License-MIT-DarkSlateBlue.svg?style=flat" href="https://opensource.org/licenses/MIT" alt="MIT License">
+</a>
+
 <a href="https://github.com/isa-robot/checkin-frontend/blob/master/package.json">
+
 <img src="https://img.shields.io/badge/package.json%20version%20-1.0.0-green.svg?style=flat" alt="package.json version">
 </a>
 
@@ -65,10 +70,27 @@ REACT_APP_KEYCLOAK_SERVER_URL="http://localhost:8080/auth" REACT_APP_KEYCLOAK_CL
 <img src="https://img.shields.io/badge/Code%20Climate-F-red.svg?style=flat" alt="Code Climate">
 </a>
 
+<a href="https://codecov.io/gh/isa-robot/checkin-frontend"> 
+<img src="https://img.shields.io/badge/Codecov-F-red.svg?style=flat" alt="Codecov">
+</a>
+
+<a href="https://travis-ci.org/isa-robot/checkin-frontend.svg?branch=master">
+<img src="https://travis-ci.org/isa-robot/checkin-frontend.svg?branch=master&style=flat" href="https://travis-ci.org/isa-robot/checkin-frontend" alt="Build Status">
+</a>
+
+<a href="https://snyk.io/test/github/isa-robot/checkin-frontend">
+  <img src="https://snyk.io/test/github/isa-robot/checkin-frontend/badge.svg?style=flat" href="https://snyk.io/test/github/isa-robot/checkin-frontend" alt="Known Vulnerabilities">
+</a>
+
+<a href="https://deepscan.io/dashboard#view=project&tid=10666&pid=13767&bid=240493">
+  <img src="https://deepscan.io/api/teams/10666/projects/13767/branches/240493/badge/grade.svg?style=flat" alt="DeepScan grade">
+</a>
+
 <a href="https://github.com/isa-robot/checkin-frontend/commits">
-<img src="https://img.shields.io/badge/GitHub%20commit%20activity-up-green.svg?style=flat" alt="GitHub commit activity">
+  <img src="https://img.shields.io/badge/GitHub%20commit%20activity-up-green.svg?style=flat" alt="GitHub commit activity">
 </a>
 
 <a href="https://github.com/isa-robot/checkin-frontend/commit/">
-<img src="https://img.shields.io/badge/GitHub%20last%20commit-up-green.svg?style=flat" alt="GitHub last commit">
+  <img src="https://img.shields.io/badge/GitHub%20last%20commit-up-green.svg?style=flat" alt="GitHub last commit">
 </a>
+

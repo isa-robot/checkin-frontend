@@ -1,18 +1,39 @@
 language: node_js
-#node_js:
-#  - <version>
-#cache: yarn
+node_js:
+  - 12
+cache: npm #yarn
 
-#install:
-#  - yarn install
+#before_install:
+#  - curl -s https://codecov.io/bash
 
-#script:
+install:
+  - npm install
+#  - yarn install --frozen-lockfile
+#  - yarn install -g codecov
+#  - yarn upgrade
+#  - yarn add yarn
+  - npm install -g codecov
+
+script:
+#  - npm test #--passWithNoTests
+  - npm run build
+#  - yarn start
 #  - yarn test
 #  - yarn run build
+  - codecov
 
 deploy:
-  provider: isa-robot
-  skip-cleanup: true
-  github-token: $GITHUB_TOKEN
-  on:
-    branch: master
+  - provider: script
+    script: bash <(curl -s https://codecov.io/bash)
+    on:
+      branch: master
+#    tags: true
+#    all_branches: true
+
+#deploy:
+#  provider: pages
+#  skip-cleanup: true
+#  github-token: $GITHUB_TOKEN
+#  on:
+#    branch: master
+#    all_branches: true
