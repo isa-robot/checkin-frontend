@@ -210,9 +210,7 @@ export default function Cfpng() {
                 <Form>
                   <InputGroup>
                     <ChoiceGroup key={1} visible={true}>
-                      <p>
-                        1 - Falta de ar
-                      </p>
+                      <p>Falta de ar</p>
                       <div>
                         <GreenCheckbox checked={formState.breathLess}
                                              onChange={handleFormChange}
@@ -229,9 +227,7 @@ export default function Cfpng() {
                       </div>
                     </ChoiceGroup >
                     <ChoiceGroup key={2} visible={true}>
-                      <p>
-                       2 - Dificuldade para respirar
-                      </p>
+                      <p>Dificuldade para respirar</p>
                       <div>
                         <GreenCheckbox checked={formState.breathDifficulty}
                                   onChange={handleFormChange}
@@ -248,9 +244,7 @@ export default function Cfpng() {
                       </div>
                     </ChoiceGroup>
                     <ChoiceGroup key={3} visible={true}>
-                      <p>
-                        3 - Aperto no peito
-                      </p>
+                      <p>Aperto no peito</p>
                       <div>
                         <GreenCheckbox checked={formState.chestTightness}
                                   onChange={handleFormChange}
@@ -267,9 +261,7 @@ export default function Cfpng() {
                       </div>
                     </ChoiceGroup>
                     <ChoiceGroup key={4} visible={true}>
-                      <p>
-                        4 - Pressão para respirar
-                      </p>
+                      <p>Pressão para respirar</p>
                       <div>
                         <GreenCheckbox checked={formState.breathPressure}
                                        onChange={handleFormChange}
@@ -286,7 +278,7 @@ export default function Cfpng() {
                       </div>
                     </ChoiceGroup>
                     <ChoiceGroup key={5} visible={true}>
-                      <p> 5 - Confusão mental</p>
+                      <p>Confusão mental</p>
                       <div>
                         <GreenCheckbox checked={formState.mentalConfusion}
                                        onChange={handleFormChange}
@@ -303,7 +295,7 @@ export default function Cfpng() {
                       </div>
                     </ChoiceGroup>
                     <ChoiceGroup key={6} visible={true}>
-                      <p> 6 - Tonturas</p>
+                      <p>Tonturas</p>
                       <div>
                         <GreenCheckbox checked={formState.dizziness}
                                        onChange={handleFormChange}
@@ -320,7 +312,7 @@ export default function Cfpng() {
                       </div>
                     </ChoiceGroup>
                     <ChoiceGroup key={7} visible={true}>
-                      <p> 7 - Voz arrastada</p>
+                      <p>Voz arrastada</p>
                       <div>
                         <GreenCheckbox checked={formState.draggedVoice}
                                        onChange={handleFormChange}
@@ -337,7 +329,7 @@ export default function Cfpng() {
                       </div>
                     </ChoiceGroup>
                     <ChoiceGroup key={8} visible={true}>
-                      <p> 8 - Dificuldade para se manter acordado</p>
+                      <p>Dificuldade para se manter acordado</p>
                       <div>
                         <GreenCheckbox checked={formState.awakeDifficulty}
                                        onChange={handleFormChange}
@@ -353,25 +345,8 @@ export default function Cfpng() {
                         <label htmlFor="awakeDifficulty-false">Não</label>
                       </div>
                     </ChoiceGroup>
-                    <ChoiceGroup key={9} visible={true}>
-                      <p> 9 - Lábios ou face com coloração mais azulada</p>
-                      <div>
-                        <GreenCheckbox checked={formState.blueSkin}
-                                       onChange={handleFormChange}
-                                       id="blueSkin-true"
-                                       name="blueSkin"
-                                       value={true}/>
-                        <label htmlFor="blueSkin-true">Sim</label>
-                        <GreenCheckbox checked={!formState.blueSkin}
-                                       onChange={handleFormChange}
-                                       id="blueSkin-false"
-                                       name="blueSkin"
-                                       value={false}/>
-                        <label htmlFor="blueSkin-false">Não</label>
-                      </div>
-                    </ChoiceGroup>
                     <ChoiceGroup key={10} visible={true}>
-                      <p> 10 - Pressão baixa</p>
+                      <p>Pressão baixa</p>
                       <div>
                         <GreenCheckbox checked={formState.lowPressure}
                                        onChange={handleFormChange}
@@ -388,7 +363,7 @@ export default function Cfpng() {
                       </div>
                     </ChoiceGroup>
                     <ChoiceGroup key={11} visible={true}>
-                      <p> 11 - Palidez</p>
+                      <p>Palidez</p>
                       <div>
                         <GreenCheckbox checked={formState.pallor}
                                        onChange={handleFormChange}
@@ -405,7 +380,7 @@ export default function Cfpng() {
                       </div>
                     </ChoiceGroup>
                     <ChoiceGroup key={12} visible={true}>
-                      <p> 12 - Sudorese</p>
+                      <p>Sudorese</p>
                       <div>
                         <GreenCheckbox checked={formState.sweating}
                                        onChange={handleFormChange}
@@ -421,8 +396,25 @@ export default function Cfpng() {
                         <label htmlFor="sweating-false">Não</label>
                       </div>
                     </ChoiceGroup>
-                    <ChoiceGroup key={13} visible={true}>
-                      <p> 13 - Fez oximetria</p>
+                    <ChoiceGroup key={9} visible={true}>
+                      <p>Lábios ou face com coloração mais azulada</p>
+                      <div>
+                        <GreenCheckbox checked={formState.blueSkin}
+                                       onChange={handleFormChange}
+                                       id="blueSkin-true"
+                                       name="blueSkin"
+                                       value={true}/>
+                        <label htmlFor="blueSkin-true">Sim</label>
+                        <GreenCheckbox checked={!formState.blueSkin}
+                                       onChange={handleFormChange}
+                                       id="blueSkin-false"
+                                       name="blueSkin"
+                                       value={false}/>
+                        <label htmlFor="blueSkin-false">Não</label>
+                      </div>
+                    </ChoiceGroup>
+                    <ChoiceGroup key={13} visible={formState.blueSkin}>
+                      <p>Fez oximetria</p>
                       <div>
                         <GreenCheckbox checked={formState.oximetry}
                                        onChange={handleFormChange}
@@ -439,7 +431,7 @@ export default function Cfpng() {
                       </div>
                     </ChoiceGroup>
                     <ChoiceGroup key={14} visible={true}>
-                      <p> 14 - Você apresentou algum sintoma a mais comparado à ontem?</p>
+                      <p>Você apresentou algum sintoma a mais comparado à ontem?</p>
                       <div>
                         <GreenCheckbox checked={formState.extraSymptom}
                                        onChange={handleFormChange}
