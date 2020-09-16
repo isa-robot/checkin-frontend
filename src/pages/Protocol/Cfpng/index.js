@@ -78,6 +78,9 @@ export default function Cfpng() {
 
   async function handleFormAnswer() {
     formState.newSymptom = newSympt
+    if(!formState.extraSymptom) {
+      formState.newSymptom = "no simptoms"
+    }
     api
       .post(`/protocols/cfpng`, formState, {
         headers: {
@@ -123,8 +126,7 @@ export default function Cfpng() {
           Authorization: `Bearer ${keycloak.token}`
         }
       })
-
-      if(!diary.data.diary.hasOwnProperty("approved")){
+      if(!diary.data.diary){
         return setDiaryAnswered(false)
       }
 
@@ -133,9 +135,10 @@ export default function Cfpng() {
       const today = new Date()
       if(today >= diaryDate){
         return setDateExp(true)
-      } else if (diary.data.approved){
-        setApprovedDiary(diary.data.approved)
-        setDateDiary(diary.data.created_at)
+      }
+      if (diary.data.diary.approved){
+        setApprovedDiary(diary.data.diary.approved)
+        setDateDiary(diary.data.diary.created_at)
       }else{
         setApprovedDiary(false)
         setDateDiary(diary.data.created_at)
