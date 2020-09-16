@@ -78,9 +78,6 @@ export default function Cfpng() {
 
   async function handleFormAnswer() {
     formState.newSymptom = newSympt
-    if(!formState.extraSymptom) {
-      formState.newSymptom = "no simptoms"
-    }
     api
       .post(`/protocols/cfpng`, formState, {
         headers: {
@@ -141,7 +138,7 @@ export default function Cfpng() {
         setDateDiary(diary.data.diary.created_at)
       }else{
         setApprovedDiary(false)
-        setDateDiary(diary.data.created_at)
+        setDateDiary(diary.data.diary.created_at)
       }
       setLoading(false)
     }
