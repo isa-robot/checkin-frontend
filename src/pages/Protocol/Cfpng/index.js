@@ -413,7 +413,7 @@ export default function Cfpng() {
                         <label htmlFor="blueSkin-false">Não</label>
                       </div>
                     </ChoiceGroup>
-                    <ChoiceGroup key={13} visible={formState.blueSkin}>
+                    <ChoiceGroup key={13} visible={true}>
                       <p>Fez oximetria</p>
                       <div>
                         <GreenCheckbox checked={formState.oximetry}
