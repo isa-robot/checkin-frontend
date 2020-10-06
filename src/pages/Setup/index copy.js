@@ -36,7 +36,6 @@ export default function Setup() {
   const [loading, setLoading] = useState(false);
   const [etherealRecipients, setEtherealRecipients] = useState([]);
   const [sesRecipients, setSesRecipients] = useState([]);
-  const history = useHistory();
   const [provider, setProvider] = useState('ethereal');
   const [smsChanel, setSmsChanel] = useState('whatsapp');
   const [keycloak] = useKeycloak();
@@ -103,6 +102,10 @@ export default function Setup() {
   });
 
   const usersForm = useForm({
+    validationSchema: recipientSchema,
+  });
+
+  const healthForm = useForm({
     validationSchema: recipientSchema,
   });
 
@@ -301,10 +304,42 @@ export default function Setup() {
         );
       });
   }
+  function handleOnSubmitHealth(data) {
+    const healthService = {
+      destinatary_type: 'healthService',
+      name: data.name,
+      address: data.address,
+    };
 
-  async function handleDeleteRecipient(r) {
     api
-      .delete(`mails/removeDestinatary/${r.id}`, {
+      .post('/mails/createDestinataries', healthService, {
+        headers: {
+          Authorization: `Bearer ${keycloak.token}`,
+        },
+      })
+      .then(() => {
+        toast.success('Destinatário para serviço de saúde configurado!');
+        api
+          .get('mails/destinataries', {
+            headers: { Authorization: `Bearer ${keycloak.token}` },
+          })
+          .then(res => {
+            if (res) {
+              if (provider === 'ethereal') setEtherealRecipients(res.data);
+              else setSesRecipients(res.data);
+            }
+          });
+      })
+      .catch(() => {
+        toast.error(
+          'Erro ao configurar destinatário para serviço de saúde!'
+        );
+      });
+  }
+
+  async function handleDeleteRecipient(recipient) {
+    api
+      .delete(`mails/removeDestinatary/${recipient.id}`, {
         headers: { Authorization: `Bearer ${keycloak.token}` },
       })
       .then(() => {
@@ -633,6 +668,59 @@ export default function Setup() {
                       </form>
                     </CardContent>
                   ) : null}
+                  {!etherealRecipients
+                    .map(r => r.destinatary_type)
+                    .includes('healthService') && hasMailer ? (
+                    <CardContent>
+                      <form
+                        onSubmit={healthForm.handleSubmit(handleOnSubmitHealth)}
+                      >
+                        <h4>Serviço de saúde</h4>
+                        <InputsGroup>
+                          <div>
+                            <InputGroup>
+                              <input
+                                name="name"
+                                placeholder="Nome"
+                                autoComplete="off"
+                                ref={usersForm.register()}
+                              />
+                              <label>Nome</label>
+                            </InputGroup>
+                            {healthForm.errors.name &&
+                              healthForm.errors.name.type === 'required' && (
+                                <span>O nome é obrigatória</span>
+                              )}
+                          </div>
+                          <div>
+                            <InputGroup>
+                              <input
+                                name="address"
+                                placeholder="Endereço"
+                                autoComplete="off"
+                                ref={healthForm.register()}
+                              />
+                              <label>Endereço</label>
+                            </InputGroup>
+                            {healthForm.errors.user &&
+                              healthForm.errors.user.type === 'required' && (
+                                <span>O endereço é obrigatório</span>
+                              )}
+                          </div>
+                          <CardActions>
+                            <Button
+                              type="submit"
+                              backgroundColor="mountainMeadow"
+                              color="white"
+                              disabled={loading}
+                            >
+                              {loading ? 'Carregando...' : 'Adicionar'}
+                            </Button>
+                          </CardActions>
+                        </InputsGroup>
+                      </form>
+                    </CardContent>
+                  ) : null}
                   <List
                     component="nav"
                     aria-labelledby="nested-list-subheader"
@@ -886,6 +974,59 @@ export default function Setup() {
                               usersForm.errors.user.type === 'required' && (
                                 <span>O endereço é obrigatório</span>
                               )}
+                          </div>
+                          <CardActions>
+                            <Button
+                              type="submit"
+                              backgroundColor="mountainMeadow"
+                              color="white"
+                              disabled={loading}
+                            >
+                              {loading ? 'Carregando...' : 'Adicionar'}
+                            </Button>
+                          </CardActions>
+                        </InputsGroup>
+                      </form>
+                    </CardContent>
+                  ) : null}
+                  {!sesRecipients
+                    .map(r => r.destinatary_type)
+                    .includes('healthService') && hasMailer ? (
+                    <CardContent>
+                      <form
+                        onSubmit={healthForm.handleSubmit(handleOnSubmitHealth)}
+                      >
+                        <h4>Serviço de saúde</h4>
+                        <InputsGroup>
+                          <div>
+                            <InputGroup>
+                              <input
+                                name="name"
+                                placeholder="Nome"
+                                autoComplete="off"
+                                ref={usersForm.register()}
+                              />
+                              <label>Nome</label>
+                            </InputGroup>
+                            {healthForm.errors.name &&
+                            healthForm.errors.name.type === 'required' && (
+                              <span>O nome é obrigatória</span>
+                            )}
+                          </div>
+                          <div>
+                            <InputGroup>
+                              <input
+                                name="address"
+                                placeholder="Endereço"
+                                autoComplete="off"
+                                ref={healthForm.register()}
+                              />
+                              <label>Endereço</label>
+                            </InputGroup>
+                            {healthForm.errors.user &&
+                            healthForm.errors.user.type === 'required' && (
+                              <span>O endereço é obrigatório</span>
+                            )}
                           </div>
                           <CardActions>
                             <Button

@@ -37,7 +37,8 @@ export const GreenCheckbox = withStyles({
 })((props) => <Checkbox color="default" {...props} />);
 
 
-export default function Cfpng() {
+export default function
+  Cfpng() {
   const initialState = {
     breathLess: false,
     breathDifficulty: false,
