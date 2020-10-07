@@ -36,13 +36,12 @@ export default function ProtocolsPending() {
   const history = useHistory();
 
   const handleClickOnDate = (item) => {
-   history.push(`/protocolo-cfpng?date=${item}`)
+   history.push(`/protocolo-cfpng?${item}`)
   };
 
   const handleClick = () => {
     setOpen(!open)
   };
-
 
   const [keycloak] = useKeycloak();
 

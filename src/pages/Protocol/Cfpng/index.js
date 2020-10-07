@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { formatISO } from 'date-fns';
 import {
   TextField,
   Checkbox,
@@ -19,12 +18,30 @@ import {
   InputGroup,
 } from './styles';
 
+
+import { format, formatISO } from 'date-fns';
 import api from '~/services/api';
 import Button from '~/components/Buttons/Button';
 import ProtocolCard from '~/components/ProtocolCard';
 import Modal from '~/components/ConfirmationModal';
 import ApprovalCard from '~/components/ApprovalCard';
 import { toast } from 'react-toastify';
+import { LinearProgress } from '@material-ui/core';
+import {useHistory} from 'react-router-dom'
+
+const BorderLinearProgress = withStyles((theme) => ({
+  root: {
+    height: 10,
+    borderRadius: 5,
+  },
+  colorPrimary: {
+    backgroundColor: theme.palette.grey[theme.palette.type === 'light' ? 200 : 700],
+  },
+  bar: {
+    borderRadius: 5,
+    backgroundColor: "#17b8a7"
+  },
+}))(LinearProgress);
 
 export const GreenCheckbox = withStyles({
   root: {
@@ -53,22 +70,30 @@ export default function Cfpng() {
     sweating: false,
     oximetry: false,
     extraSymptom: false,
+    protocolGenerationDate: "",
     newSymptom: ""
   };
 
   const [loading, setLoading] = useState(false);
+  const [period, ] = useState(14)
   const [form, setForm] = useState(false);
-  const [answered, setAnswered] = useState(false);
+  const [protocolAnswered, setProtocolAnswered] = useState(false);
   const [diaryAnswered, setDiaryAnswered] = useState(true);
   const [approved, setApproved] = useState();
-  const [approvedDiary, setApprovedDiary] = useState();
   const [dateDiary, setDateDiary] = useState(new Date());
   const [newSympt, setNewSympt] = useState("")
   const [dateExp, setDateExp] = useState(false);
-  const [date, setDate] = useState(new Date());
+  const [protocolDate, setProtocolDate] = useState(new Date());
   const [toggle, setToggle] = useState(false);
   const [formState, setFormState] = useState(initialState);
   const [clearAndSend, setClearAndSend] = useState(false);
+  const [progress, setProgress] = useState(100)
+  const [protocols, setProtocols] = useState({
+    protocolsPendent: [],
+    protocolsAnswered: []
+  });
+  const urlQueryDivider = window.location.search.substring(1).split('&');
+  const history = useHistory()
 
   const [keycloak] = useKeycloak();
 
@@ -78,6 +103,8 @@ export default function Cfpng() {
 
   async function handleFormAnswer() {
     formState.newSymptom = newSympt
+    const date = new Date(urlQueryDivider[0])
+    formState.protocolGenerationDate = formatISO(new Date(date.getUTCDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()), { representation: 'date' })
     api
       .post(`/protocols/cfpng`, formState, {
         headers: {
@@ -87,20 +114,13 @@ export default function Cfpng() {
       .then(response => {
         toast.success('Resposta enviada com sucesso!');
         setApproved(response.data.approved);
-        setDate(response.data.date);
-        setAnswered(true);
+        setProtocolDate(urlQueryDivider[0]);
+        setProtocolAnswered(true);
       })
       .catch((e) => {
         console.info(e)
       });
     setLoading(false);
-  }
-
-  function handleOkAnswer() {
-    setFormState({
-      ...initialState,
-    });
-    setClearAndSend(true);
   }
 
   function handleFormChange(evt) {
@@ -115,49 +135,75 @@ export default function Cfpng() {
     setForm(!form);
   }
 
-  useEffect(() => {
-    async function loadDiaryAnswer(){
+  async function loadDiaryAnswer(){
 
-      const diary = await api.get(`/users/diaries/lastbyuser/last`, {
-        headers: {
-          Authorization: `Bearer ${keycloak.token}`
+    const diary = await api.get(`/users/diaries/lastbyuser/last`, {
+      headers: {
+        Authorization: `Bearer ${keycloak.token}`
+      }
+    })
+    if(!diary.data.diary){
+      return setDiaryAnswered(false)
+    }
+    setLoading(false)
+  }
+
+  async function getProtocolsAnsweredPendent() {
+    return await api.get(`/protocols/pendent-and-answered/cfpng`, {
+      headers: {
+        Authorization: `Bearer ${keycloak.token}`
+      }
+    })
+  }
+
+  async function loadAnsweredProtocols() {
+    getProtocolsAnsweredPendent()
+      .then(protocol => {
+        setProtocols(protocol.data)
+        determinateLinearProgress(protocol.data)
+      })
+  }
+
+  async function determinateLinearProgress(protocol) {
+    setProgress(( protocol.protocolsAnswered.length / period ) * 100)
+
+  }
+
+  async function verifyProtocolDateAnswer() {
+    const protocolDate = urlQueryDivider[0]
+    getProtocolsAnsweredPendent()
+      .then(protocol => {
+        const answered = protocol.data.protocolsAnswered.filter(protocolAnswered => protocolAnswered == protocolDate)
+        if(answered.length > 0) {
+          setProtocolAnswered(true)
+          setProtocolDate(format(new Date(protocolDate), "MM/dd/yyyy"))
+        }
+      }).catch(e => {
+        toast.error('Houve um problema, contate o suporte!')
+      })
+  }
+
+  async function verifyProtocolDateExistance() {
+    const protocolDate = urlQueryDivider[0]
+    getProtocolsAnsweredPendent()
+      .then(protocol => {
+        const protocolDateExist = protocol.data.protocolsPendent.filter(protocolPendent => {
+          return protocolDate == protocolPendent
+        })
+        if(protocolDateExist.length < 1) {
+          history.push("/protocolos")
         }
       })
-      if(!diary.data.diary){
-        return setDiaryAnswered(false)
-      }
+  }
 
-      const diaryDate = new Date(diary.data.diary.created_at)
-      diaryDate.setDate(diaryDate.getDate() + 13)
-      const today = new Date()
-      if(today >= diaryDate){
-        return setDateExp(true)
-      }
-      if (diary.data.diary.approved){
-        setApprovedDiary(diary.data.diary.approved)
-        setDateDiary(diary.data.diary.created_at)
-      }else{
-        setApprovedDiary(false)
-        setDateDiary(diary.data.diary.created_at)
-      }
-      setLoading(false)
+  useEffect(() => {
+    if(!urlQueryDivider[0]) {
+      history.push("/protocolos")
     }
-    async function loadDaily() {
-      const newDate = formatISO(new Date(), { representation: 'date' });
-      const dailyAnswer = await api.get(`/protocols/cfpng/date/${newDate}`, {
-        headers: {
-          Authorization: `Bearer ${keycloak.token}`,
-        },
-      });
-      if (dailyAnswer.data) {
-        setAnswered(true);
-        setApproved(dailyAnswer.data.approved);
-        setDate(dailyAnswer.data.date)
-      }
-      setLoading(false);
-    }
-    loadDiaryAnswer();
-    loadDaily();
+    loadDiaryAnswer()
+    loadAnsweredProtocols()
+    verifyProtocolDateAnswer()
+    verifyProtocolDateExistance()
   }, []);
 
   useEffect(() => {
@@ -178,13 +224,6 @@ export default function Cfpng() {
             </Content>
           </Container>
         ): (
-        approvedDiary ? (
-          <Container>
-            <Content>
-              <ApprovalCard approved={approvedDiary} date={dateDiary}></ApprovalCard>
-            </Content>
-          </Container>
-        ) : (
         dateExp ? (
           <Container>
             <Content>
@@ -192,20 +231,22 @@ export default function Cfpng() {
             </Content>
           </Container>
           ) :
-        answered ? (
+        protocolAnswered ? (
           <Container>
             <Content>
-              <ProtocolCard approved={approved} date={date} />
+              <ProtocolCard approved={true} date={protocolDate} />
             </Content>
           </Container>
           ) : (
           <Container>
             <Content>
               <FormCard visible={true}>
-                <h2>Olá, eu sou o ISA o robô da Qualis. Estou entrando em contato pois você sinalizou
-                  que está apresentando sintoma compatível com síndrome respiratória gripal
-                  em nosso sistema. Primeiramente preciso saber se você não está
-                  com algum sinal de infecção mais grave.</h2>
+                <div>
+                  <p>{protocols.protocolsAnswered.length} de {period} protocolos respondidos</p>
+                  <BorderLinearProgress variant="determinate" value={progress}/>
+                </div>
+                <span style={{marginTop: "15px"}}></span>
+                <h4>Protocolo do dia: {urlQueryDivider[0]}</h4>
                 <h3>Você está apresentando algum destes sintomas?</h3>
                 <Form>
                   <InputGroup>
@@ -498,7 +539,6 @@ export default function Cfpng() {
           </Container>
           )
          )
-        )
       )}
     </>
   );
