@@ -16,6 +16,10 @@ import {
 
 import api from '~/services/api';
 import ApprovalCard from '~/components/ApprovalCard';
+import { toast } from 'react-toastify';
+import Collapse from '@material-ui/core/Collapse';
+import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import {Link, useHistory} from 'react-router-dom';
 
 
 
@@ -24,34 +28,34 @@ export default function ProtocolsPending() {
   const [loading, setLoading] = useState(false);
   const [diaryAnswered, setDiaryAnswered] = useState(true);
   const [dateDiary, setDateDiary] = useState(new Date());
-
-
-
-
-  const protocols = ({
-    protocolsPendent: [
-      "01/10/2020",
-      "02/10/2020"
-    ],
-    protocolsAnswered: [
-      "30/09/2020"
-    ]
+  const [open, setOpen] = useState(true);
+  const [protocols, setProtocols] = useState({
+    protocolsPendent: [],
+    protocolsAnswered: []
   });
+  const history = useHistory();
+
+  const handleClickOnDate = (item) => {
+   history.push(`/protocolo-cfpng?date=${item}`)
+  };
 
   const handleClick = () => {
+    setOpen(!open)
   };
 
 
   const [keycloak] = useKeycloak();
 
-
- async function loadPendingAndAnsweredProtocols(){
-   const cfpngProtocolsDates = await api.get(`/protocols/pendent-and-answered/cfpng`, {
-     headers: {
-       Authorization: `Bearer ${keycloak.token}`
-     }
-   })
-    console.log(cfpngProtocolsDates);
+  async function loadPendingAndAnsweredProtocols(){
+    await api.get(`/protocols/pendent-and-answered/cfpng`, {
+      headers: {
+        Authorization: `Bearer ${keycloak.token}`
+      }
+    }).then(protocol => {
+      setProtocols(protocol.data)
+    }).catch(e => {
+      toast.error('Houve um problema, contate o suporte!')
+    })
   }
 
   async function loadDiaryAnswer(){
@@ -68,7 +72,6 @@ export default function ProtocolsPending() {
   };
 
   useEffect(() => {
-
     loadPendingAndAnsweredProtocols()
     loadDiaryAnswer();
   }, []);
@@ -89,19 +92,22 @@ export default function ProtocolsPending() {
               (
                 <Container>
                   <Content>
-
                     <FormCard visible={true} >
-
-                      <List style={{width:'100%'}}>
-                          <ListItemText>Protocolos Pendentes</ListItemText>
-                          {protocols.protocolsPendent.map((item) => (
-                            <ListItem button alignItems ='center'>
-                              {item}
-                            </ListItem>
-                          ))}
+                      <List style={{backgroundColor: "#F3F5FA", padding: "5px"}}>
+                          <ListItem  button onClick={handleClick}>
+                            <ListItemText><strong>Protocolos Pendentes</strong></ListItemText>
+                            {open ? <ExpandLess /> : <ExpandMore />}
+                          </ListItem>
+                          <Collapse in={open} timeout="auto" unmountOnExit>
+                            <List>
+                              {protocols.protocolsPendent.map((item, index) => (
+                                <ListItem onClick={evt => handleClickOnDate(item)} style={{marginLeft: "10px"}} key={`protocolPendent: ${index}`} button alignItems ='center'>
+                                  {item}
+                                </ListItem>
+                              ))}
+                            </List>
+                          </Collapse>
                       </List>
-
-
                     </FormCard>
 
                   </Content>

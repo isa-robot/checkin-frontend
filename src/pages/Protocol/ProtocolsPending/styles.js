@@ -78,16 +78,13 @@ export const FormCard = styled(Card)`
   display: ${props => (props.visible ? 'flex' : 'none')};
   flex-direction: column;
   overflow-y: scroll;
-  ::-webkit-scrollbar {
-    display: none;
-  }
   color: #000;
-  max-height: 800px;
+  max-height: 600px;
   max-width: 600px;
+  width: 600px;
   padding: 2rem;
   margin-top: 50px;
   font-weight: normal;
-  min-width: 200px;
   p {
     font-size: 1rem;
     font-weight: normal;

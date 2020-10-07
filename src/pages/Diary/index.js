@@ -44,7 +44,7 @@ export default function Dairy() {
   const [form, setForm] = useState(false);
   const [answered, setAnswered] = useState(false);
   const [approved, setApproved] = useState();
-  const [date, setDate] = useState();
+  const [date, setDate] = useState(new Date());
   const [toggle, setToggle] = useState(false);
   const [formState, setFormState] = useState(initialState);
   const [clearAndSend, setClearAndSend] = useState(false);
