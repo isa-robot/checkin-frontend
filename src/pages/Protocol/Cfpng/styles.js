@@ -30,9 +30,6 @@ export const MainCard = styled(Card)`
   max-width: 700px;
   max-height: 700px;
   overflow-y: scroll;
-  ::-webkit-scrollbar {
-    display: none;
-  }
 
   margin-top: 50px;
   padding: 1.5rem;
@@ -78,8 +75,14 @@ export const FormCard = styled(Card)`
   display: ${props => (props.visible ? 'flex' : 'none')};
   flex-direction: column;
   overflow-y: scroll;
-  ::-webkit-scrollbar {
-    display: none;
+   ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+  ::-webkit-scrollbar-thumb {
+    background: ${props => props.theme.colors.vulcan};
+    border-radius: 5px;
+
   }
   color: #000;
   max-height: 800px;
