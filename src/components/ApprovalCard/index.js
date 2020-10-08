@@ -3,6 +3,8 @@ import { FaRegCheckCircle } from 'react-icons/fa';
 import { AiOutlineMinusCircle } from 'react-icons/ai';
 import { format } from 'date-fns';
 import { Container } from './styles';
+import Button from '@material-ui/core/Button';
+import {Link} from 'react-router-dom';
 
 function ApprovalCard({ approved, answered=true, dateExpired = false,  date }) {
   if (approved) {
@@ -53,6 +55,7 @@ function ApprovalCard({ approved, answered=true, dateExpired = false,  date }) {
         <h1>{format(new Date(date), "dd/MM/yyyy' às 'HH:mm' ")}</h1>
       </div>
       <p>Contate o setor de saúde</p>
+      <h2><Button variant="contained" color="primary"><Link style={{color: "white"}} to={"/protocolos"}>acessar pagina de protocolos</Link></Button></h2>
     </Container>
   );
 }
