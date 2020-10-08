@@ -104,7 +104,10 @@ export default function Cfpng() {
   async function handleFormAnswer() {
     formState.newSymptom = newSympt
     const date = new Date(urlQueryDivider[0])
-    formState.protocolGenerationDate = formatISO(new Date(date.getUTCDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()), { representation: 'date' })
+    formState.protocolGenerationDate = formatISO(new Date(date.getUTCDate() + "/" +
+      (date.getMonth() + 1) + "/" +
+      date.getFullYear()),
+      { representation: 'date' })
     api
       .post(`/protocols/cfpng`, formState, {
         headers: {
@@ -136,7 +139,6 @@ export default function Cfpng() {
   }
 
   async function loadDiaryAnswer(){
-
     const diary = await api.get(`/users/diaries/lastbyuser/last`, {
       headers: {
         Authorization: `Bearer ${keycloak.token}`
@@ -169,28 +171,23 @@ export default function Cfpng() {
 
   }
 
-  async function verifyProtocolDateAnswer() {
-    const protocolDate = urlQueryDivider[0]
-    getProtocolsAnsweredPendent()
-      .then(protocol => {
-        const answered = protocol.data.protocolsAnswered.filter(protocolAnswered => protocolAnswered == protocolDate)
-        if(answered.length > 0) {
-          setProtocolAnswered(true)
-          setProtocolDate(format(new Date(protocolDate), "MM/dd/yyyy"))
-        }
-      }).catch(e => {
-        toast.error('Houve um problema, contate o suporte!')
-      })
-  }
-
   async function verifyProtocolDateExistance() {
     const protocolDate = urlQueryDivider[0]
     getProtocolsAnsweredPendent()
       .then(protocol => {
-        const protocolDateExist = protocol.data.protocolsPendent.filter(protocolPendent => {
+        const protocolAnsweredDateExist = protocol.data.protocolsAnswered.filter(protocolAnswered => {
+          return protocolDate == protocolAnswered
+        })
+
+        if(protocolAnsweredDateExist.length > 0) {
+          setProtocolDate(urlQueryDivider[0]);
+          return setProtocolAnswered(true);
+        }
+
+        const protocolPendentDateExist = protocol.data.protocolsPendent.filter(protocolPendent => {
           return protocolDate == protocolPendent
         })
-        if(protocolDateExist.length < 1) {
+        if(protocolPendentDateExist.length < 1) {
           history.push("/protocolos")
         }
       })
@@ -202,7 +199,6 @@ export default function Cfpng() {
     }
     loadDiaryAnswer()
     loadAnsweredProtocols()
-    verifyProtocolDateAnswer()
     verifyProtocolDateExistance()
   }, []);
 

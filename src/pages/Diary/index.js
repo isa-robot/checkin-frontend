@@ -66,7 +66,7 @@ export default function Dairy() {
       .then(response => {
         toast.success('Resposta enviada com sucesso!');
         setApproved(response.data.approved);
-        setDate(response.data.date);
+        setDate(response.data.created_at);
         setAnswered(true);
       })
       .catch(() => {
