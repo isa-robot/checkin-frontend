@@ -41,7 +41,7 @@ export default function SendMailModal({
         Authorization: `Bearer ${keycloak.token}`
       }
     }).then(() => {
-
+      handleOnClick()
       toast.success("Email enviado com sucesso")
     })
   }
@@ -52,7 +52,12 @@ export default function SendMailModal({
           <strong>Enviar email para o serviço de infectologia?</strong>
         </ModalHeader>
         <ModalBody>
-          <textarea value={textMail} onChange={e => setTextMail(e.target.value)} style={{minWidth: "330px", width: "330px",maxWidth: "330px", height: "230px", minHeight: "230px", maxHeight: "230px"}} placeholder="Sua mensagem..." />;
+          <textarea value={textMail} onChange={e => setTextMail(e.target.value)} style={{padding: "10px",
+            borderRadius: "5px",
+            minWidth: "330px", width: "330px",maxWidth: "330px", height: "230px",
+            minHeight: "230px", maxHeight: "230px"}}
+                    placeholder="Sua mensagem..."
+          />;
         </ModalBody>
         <ModalFooter>
           <div style={{display: "flex", flexDirection: "column"}}>

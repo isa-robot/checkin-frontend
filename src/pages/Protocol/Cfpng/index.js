@@ -202,27 +202,27 @@ export default function Cfpng() {
       })
   }
 
-  async function verifyProtocolDateExistance() {
-    const protocolDate = urlQueryDivider[0]
-    getProtocolsAnsweredPendent()
-      .then(protocol => {
-        const protocolAnsweredDateExist = protocol.data.protocolsAnswered.filter(protocolAnswered => {
-          return protocolDate == protocolAnswered
-        })
-
-        if(protocolAnsweredDateExist.length > 0) {
-          setProtocolDate(urlQueryDivider[0]);
-          return setProtocolAnswered(true);
-        }
-
-        const protocolPendentDateExist = protocol.data.protocolsPendent.filter(protocolPendent => {
-          return protocolDate == protocolPendent
-        })
-        if(protocolPendentDateExist.length < 1) {
-          history.push("/protocolos")
-        }
-      })
-  }
+  // async function verifyProtocolDateExistance() {
+  //   const protocolDate = urlQueryDivider[0]
+  //   getProtocolsAnsweredPendent()
+  //     .then(protocol => {
+  //       const protocolAnsweredDateExist = protocol.data.protocolsAnswered.filter(protocolAnswered => {
+  //         return protocolDate == protocolAnswered
+  //       })
+  //
+  //       if(protocolAnsweredDateExist.length > 0) {
+  //         setProtocolDate(urlQueryDivider[0]);
+  //         return setProtocolAnswered(true);
+  //       }
+  //
+  //       const protocolPendentDateExist = protocol.data.protocolsPendent.filter(protocolPendent => {
+  //         return protocolDate == protocolPendent
+  //       })
+  //       if(protocolPendentDateExist.length < 1) {
+  //         history.push("/protocolos")
+  //       }
+  //     })
+  // }
 
   useEffect(() => {
     if(!urlQueryDivider[0]) {
@@ -231,7 +231,7 @@ export default function Cfpng() {
     loadDiaryAnswer()
     loadAnsweredProtocols()
     verifyProtocolMailDatesModal()
-    verifyProtocolDateExistance()
+    // verifyProtocolDateExistance()
   }, []);
 
 
@@ -550,7 +550,7 @@ export default function Cfpng() {
                       height="3rem"
                       backgroundColor="sunset"
                       color="white"
-                      onClick={() => handleToggleForm()}
+                      onClick={() => history.push("/protocolos")}
                       disabled={loading}
                     >
                       <p>Voltar</p>
