@@ -28,6 +28,7 @@ import ApprovalCard from '~/components/ApprovalCard';
 import { toast } from 'react-toastify';
 import { LinearProgress } from '@material-ui/core';
 import {useHistory} from 'react-router-dom'
+import SendMailModal from '~/components/SendMailModal';
 
 const BorderLinearProgress = withStyles((theme) => ({
   root: {
@@ -79,7 +80,8 @@ export default function Cfpng() {
   const [form, setForm] = useState(false);
   const [protocolAnswered, setProtocolAnswered] = useState(false);
   const [diaryAnswered, setDiaryAnswered] = useState(true);
-  const [approved, setApproved] = useState();
+  const [approved, setApproved] = useState(true);
+  const [formSent, setFormSent] = useState(false)
   const [dateDiary, setDateDiary] = useState(new Date());
   const [newSympt, setNewSympt] = useState("")
   const [dateExp, setDateExp] = useState(false);
@@ -87,7 +89,9 @@ export default function Cfpng() {
   const [toggle, setToggle] = useState(false);
   const [formState, setFormState] = useState(initialState);
   const [clearAndSend, setClearAndSend] = useState(false);
+  const [protocolMailDate, setProtocolMailDate] = useState(false)
   const [progress, setProgress] = useState(100)
+  const [toggleSendMail, setToggleSendMail] = useState(100)
   const [protocols, setProtocols] = useState({
     protocolsPendent: [],
     protocolsAnswered: []
@@ -99,6 +103,9 @@ export default function Cfpng() {
 
   function toggleModal(prop) {
     setToggle(prop);
+  }
+  function toggleSendMailModal(prop) {
+    setToggleSendMail(prop)
   }
 
   async function handleFormAnswer() {
@@ -116,12 +123,15 @@ export default function Cfpng() {
       })
       .then(response => {
         toast.success('Resposta enviada com sucesso!');
+        setToggle(false)
         setApproved(response.data.approved);
+        setFormSent(true)
         setProtocolDate(urlQueryDivider[0]);
         setProtocolAnswered(true);
+        toggleSendMailModal(true)
       })
       .catch((e) => {
-        console.info(e)
+        toast.error('Houve um problema, contate o suporte!')
       });
     setLoading(false);
   }
@@ -158,6 +168,14 @@ export default function Cfpng() {
     })
   }
 
+  async function getProtocolMailDates() {
+    return await api.get(`/protocols/active-mail-date/cfpng`, {
+      headers: {
+        Authorization: `Bearer ${keycloak.token}`
+      }
+    })
+  }
+
   async function loadAnsweredProtocols() {
     getProtocolsAnsweredPendent()
       .then(protocol => {
@@ -169,6 +187,19 @@ export default function Cfpng() {
   async function determinateLinearProgress(protocol) {
     setProgress(( protocol.protocolsAnswered.length / period ) * 100)
 
+  }
+
+  async function verifyProtocolMailDatesModal() {
+    const protocolDate = urlQueryDivider[0]
+    getProtocolMailDates()
+      .then(protocolMailDates => {
+        const protocolMailDateExists = protocolMailDates.data.protocolMailDate.filter(protocolMail => {
+          return protocolMail == protocolDate
+        })
+        if(protocolMailDateExists.length > 0) {
+          setProtocolMailDate(true)
+        }
+      })
   }
 
   async function verifyProtocolDateExistance() {
@@ -199,14 +230,10 @@ export default function Cfpng() {
     }
     loadDiaryAnswer()
     loadAnsweredProtocols()
+    verifyProtocolMailDatesModal()
     verifyProtocolDateExistance()
   }, []);
 
-  useEffect(() => {
-    if (clearAndSend) {
-      handleFormAnswer();
-    }
-  }, [clearAndSend]);
 
   return (
     <>
@@ -232,6 +259,16 @@ export default function Cfpng() {
             <Content>
               <ProtocolCard approved={true} date={protocolDate} />
             </Content>
+            {
+              !approved || (SendMailModal && approved && formSent) ? (
+                <SendMailModal
+                  toggle={toggleSendMail}
+                  toggleFunction={toggleSendMailModal}
+                  protocolName={"cfpng"}
+                  protocolGenerationDate={urlQueryDivider[0]}
+                />
+              ) : ""
+            }
           </Container>
           ) : (
           <Container>
