@@ -2,6 +2,8 @@ import React from 'react';
 import { Switch } from 'react-router-dom';
 import Route from './Route';
 
+import ProtocolsPending from '../pages/Protocol/ProtocolsPending'
+import Cfpng from '../pages/Protocol/Cfpng'
 import Diary from '../pages/Diary';
 import Qualis from '../pages/Qualis';
 import NotFound from '../pages/NotFound';
@@ -45,6 +47,19 @@ export default function AppRoutes() {
         component={Diary}
         resource="diary"
       />
+      <Route
+        path="/protocolo-cfpng"
+        roles={['assisted']}
+        component={Cfpng}
+        resource={false}
+      />
+      <Route
+        path="/protocolos"
+        roles={['assisted']}
+        component={ProtocolsPending}
+        resource={false}
+      />
+
       <Route path="/qualis" roles={[]} component={Qualis} resource={false} />
       <Route
         path="/configuracao"
