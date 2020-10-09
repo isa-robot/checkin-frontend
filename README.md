@@ -46,7 +46,7 @@ As variáveis API_URL e KEYCLOAK_SERVER_URL devem ser preenchidas com o ip das m
 
 para rodar o projeto em ambiente de desenvolvimento, sem container, execute o seguinte comando:
 ```
-REACT_APP_KEYCLOAK_SERVER_URL="http://localhost:8080/auth" REACT_APP_KEYCLOAK_CLIENT="isa-frontend" REACT_APP_KEYCLOAK_REALM="isa-qualis" REACT_APP_API_URL="http://localhost:3333/"  npm start
+REACT_APP_KEYCLOAK_SERVER_URL="http://$(hostname -I | awk '{print $1}'):8080/auth" REACT_APP_KEYCLOAK_CLIENT="isa-frontend" REACT_APP_KEYCLOAK_REALM="isa-qualis" REACT_APP_API_URL="http://localhost:3333/"  npm start
 ```
 
 <a href="https://opensource.org/licenses/MIT">
@@ -70,7 +70,7 @@ REACT_APP_KEYCLOAK_SERVER_URL="http://localhost:8080/auth" REACT_APP_KEYCLOAK_CL
 <img src="https://img.shields.io/badge/Code%20Climate-F-red.svg?style=flat" alt="Code Climate">
 </a>
 
-<a href="https://codecov.io/gh/isa-robot/checkin-frontend"> 
+<a href="https://codecov.io/gh/isa-robot/checkin-frontend">
 <img src="https://img.shields.io/badge/Codecov-F-red.svg?style=flat" alt="Codecov">
 </a>
 

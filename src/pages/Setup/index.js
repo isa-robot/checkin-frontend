@@ -45,6 +45,8 @@ function GmailForm(props) {
     recipients,
     suportForm,
     submitSuport,
+    healthForm,
+    submitHealth,
     usersForm,
     submitUsers,
     deleteRecipient,
@@ -286,6 +288,56 @@ function GmailForm(props) {
                   </form>
                 </CardContent>
               )}
+              {!recipients
+                .map(r => r.destinatary_type)
+                .includes('healthService') && (
+                <CardContent>
+                  <form onSubmit={healthForm.handleSubmit(submitHealth)}>
+                    <h4>Serviço de saúde</h4>
+                    <InputsGroup>
+                      <div>
+                        <InputGroup>
+                          <input
+                            name="name"
+                            placeholder="Nome"
+                            autoComplete="off"
+                            ref={healthForm.register()}
+                          />
+                          <label>Nome</label>
+                        </InputGroup>
+                        {healthForm.errors.name &&
+                          healthForm.errors.name.type === 'required' && (
+                            <span>O nome é obrigatória</span>
+                          )}
+                      </div>
+                      <div>
+                        <InputGroup>
+                          <input
+                            name="address"
+                            placeholder="Endereço de E-mail"
+                            autoComplete="off"
+                            ref={healthForm.register()}
+                          />
+                          <label>Endereço de E-mail</label>
+                        </InputGroup>
+                        {healthForm.errors.user &&
+                          healthForm.errors.user.type === 'required' && (
+                            <span>O endereço é obrigatório</span>
+                          )}
+                      </div>
+                      <CardActions>
+                        <Button
+                          type="submit"
+                          backgroundColor="mountainMeadow"
+                          color="white"
+                        >
+                          Adicionar
+                        </Button>
+                      </CardActions>
+                    </InputsGroup>
+                  </form>
+                </CardContent>
+              )}
               <List
                 component="nav"
                 aria-labelledby="nested-list-subheader"
@@ -341,6 +393,8 @@ function AmazonForm(props) {
     recipients,
     suportForm,
     submitSuport,
+    healthForm,
+    submitHealth,
     usersForm,
     submitUsers,
     deleteRecipient,
@@ -566,6 +620,56 @@ function AmazonForm(props) {
                   </form>
                 </CardContent>
               )}
+              {!recipients
+                .map(r => r.destinatary_type)
+                .includes('healthService') && (
+                <CardContent>
+                  <form onSubmit={healthForm.handleSubmit(submitHealth)}>
+                    <h4>Serviço de saúde</h4>
+                    <InputsGroup>
+                      <div>
+                        <InputGroup>
+                          <input
+                            name="name"
+                            placeholder="Nome"
+                            autoComplete="off"
+                            ref={healthForm.register()}
+                          />
+                          <label>Nome</label>
+                        </InputGroup>
+                        {healthForm.errors.name &&
+                        healthForm.errors.name.type === 'required' && (
+                          <span>O nome é obrigatória</span>
+                        )}
+                      </div>
+                      <div>
+                        <InputGroup>
+                          <input
+                            name="address"
+                            placeholder="Endereço de E-mail"
+                            autoComplete="off"
+                            ref={healthForm.register()}
+                          />
+                          <label>Endereço de E-mail</label>
+                        </InputGroup>
+                        {healthForm.errors.user &&
+                        healthForm.errors.user.type === 'required' && (
+                          <span>O endereço é obrigatório</span>
+                        )}
+                      </div>
+                      <CardActions>
+                        <Button
+                          type="submit"
+                          backgroundColor="mountainMeadow"
+                          color="white"
+                        >
+                          Adicionar
+                        </Button>
+                      </CardActions>
+                    </InputsGroup>
+                  </form>
+                </CardContent>
+              )}
               <List
                 component="nav"
                 aria-labelledby="nested-list-subheader"
@@ -679,6 +783,10 @@ export default function Setup() {
   });
 
   const usersForm = useForm({
+    validationSchema: recipientSchema,
+  });
+
+  const healthForm = useForm({
     validationSchema: recipientSchema,
   });
 
@@ -893,6 +1001,30 @@ export default function Setup() {
       });
   }
 
+  function handleOnSubmitHealth(data) {
+    const healthService = {
+      destinatary_type: 'healthService',
+      name: data.name,
+      address: data.address,
+    };
+
+    api
+      .post('/mails/createDestinataries', healthService, {
+        headers: {
+          Authorization: `Bearer ${keycloak.token}`,
+        },
+      })
+      .then(() => {
+        toast.success('Destinatário para serviço de saúde configurado!');
+        getRecipients();
+      })
+      .catch(() => {
+        toast.error(
+          'Erro ao configurar destinatário para serviço de saúde!'
+        );
+      });
+  }
+
   async function handleDeleteRecipient(r) {
     api
       .delete(`mails/removeDestinatary/${r.id}`, {
@@ -973,7 +1105,9 @@ export default function Setup() {
                 hasMailer={hasMailer}
                 recipients={recipients}
                 suportForm={suportForm}
+                healthForm={healthForm}
                 submitSuport={handleOnSubmitSuport}
+                submitHealth={handleOnSubmitHealth}
                 usersForm={usersForm}
                 submitUsers={handleOnSubmitUsers}
                 deleteRecipient={handleDeleteRecipient}
@@ -987,7 +1121,9 @@ export default function Setup() {
                 hasMailer={hasMailer}
                 recipients={recipients}
                 suportForm={suportForm}
+                healthForm={healthForm}
                 submitSuport={handleOnSubmitSuport}
+                submitHealth={handleOnSubmitHealth}
                 usersForm={usersForm}
                 submitUsers={handleOnSubmitUsers}
                 deleteRecipient={handleDeleteRecipient}
