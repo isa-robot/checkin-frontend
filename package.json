@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "author": "Qualis Infectologia Ltda. <contato@portalqualis.com.br>",
   "scripts": {
+    "production": "rm -rf node_modules package-lock.json && npm install && npm run build",
     "start": "react-app-rewired start",
     "build:dev": "env-cmd -f ./.env.development react-app-rewired build",
     "prebuild": "rm -rf build",
