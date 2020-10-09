@@ -43,13 +43,15 @@ export default function SendMailModal({
     }).then(() => {
       handleOnClick()
       toast.success("Email enviado com sucesso")
+    }).catch(e => {
+      toast.error("Houve um problema, contate o suporte!")
     })
   }
   return (
     <Container ref={ref} display={String(display)} onClick={handleOnClick}>
       <ModalCard onClick={e => e.stopPropagation()}>
         <ModalHeader>
-          <strong>Enviar email para o serviço de infectologia?</strong>
+          <strong>Descreva sua situação de saúde e será encaminhado um e-mail ao serviço de saúde vinculado.</strong>
         </ModalHeader>
         <ModalBody>
           <textarea value={textMail} onChange={e => setTextMail(e.target.value)} style={{padding: "10px",
