@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   TextField,
   Checkbox,
-  withStyles
+  withStyles, CircularProgress,
 } from '@material-ui/core';
 
 import { Form } from '@rocketseat/unform';
@@ -91,7 +91,7 @@ export default function
   const [formState, setFormState] = useState(initialState);
   const [clearAndSend, setClearAndSend] = useState(false);
   const [protocolMailDate, setProtocolMailDate] = useState(false)
-  const [progress, setProgress] = useState(100)
+  const [progress, setProgress] = useState(0)
   const [toggleSendMail, setToggleSendMail] = useState(100)
   const [protocols, setProtocols] = useState({
     protocolsPendent: [],
@@ -111,10 +111,9 @@ export default function
 
   async function handleFormAnswer() {
     formState.newSymptom = newSympt
-    const date = new Date(urlQueryDivider[0])
-    formState.protocolGenerationDate = formatISO(new Date(date.getUTCDate() + "/" +
-      (date.getMonth() + 1) + "/" +
-      date.getFullYear()),
+
+    const date = new Date(urlQueryDivider[0].split("/").reverse().join("/"))
+    formState.protocolGenerationDate = formatISO(date,
       { representation: 'date' })
     api
       .post(`/protocols/cfpng`, formState, {
@@ -127,7 +126,7 @@ export default function
         setToggle(false)
         setApproved(response.data.approved);
         setFormSent(true)
-        setProtocolDate(urlQueryDivider[0]);
+        setProtocolDate(new Date(urlQueryDivider[0].split("/").reverse().join("/")));
         setProtocolAnswered(true);
         toggleSendMailModal(true)
       })
@@ -212,7 +211,7 @@ export default function
         })
 
         if(protocolAnsweredDateExist.length > 0) {
-          setProtocolDate(urlQueryDivider[0]);
+          setProtocolDate(new Date(urlQueryDivider[0].split("/").reverse().join("/")));
           return setProtocolAnswered(true);
         }
 
@@ -239,7 +238,9 @@ export default function
   return (
     <>
       {loading ? (
-          <Loading></Loading>
+        <Loading>
+          <CircularProgress size="5rem" />
+        </Loading>
         ) : (
         !diaryAnswered ? (
           <Container>

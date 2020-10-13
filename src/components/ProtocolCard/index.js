@@ -14,9 +14,8 @@ function ProtocolCard({ approved, date }) {
         <FaRegCheckCircle color="#FFF" size="10rem" />
         <h2>você respondeu o protocolo do dia:</h2>
         <div>
-          <h1>{format(new Date(date), "MM/dd/yyyy")}</h1>
+          <h1>{format(new Date(date), "dd/MM/yyyy")}</h1>
         </div>
-        <p>Bom trabalho!</p>
         <h2><Button variant="contained" color="primary"><Link style={{color: "white"}} to={"/protocolos"}>Acessar página protocolos</Link></Button></h2>
       </Container>
     );
