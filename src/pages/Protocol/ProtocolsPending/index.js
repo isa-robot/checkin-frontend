@@ -3,6 +3,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import {
+  CircularProgress,
 } from '@material-ui/core';
 
 import { useKeycloak } from '@react-keycloak/web';
@@ -26,6 +27,7 @@ import {Link, useHistory} from 'react-router-dom';
 export default function ProtocolsPending() {
 
   const [loading, setLoading] = useState(false);
+  const [loadedProtocols, setLoadedProtocols] = useState(false);
   const [diaryAnswered, setDiaryAnswered] = useState(true);
   const [dateDiary, setDateDiary] = useState(new Date());
   const [open, setOpen] = useState(true);
@@ -52,6 +54,7 @@ export default function ProtocolsPending() {
       }
     }).then(protocol => {
       setProtocols(protocol.data)
+      setLoadedProtocols(true)
     }).catch(e => {
       toast.error('Houve um problema, contate o suporte!')
     })
@@ -79,7 +82,9 @@ export default function ProtocolsPending() {
   return (
     <>
       {loading ? (
-        <Loading></Loading>
+        <Loading>
+          <CircularProgress size="5rem" />
+        </Loading>
       ) : (
         !diaryAnswered ? (
           <Container>
@@ -87,8 +92,7 @@ export default function ProtocolsPending() {
               <ApprovalCard answered={false} date={dateDiary}></ApprovalCard>
             </Content>
           </Container>
-        ):
-              (
+        ) : (
                 <Container>
                   <Content>
                     <FormCard visible={true} >
@@ -97,6 +101,11 @@ export default function ProtocolsPending() {
                             <ListItemText><strong>Protocolos Pendentes</strong></ListItemText>
                             {open ? <ExpandLess /> : <ExpandMore />}
                           </ListItem>
+                        { !loadedProtocols ? (
+                          <Loading>
+                            <CircularProgress size="5rem" />
+                          </Loading>
+                          ) : (
                           <Collapse in={open} timeout="auto" unmountOnExit>
                             <List>
                               {protocols.protocolsPendent.map((item, index) => (
@@ -106,6 +115,7 @@ export default function ProtocolsPending() {
                               ))}
                             </List>
                           </Collapse>
+                          )}
                       </List>
                     </FormCard>
 
