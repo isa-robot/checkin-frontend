@@ -8,13 +8,16 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  SendText
 } from './styles';
+import { CircularProgress } from '@material-ui/core';
 
 export default function Modal({
   toggle,
   toggleFunction,
   formState,
   formStateFunction,
+  sending=false
 }) {
   const ref = useRef();
   const [display, setDisplay] = useState(toggle);
@@ -120,7 +123,7 @@ export default function Modal({
         </ModalBody>
         <ModalFooter>
           <strong>Essa ação não pode ser desfeita!</strong>
-          <div>
+          <div style={{position: "relative"}}>
             <Button
               type="button"
               color="white"
@@ -128,9 +131,17 @@ export default function Modal({
               width="150px"
               height="50px"
               onClick={() => formStateFunction()}
+              disabled={sending}
             >
-              <p>Enviar</p>
+              <SendText visible={sending == false}>Enviar</SendText>
+              <SendText visible={sending == true}>enviando</SendText>
             </Button>
+            { sending ? (
+              <div style={{ position: "absolute", top: "20%", left: "40%" }}>
+                <CircularProgress size="2rem"/>
+              </div>
+              ) : ""
+            }
           </div>
         </ModalFooter>
       </ModalCard>

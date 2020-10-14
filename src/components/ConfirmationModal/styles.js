@@ -22,6 +22,10 @@ export const Container = styled.div`
   }
 `;
 
+export const SendText = styled.p `{
+  display:  ${props => (props.visible ? 'flex' : 'none')};
+`
+
 export const ModalCard = styled(Card)`
   display: flex;
   flex: 1 0;
