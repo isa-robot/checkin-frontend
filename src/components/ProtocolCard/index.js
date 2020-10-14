@@ -16,7 +16,7 @@ function ProtocolCard({ approved, date }) {
         <div>
           <h1>{format(new Date(date), "dd/MM/yyyy")}</h1>
         </div>
-        <h2><Button variant="contained" color="primary"><Link style={{color: "white"}} to={"/protocolos"}>Acessar página protocolos</Link></Button></h2>
+        <h2><Button variant="contained" color="primary"><Link style={{color: "white"}} to={"/protocolos"}>Clique aqui para acessar página protocolos</Link></Button></h2>
       </Container>
     );
   }

@@ -8,11 +8,14 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  ErrorText
 } from './styles';
 import api from '~/services/api';
 import { useKeycloak } from '@react-keycloak/web';
 import {useHistory} from 'react-router-dom'
 import { toast } from 'react-toastify';
+import { SendText } from '~/components/ConfirmationModal/styles';
+import { CircularProgress } from '@material-ui/core';
 
 export default function SendMailModal({
                                         toggle,
@@ -26,6 +29,8 @@ export default function SendMailModal({
   const [textMail, setTextMail] = useState("")
   const [keycloak] = useKeycloak();
   const history = useHistory();
+  const [sending, setSending] = useState(false);
+  const [textError, setTextError] = useState(false)
 
   useEffect(() => {
     setDisplay(toggle);
@@ -36,6 +41,13 @@ export default function SendMailModal({
   }
 
   async function handleSendMail() {
+    setSending(true)
+
+    if(textMail.length < 1) {
+      setSending(false)
+      return setTextError(true)
+    }
+
     await api.post(`/send-mail/toHealthService/${protocolName}`, {textMail, protocolGenerationDate}, {
       headers: {
         Authorization: `Bearer ${keycloak.token}`
@@ -43,7 +55,9 @@ export default function SendMailModal({
     }).then(() => {
       handleOnClick()
       toast.success("Email enviado com sucesso")
+      setSending(false)
     }).catch(e => {
+      setSending(false)
       toast.error("Houve um problema, contate o suporte!")
     })
   }
@@ -54,7 +68,13 @@ export default function SendMailModal({
           <strong>Descreva sua situação de saúde e será encaminhado um e-mail ao serviço de saúde vinculado.</strong>
         </ModalHeader>
         <ModalBody>
-          <textarea value={textMail} onChange={e => setTextMail(e.target.value)} style={{padding: "10px",
+          <ErrorText style={{color: "#e11400aa"}} textError={textError}>Para enviar você precisa preencher a caixa de texto</ErrorText>
+          <textarea value={textMail} onChange={e => {
+            setTextMail(e.target.value)
+            if(textMail > 0 && textError) {
+              setTextError(false)
+            }
+          }} style={{padding: "10px",
             borderRadius: "5px",
             minWidth: "330px", width: "330px",maxWidth: "330px", height: "230px",
             minHeight: "230px", maxHeight: "230px"}}
@@ -63,16 +83,26 @@ export default function SendMailModal({
         </ModalBody>
         <ModalFooter>
           <div style={{display: "flex", flexDirection: "column"}}>
-            <Button
-              type="button"
-              color="white"
-              backgroundColor="mountainMeadow"
-              width="150px"
-              height="50px"
-              onClick={() => handleSendMail()}
-            >
-              <p>Enviar</p>
-            </Button>
+            <div style={{position: "relative"}}>
+              <Button
+                type="button"
+                color="white"
+                backgroundColor="mountainMeadow"
+                width="150px"
+                height="50px"
+                onClick={() => handleSendMail()}
+                disabled={sending}
+              >
+                <SendText visible={sending == false}>Enviar</SendText>
+                <SendText visible={sending == true}>enviando</SendText>
+              </Button>
+              { sending ? (
+                <div style={{ position: "absolute", top: "20%", left: "40%" }}>
+                  <CircularProgress size="2rem"/>
+                </div>
+              ) : ""
+              }
+            </div>
             <Button
               style={{marginTop: "10px", backgroundColor: "#e11400aa"}}
               type="button"
