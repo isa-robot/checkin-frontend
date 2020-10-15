@@ -90,6 +90,7 @@ export default function
   const [toggle, setToggle] = useState(false);
   const [formState, setFormState] = useState(initialState);
   const [clearAndSend, setClearAndSend] = useState(false);
+  const [sending, setSending] = useState(false);
   const [protocolMailDate, setProtocolMailDate] = useState(false)
   const [progress, setProgress] = useState(0)
   const [toggleSendMail, setToggleSendMail] = useState(100)
@@ -110,6 +111,7 @@ export default function
   }
 
   async function handleFormAnswer() {
+    setSending(true)
     formState.newSymptom = newSympt
 
     const date = new Date(urlQueryDivider[0].split("/").reverse().join("/"))
@@ -129,8 +131,10 @@ export default function
         setProtocolDate(new Date(urlQueryDivider[0].split("/").reverse().join("/")));
         setProtocolAnswered(true);
         toggleSendMailModal(true)
+        setSending(false)
       })
       .catch((e) => {
+        setSending(false)
         toast.error('Houve um problema, contate o suporte!')
       });
     setLoading(false);
@@ -231,7 +235,7 @@ export default function
     loadDiaryAnswer()
     loadAnsweredProtocols()
     verifyProtocolMailDatesModal()
-    verifyProtocolDateExistance()
+    // verifyProtocolDateExistance()
   }, []);
 
 
@@ -248,7 +252,7 @@ export default function
               <ApprovalCard answered={false} date={dateDiary}></ApprovalCard>
             </Content>
           </Container>
-        ): (
+        ) : (
         dateExp ? (
           <Container>
             <Content>
@@ -570,6 +574,7 @@ export default function
               toggleFunction={toggleModal}
               formState={formState}
               formStateFunction={handleFormAnswer}
+              sending={sending}
             />
           </Container>
           )

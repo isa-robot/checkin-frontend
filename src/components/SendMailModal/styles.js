@@ -57,6 +57,10 @@ export const ModalHeader = styled.div`
   text-align: center;
 `;
 
+export const ErrorText = styled.p`
+  display: ${props => (props.textError ? 'flex' : 'none')};
+`
+
 export const ModalBody = styled.div`
   width: 100%;
   padding: 10px 0 0 15px;

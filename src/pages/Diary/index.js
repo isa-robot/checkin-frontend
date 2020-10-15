@@ -42,6 +42,7 @@ export default function Dairy() {
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState(false);
+  const [protocolActive ,setProtocolActive] = useState(false)
   const [answered, setAnswered] = useState(false);
   const [approved, setApproved] = useState();
   const [date, setDate] = useState(new Date());
@@ -68,11 +69,27 @@ export default function Dairy() {
         setApproved(response.data.approved);
         setDate(new Date());
         setAnswered(true);
+        verifyProtocolsActive();
       })
       .catch(() => {
         toast.error('Houve um problema, contate o suporte!');
       });
     setLoading(false);
+  }
+
+  function verifyProtocolsActive() {
+    api.get(`/protocols/active`, {
+      headers: {
+        Authorization: `Bearer ${keycloak.token}`
+      }
+    }).then(response => {
+      if(response.data.length > 0) {
+        setProtocolActive(true)
+      }else {
+        setProtocolActive(false)
+      }
+    })
+
   }
 
   function handleOkAnswer() {
@@ -110,6 +127,7 @@ export default function Dairy() {
       setLoaded(true);
     }
     fetchData();
+    verifyProtocolsActive()
   }, []);
 
   useEffect(() => {
@@ -124,7 +142,7 @@ export default function Dairy() {
         answered ? (
           <Container>
             <Content>
-              <ApprovalCard approved={approved} date={date} />
+              <ApprovalCard approved={approved} protocolActive={protocolActive} date={date} />
             </Content>
           </Container>
         ) : (

@@ -29,8 +29,8 @@ export default function ProtocolsPending() {
   const [loading, setLoading] = useState(false);
   const [loadedProtocols, setLoadedProtocols] = useState(false);
   const [diaryAnswered, setDiaryAnswered] = useState(true);
-  const [dateDiary, setDateDiary] = useState(new Date());
   const [open, setOpen] = useState(true);
+  const [protocolsActive, setProtocolActive] = useState(false);
   const [protocols, setProtocols] = useState({
     protocolsPendent: [],
     protocolsAnswered: []
@@ -73,9 +73,25 @@ export default function ProtocolsPending() {
     setLoading(false)
   };
 
+  function verifyProtocolsActive() {
+    api.get(`/protocols/active`, {
+      headers: {
+        Authorization: `Bearer ${keycloak.token}`
+      }
+    }).then(response => {
+      if(response.data.length > 0) {
+        setProtocolActive(true)
+      }else {
+        setProtocolActive(false)
+      }
+    })
+
+  }
+
   useEffect(() => {
     loadPendingAndAnsweredProtocols()
     loadDiaryAnswer();
+    verifyProtocolsActive();
   }, []);
 
 
@@ -89,13 +105,14 @@ export default function ProtocolsPending() {
         !diaryAnswered ? (
           <Container>
             <Content>
-              <ApprovalCard answered={false} date={dateDiary}></ApprovalCard>
+              <ApprovalCard answered={false}></ApprovalCard>
             </Content>
           </Container>
         ) : (
                 <Container>
                   <Content>
                     <FormCard visible={true} >
+                      {protocolsActive ? (
                       <List style={{backgroundColor: "#F3F5FA", padding: "5px"}}>
                           <ListItem  button onClick={handleClick}>
                             <ListItemText><strong>Protocolos Pendentes</strong></ListItemText>
@@ -106,17 +123,22 @@ export default function ProtocolsPending() {
                             <CircularProgress size="5rem" />
                           </Loading>
                           ) : (
-                          <Collapse in={open} timeout="auto" unmountOnExit>
-                            <List>
-                              {protocols.protocolsPendent.map((item, index) => (
-                                <ListItem onClick={evt => handleClickOnDate(item)} style={{marginLeft: "10px"}} key={`protocolPendent: ${index}`} button alignItems ='center'>
-                                  {item}
-                                </ListItem>
-                              ))}
-                            </List>
-                          </Collapse>
+                              <Collapse in={open} timeout="auto" unmountOnExit>
+                                { protocols.protocolsPendent.length > 0 ? (
+                                  <List>
+                                    {protocols.protocolsPendent.map((item, index) => (
+                                      <ListItem onClick={evt => handleClickOnDate(item)} style={{marginLeft: "10px"}} key={`protocolPendent: ${index}`} button alignItems ='center'>
+                                        {item}
+                                      </ListItem>
+                                    ))}
+                                  </List>
+                                  ): <h4 style={{marginLeft: "20px"}}>Não há protocolos pendentes</h4>
+                                }
+                              </Collapse>
                           )}
                       </List>
+
+                      ): <h2>Não há protocolos ativos</h2>}
                     </FormCard>
 
                   </Content>
