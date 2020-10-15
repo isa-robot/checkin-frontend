@@ -14,11 +14,11 @@ function ApprovalCard({ approved, answered=true, dateExpired = false,  date, pro
         <FaRegCheckCircle color="#FFF" size="10rem" />
         <div>
           <span>Entrada aprovada para o dia</span>
-          <h1>{format(new Date(date), "dd/MM/yyyy' às 'HH:mm' ")}</h1>
+          <h1>{format(new Date(date), "dd/MM/yyyy")}</h1>
         </div>
         <p>Bom trabalho!</p>
         { protocolActive ? (
-          <h2><Button variant="contained" color="primary"><Link style={{ color: "white" }} to={"/protocolos"}>Clique aqui e acesse a página de protocolos</Link></Button></h2>
+          <h2><Button variant="contained" color="primary"><Link style={{ color: "white" }} to={"/protocolos"}>Clique aqui para responder aos protocolos pendentes</Link></Button></h2>
           ) : ""
         }
       </Container>
@@ -33,30 +33,16 @@ function ApprovalCard({ approved, answered=true, dateExpired = false,  date, pro
       </Container>
     );
   }
-  if(dateExpired) {
-    return (
-      <Container approved={answered}>
-        <h1>Protocolos respondidos</h1>
-        <FaRegCheckCircle color="#FFF" size="10rem" />
-        <div>
-          <h1>{format(new Date(date), "dd/MM/yyyy' às 'HH:mm' ")}</h1>
-        </div>
-        <p>Os protocolos foram respondidos durante 14 dias
-          após ser bloqueado no sistema</p>
-        <p>Bom trabalho!</p>
-      </Container>
-    )
-  }
   return (
     <Container approved={approved}>
       <h1>ENTRADA NÃO AUTORIZADA</h1>
       <AiOutlineMinusCircle color="#FFF" size="10rem" />
       <div>
         <span>Entrada negada para o dia</span>
-        <h1>{format(new Date(date), "dd/MM/yyyy' às 'HH:mm' ")}</h1>
+        <h1>{format(new Date(date), "dd/MM/yyyy")}</h1>
       </div>
       <p>Contate o setor de saúde</p>
-      <h2><Button variant="contained"><Link style={{color: "black"}} to={"/protocolos"}>Clique aqui e acesse a página de protocolos</Link></Button></h2>
+      <h2><Button variant="contained"><Link style={{color: "black"}} to={"/protocolos"}>Clique aqui para responder aos protocolos pendentes</Link></Button></h2>
     </Container>
   );
 }
