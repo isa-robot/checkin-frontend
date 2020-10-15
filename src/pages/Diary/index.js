@@ -49,16 +49,17 @@ export default function Dairy() {
   const [toggle, setToggle] = useState(false);
   const [formState, setFormState] = useState(initialState);
   const [clearAndSend, setClearAndSend] = useState(false);
-
+  const [sending, setSending] = useState(false);
   const [keycloak] = useKeycloak();
 
   function toggleModal(prop) {
     setToggle(prop);
   }
 
-  function handleFormAnswer() {
+  async function handleFormAnswer() {
     setLoading(true);
-    api
+    setSending(true);
+    await api
       .post(`/users/diaries`, formState, {
         headers: {
           Authorization: `Bearer ${keycloak.token}`,
@@ -70,8 +71,10 @@ export default function Dairy() {
         setDate(new Date());
         setAnswered(true);
         verifyProtocolsActive();
+        setSending(false)
       })
       .catch(() => {
+        setSending(false)
         toast.error('Houve um problema, contate o suporte!');
       });
     setLoading(false);
@@ -491,6 +494,7 @@ export default function Dairy() {
               toggle={toggle}
               toggleFunction={toggleModal}
               formState={formState}
+              sending={sending}
               formStateFunction={handleFormAnswer}
             />
           </Container>

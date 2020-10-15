@@ -16,21 +16,10 @@ function ProtocolCard({ approved, date }) {
         <div>
           <h1>{format(new Date(date), "dd/MM/yyyy")}</h1>
         </div>
-        <h2><Button variant="contained" color="primary"><Link style={{color: "white"}} to={"/protocolos"}>Clique aqui para acessar página protocolos</Link></Button></h2>
+        <h2><Button variant="contained" color="primary"><Link style={{color: "white"}} to={"/protocolos"}>Clique aqui para acessar a página de protocolos</Link></Button></h2>
       </Container>
     );
   }
-  return (
-    <Container approved={approved}>
-      <span>Você está apresentando sinais de doença mais grave entre em contato com o seu médico
-              ou procure atendimento em uma emergência para avaliação. Em até uma hora um
-              profissional da Qualis irá fazer contato com você.</span>
-      <AiOutlineMinusCircle color="#FFF" size="10rem" />
-      <div>
-        <h1>{format(new Date(date), "dd/MM/yyyy' às 'HH:mm' ")}</h1>
-      </div>
-    </Container>
-  );
 }
 
 export default ProtocolCard;
