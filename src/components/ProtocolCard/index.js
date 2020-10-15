@@ -12,11 +12,11 @@ function ProtocolCard({ approved, date }) {
       <Container approved={approved}>
         <h1>OBRIGADO!</h1>
         <FaRegCheckCircle color="#FFF" size="10rem" />
-        <h2>você respondeu o protocolo do dia:</h2>
+        <h2>você respondeu a avaliação do dia:</h2>
         <div>
           <h1>{format(new Date(date), "dd/MM/yyyy")}</h1>
         </div>
-        <h2><Button variant="contained" color="primary"><Link style={{color: "white"}} to={"/protocolos"}>Clique aqui para acessar a página de protocolos</Link></Button></h2>
+        <h2><Button variant="contained" color="primary"><Link style={{color: "white"}} to={"/avaliacoes"}>Clique aqui para acessar a página de avaliações</Link></Button></h2>
       </Container>
     );
   }

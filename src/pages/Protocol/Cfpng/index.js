@@ -223,19 +223,19 @@ export default function
           return protocolDate == protocolPendent
         })
         if(protocolPendentDateExist.length < 1) {
-          history.push("/protocolos")
+          history.push("/avaliacoes")
         }
       })
   }
 
   useEffect(() => {
     if(!urlQueryDivider[0]) {
-      history.push("/protocolos")
+      history.push("/avaliacoes")
     }
     loadDiaryAnswer()
     loadAnsweredProtocols()
     verifyProtocolMailDatesModal()
-    // verifyProtocolDateExistance()
+    verifyProtocolDateExistance()
   }, []);
 
 
@@ -281,11 +281,11 @@ export default function
             <Content>
               <FormCard visible={true}>
                 <div>
-                  <p>{protocols.protocolsAnswered.length} de {period} protocolos respondidos</p>
+                  <p>{protocols.protocolsAnswered.length} de {period} avaliacões respondidas</p>
                   <BorderLinearProgress variant="determinate" value={progress}/>
                 </div>
                 <span style={{marginTop: "15px"}}></span>
-                <h4>Protocolo do dia: {urlQueryDivider[0]}</h4>
+                <h4>avaliação do dia: {urlQueryDivider[0]}</h4>
                 <h3>Você está apresentando algum destes sintomas?</h3>
                 <Form>
                   <InputGroup>
@@ -556,7 +556,7 @@ export default function
                       height="3rem"
                       backgroundColor="sunset"
                       color="white"
-                      onClick={() => history.push("/protocolos")}
+                      onClick={() => history.push("/avaliacoes")}
                       disabled={loading}
                     >
                       <p>Voltar</p>

@@ -39,7 +39,7 @@ export default function ProtocolsPending() {
   const history = useHistory();
 
   const handleClickOnDate = (item) => {
-   history.push(`/protocolo-cfpng?${item}`)
+   history.push(`/avaliacao-cfpng?${item}`)
   };
 
   const handleClick = () => {
@@ -123,7 +123,7 @@ export default function ProtocolsPending() {
                         protocolsActive ? (
                       <List style={{backgroundColor: "#F3F5FA", padding: "5px"}}>
                           <ListItem  button onClick={handleClick}>
-                            <ListItemText><strong>Protocolos Pendentes</strong></ListItemText>
+                            <ListItemText><strong>Avaliações Pendentes</strong></ListItemText>
                             {open ? <ExpandLess /> : <ExpandMore />}
                           </ListItem>
                         { !loadedProtocols ? (
@@ -140,12 +140,12 @@ export default function ProtocolsPending() {
                                       </ListItem>
                                     ))}
                                   </List>
-                                  ): <h4 style={{marginLeft: "20px"}}>Não há protocolos pendentes</h4>
+                                  ): <h4 style={{marginLeft: "20px"}}>Não há avaliações pendentes</h4>
                                 }
                               </Collapse>
                           )}
                       </List>
-                        ) : <h2>Não há protocolos ativos</h2>
+                        ) : <h2>Não há avaliações ativos</h2>
                       )}
                     </FormCard>
                   </Content>

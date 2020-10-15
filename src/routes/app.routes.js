@@ -48,13 +48,13 @@ export default function AppRoutes() {
         resource="diary"
       />
       <Route
-        path="/protocolo-cfpng"
+        path="/avaliacao-cfpng"
         roles={['assisted']}
         component={Cfpng}
         resource={false}
       />
       <Route
-        path="/protocolos"
+        path="/avaliacoes"
         roles={['assisted']}
         component={ProtocolsPending}
         resource={false}
