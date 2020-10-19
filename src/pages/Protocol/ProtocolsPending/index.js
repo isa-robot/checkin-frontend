@@ -27,6 +27,7 @@ import {Link, useHistory} from 'react-router-dom';
 export default function ProtocolsPending() {
 
   const [loading, setLoading] = useState(false);
+  const [loadActiveProtocols, setLoadActiveProtocols] = useState(false);
   const [loadedProtocols, setLoadedProtocols] = useState(false);
   const [diaryAnswered, setDiaryAnswered] = useState(true);
   const [open, setOpen] = useState(true);
@@ -38,7 +39,7 @@ export default function ProtocolsPending() {
   const history = useHistory();
 
   const handleClickOnDate = (item) => {
-   history.push(`/protocolo-cfpng?${item}`)
+   history.push(`/avaliacao-cfpng?${item}`)
   };
 
   const handleClick = () => {
@@ -61,7 +62,7 @@ export default function ProtocolsPending() {
   }
 
   async function loadDiaryAnswer(){
-
+    setLoading(true)
     const diary = await api.get(`/users/diaries/lastbyuser/last`, {
       headers: {
         Authorization: `Bearer ${keycloak.token}`
@@ -74,11 +75,13 @@ export default function ProtocolsPending() {
   };
 
   function verifyProtocolsActive() {
+    setLoadActiveProtocols(true)
     api.get(`/protocols/active`, {
       headers: {
         Authorization: `Bearer ${keycloak.token}`
       }
     }).then(response => {
+      setLoadActiveProtocols(false)
       if(response.data.length > 0) {
         setProtocolActive(true)
       }else {
@@ -112,10 +115,15 @@ export default function ProtocolsPending() {
                 <Container>
                   <Content>
                     <FormCard visible={true} >
-                      {protocolsActive ? (
+                      { loadActiveProtocols ? (
+                          <Loading>
+                            <CircularProgress size="5rem" />
+                          </Loading>
+                        ) : (
+                        protocolsActive ? (
                       <List style={{backgroundColor: "#F3F5FA", padding: "5px"}}>
                           <ListItem  button onClick={handleClick}>
-                            <ListItemText><strong>Protocolos Pendentes</strong></ListItemText>
+                            <ListItemText><strong>Avaliações Pendentes</strong></ListItemText>
                             {open ? <ExpandLess /> : <ExpandMore />}
                           </ListItem>
                         { !loadedProtocols ? (
@@ -132,15 +140,14 @@ export default function ProtocolsPending() {
                                       </ListItem>
                                     ))}
                                   </List>
-                                  ): <h4 style={{marginLeft: "20px"}}>Não há protocolos pendentes</h4>
+                                  ): <h4 style={{marginLeft: "20px"}}>Não há avaliações pendentes</h4>
                                 }
                               </Collapse>
                           )}
                       </List>
-
-                      ): <h2>Não há protocolos ativos</h2>}
+                        ) : <h2>Não há avaliações ativos</h2>
+                      )}
                     </FormCard>
-
                   </Content>
                 </Container>
               )

@@ -12,7 +12,8 @@ export const Container = styled(Card)`
   max-width: 700px;
   padding: 3rem;
   margin-top: 100px;
-  background: ${props => (props.approved ? '#77c90daa' : '#e11400aa')};
+  background: white;
+  color: black;
 
   div {
     display: flex;

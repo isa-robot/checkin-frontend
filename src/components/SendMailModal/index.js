@@ -65,10 +65,10 @@ export default function SendMailModal({
     <Container ref={ref} display={String(display)} onClick={handleOnClick}>
       <ModalCard onClick={e => e.stopPropagation()}>
         <ModalHeader>
-          <strong>Descreva sua situação de saúde e será encaminhado um e-mail ao serviço de saúde vinculado.</strong>
+          <strong>Diga mais detalhes de como você está se sentindo. Estas informações serão encaminhadas ao serviço de saúde.</strong>
         </ModalHeader>
         <ModalBody>
-          <ErrorText style={{color: "#e11400aa"}} textError={textError}>Para enviar você precisa preencher a caixa de texto</ErrorText>
+          <ErrorText style={{color: "#e11400aa"}} textError={textError}>Para enviar, você precisa preencher a caixa de texto</ErrorText>
           <textarea value={textMail} onChange={e => {
             setTextMail(e.target.value)
             if(textMail > 0 && textError) {
