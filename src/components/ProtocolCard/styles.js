@@ -14,6 +14,7 @@ export const Container = styled(Card)`
   margin-top: 100px;
   background: white;
   color: black;
+
   div {
     display: flex;
     flex-direction: column;

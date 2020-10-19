@@ -126,7 +126,7 @@ export default function
       .then(response => {
         toast.success('Resposta enviada com sucesso!');
         setToggle(false)
-        setApproved(response.data.approved);
+        setApproved(response.data.cfpng.approved);
         setFormSent(true)
         setProtocolDate(new Date(urlQueryDivider[0].split("/").reverse().join("/")));
         setProtocolAnswered(true);
@@ -263,7 +263,7 @@ export default function
         protocolAnswered ? (
           <Container>
             <Content>
-              <ProtocolCard approved={true} date={protocolDate} />
+              <ProtocolCard approved={approved} date={protocolDate} />
             </Content>
             {
               !approved || (SendMailModal && approved && formSent) ? (
