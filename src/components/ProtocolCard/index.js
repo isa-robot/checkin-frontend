@@ -17,12 +17,14 @@ function ProtocolCard({ approved, date }) {
       { !approved ? (
         <span>
           Entraremos em contato nas próximas horas
-        </span>
-        ) : ""
-      }
-      <h2><Button variant="contained" color="primary"><Link style={{color: "white"}} to={"/protocolos"}>Clique aqui para acessar a página de avaliações</Link></Button></h2>
-    </Container>
-  );
+          </span>
+          ) : ""
+        }
+        <h3 style={{'color': '#e11400ee'}}>Em caso de urgência médica procure atendimento imediatamente.</h3>
+        <h2><Button variant="contained" color="primary"><Link style={{color: "white"}} to={"/avaliacoes"}>Clique aqui para acessar a página de avaliações</Link></Button></h2>
+      </Container>
+    );
+  }
 }
 
 export default ProtocolCard;
