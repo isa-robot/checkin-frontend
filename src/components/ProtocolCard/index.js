@@ -24,7 +24,6 @@ function ProtocolCard({ approved, date }) {
         <h2><Button variant="contained" color="primary"><Link style={{color: "white"}} to={"/avaliacoes"}>Clique aqui para acessar a página de avaliações</Link></Button></h2>
       </Container>
     );
-  }
 }
 
 export default ProtocolCard;
