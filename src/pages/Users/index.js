@@ -26,22 +26,19 @@ import Button from '~/components/Buttons/Button';
 
 import Table from '~/components/Table';
 import TablePagination from '@material-ui/core/TablePagination';
-import InputBase from '@material-ui/core/InputBase';
-import { MTableToolbar } from 'material-table';
-import { debounce } from 'rxjs/operators';
 
 export default function Users() {
   const [loaded, setLoaded] = useState(false);
   const [keycloak] = useKeycloak();
   const [users, setUsers] = useState([]);
+  const [searchUser, setSearchUser] = useState("")
   const [maxUsers, setMaxUsers] = useState(0)
   const [roles, setRoles] = useState([]);
   const [page, setPage] = useState(0)
   const [enabled, setEnabled] = useState(false);
-  const [userNameInput, setUserNameInput] = useState("");
   const [selected, selectUser] = useState(null);
   const [newRole, setNewRole] = useState('desabilitado');
-
+  const [newUsersPaginated, setNewUsersPaginated] = useState([])
   const handleManageUser = user => {
     const role = user.roles.length ? user.roles[0].name : 'desabilitado';
     if (user.roles.length) setEnabled(true);
@@ -103,13 +100,13 @@ export default function Users() {
     if (response.data) setUsers(response.data);
     setLoaded(true);
   }
+
   async function countUsers() {
-    const response = await api.get('users/countUsers', {
+    const response = await api.get('users/count', {
       headers: { Authorization: `Bearer ${keycloak.token}` },
     }).then(maxUsers => {
       setMaxUsers(maxUsers.data)
     });
-    setLoaded(true);
   }
 
   useEffect(() => {
@@ -168,24 +165,22 @@ export default function Users() {
     }
   }
 
-  function handleSearch(e) {
+  function handleSearch(e = "") {
     setPage(0)
-    const deb = debounce(() => {
-      api.get(`users/searchName/${e}`, {
+    setNewUsersPaginated([])
+    if(e.length > 0){
+      setSearchUser(e)
+      const deb = debounce(() =>
+        api.get(`users/username/${e}`, {
         headers: { Authorization: `Bearer ${keycloak.token}` }
       }).then(users => {
           setUsers(users.data)
         })
-    }, 300)
-    deb()
-  }
-
-  function handlePagination(page= 1) {
-    api.get(`users/paginated/${page+1}`, {
-      headers: { Authorization: `Bearer ${keycloak.token}` }
-    }).then(users => {
-      setUsers(users.data)
-    })
+      , 300)
+      deb()
+    } else {
+      listUsers()
+    }
   }
 
   function debounce(func, wait, immediate) {
@@ -203,6 +198,15 @@ export default function Users() {
     };
   };
 
+
+  function handlePagination(page) {
+    setPage(page)
+    api.get(`users/paginated/${page+1}`, {
+      headers: { Authorization: `Bearer ${keycloak.token}` }
+    }).then(users => {
+      setUsers(users.data)
+    })
+  }
 
   function handleChangeEnabled(evt) {
     const { value } = evt.target;
@@ -308,7 +312,7 @@ export default function Users() {
                 <CardHeader title="Usuários" subheader={formatDate()} />
                 <Table
                   columns={columns}
-                  data={users}
+                  data={newUsersPaginated.length > 1 ? newUsersPaginated : users}
                   components={{
                     Container: props => (
                       <CardContent>{props.children}</CardContent>
@@ -316,12 +320,20 @@ export default function Users() {
                     Pagination: props => (
                       <TablePagination
                         {...props}
-                        count={maxUsers}
+                        count={searchUser.length < 1 ? maxUsers : users.length}
                         page={page}
-                        onChangePage={(e, page) => handlePagination(page)}
+                        onChangePage={
+                          searchUser < 1 ? (e, page) => handlePagination(page) :
+                            (e, page) => {
+                            setPage(page)
+                            const startIndex = page * 20;
+                            const endIndex = startIndex + 20;
+                            setNewUsersPaginated(users.slice(startIndex, endIndex));
+                          }
+                        }
+
                       />
                     )
-
                   }}
                   handleSearchChange={(e) => handleSearch(e)}
                   options={options}
