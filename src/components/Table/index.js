@@ -18,7 +18,7 @@ import {
 } from '@material-ui/icons';
 import MaterialTable from 'material-table'
 
-export default function Table({ columns, options, data, title = "", components, detailPanel, actions, handleSearchChange }) {
+export default function Table({ columns, options, data, title = "", components, detailPanel, actions }) {
 
   const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -100,7 +100,6 @@ export default function Table({ columns, options, data, title = "", components, 
       localization={tableLocalization}
       detailPanel={detailPanel}
       actions={actions}
-      onSearchChange={(e) => handleSearchChange(e)}
     />);
 }
 
@@ -111,5 +110,5 @@ Table.propTypes = {
   title: PropTypes.string,
   components: PropTypes.object,
   detailPanel: PropTypes.array,
-  actions: PropTypes.array
+  actions: PropTypes.array,
 };

@@ -25,20 +25,14 @@ import {
 import Button from '~/components/Buttons/Button';
 
 import Table from '~/components/Table';
-import TablePagination from '@material-ui/core/TablePagination';
-import InputBase from '@material-ui/core/InputBase';
-import { MTableToolbar } from 'material-table';
-import { debounce } from 'rxjs/operators';
 
 export default function Users() {
   const [loaded, setLoaded] = useState(false);
   const [keycloak] = useKeycloak();
   const [users, setUsers] = useState([]);
-  const [maxUsers, setMaxUsers] = useState(0)
   const [roles, setRoles] = useState([]);
-  const [page, setPage] = useState(0)
   const [enabled, setEnabled] = useState(false);
-  const [userNameInput, setUserNameInput] = useState("");
+
   const [selected, selectUser] = useState(null);
   const [newRole, setNewRole] = useState('desabilitado');
 
@@ -54,8 +48,6 @@ export default function Users() {
     filtering: false,
     grouping: false,
     actionsColumnIndex: -1,
-    pageSize: maxUsers >= 20 ? 20 : maxUsers,
-    pageSizeOptions: []
   };
 
   const actions = [
@@ -95,27 +87,16 @@ export default function Users() {
     },
   ];
 
-  async function listUsers() {
-    const response = await api.get('users', {
-      headers: { Authorization: `Bearer ${keycloak.token}` },
-    });
-
-    if (response.data) setUsers(response.data);
-    setLoaded(true);
-  }
-  async function countUsers() {
-    const response = await api.get('users/countUsers', {
-      headers: { Authorization: `Bearer ${keycloak.token}` },
-    }).then(maxUsers => {
-      setMaxUsers(maxUsers.data)
-    });
-    setLoaded(true);
-  }
-
   useEffect(() => {
+    async function fetchData() {
+      const response = await api.get('users', {
+        headers: { Authorization: `Bearer ${keycloak.token}` },
+      });
 
-    listUsers();
-    countUsers();
+      if (response.data) setUsers(response.data);
+      setLoaded(true);
+    }
+    fetchData();
   }, [keycloak.token, selected]);
 
   useEffect(() => {
@@ -131,7 +112,6 @@ export default function Users() {
   function formatDate() {
     return format(new Date(), 'dd/MM');
   }
-
 
   async function handleFormAnswer() {
     if (enabled === true && newRole === 'desabilitado') {
@@ -167,42 +147,6 @@ export default function Users() {
       toast.success('Perfil modificado com sucesso!');
     }
   }
-
-  function handleSearch(e) {
-    setPage(0)
-    const deb = debounce(() => {
-      api.get(`users/searchName/${e}`, {
-        headers: { Authorization: `Bearer ${keycloak.token}` }
-      }).then(users => {
-          setUsers(users.data)
-        })
-    }, 300)
-    deb()
-  }
-
-  function handlePagination(page= 1) {
-    api.get(`users/paginated/${page+1}`, {
-      headers: { Authorization: `Bearer ${keycloak.token}` }
-    }).then(users => {
-      setUsers(users.data)
-    })
-  }
-
-  function debounce(func, wait, immediate) {
-    var timeout;
-    return function() {
-      var context = this, args = arguments;
-      var later = function() {
-        timeout = null;
-        if (!immediate) func.apply(context, args);
-      };
-      var callNow = immediate && !timeout;
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-      if (callNow) func.apply(context, args);
-    };
-  };
-
 
   function handleChangeEnabled(evt) {
     const { value } = evt.target;
@@ -313,17 +257,7 @@ export default function Users() {
                     Container: props => (
                       <CardContent>{props.children}</CardContent>
                     ),
-                    Pagination: props => (
-                      <TablePagination
-                        {...props}
-                        count={maxUsers}
-                        page={page}
-                        onChangePage={(e, page) => handlePagination(page)}
-                      />
-                    )
-
                   }}
-                  handleSearchChange={(e) => handleSearch(e)}
                   options={options}
                   actions={actions}
                 />
