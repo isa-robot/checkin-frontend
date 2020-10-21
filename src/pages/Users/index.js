@@ -316,7 +316,7 @@ export default function Users() {
                     Pagination: props => (
                       <TablePagination
                         {...props}
-                        count={20}
+                        count={maxUsers}
                         page={page}
                         onChangePage={(e, page) => handlePagination(page)}
                       />
