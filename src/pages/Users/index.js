@@ -25,17 +25,20 @@ import {
 import Button from '~/components/Buttons/Button';
 
 import Table from '~/components/Table';
+import TablePagination from '@material-ui/core/TablePagination';
 
 export default function Users() {
   const [loaded, setLoaded] = useState(false);
   const [keycloak] = useKeycloak();
   const [users, setUsers] = useState([]);
+  const [searchUser, setSearchUser] = useState("")
+  const [maxUsers, setMaxUsers] = useState(0)
   const [roles, setRoles] = useState([]);
+  const [page, setPage] = useState(0)
   const [enabled, setEnabled] = useState(false);
-
   const [selected, selectUser] = useState(null);
   const [newRole, setNewRole] = useState('desabilitado');
-
+  const [newUsersPaginated, setNewUsersPaginated] = useState([])
   const handleManageUser = user => {
     const role = user.roles.length ? user.roles[0].name : 'desabilitado';
     if (user.roles.length) setEnabled(true);
@@ -48,6 +51,8 @@ export default function Users() {
     filtering: false,
     grouping: false,
     actionsColumnIndex: -1,
+    pageSize: maxUsers >= 20 ? 20 : maxUsers,
+    pageSizeOptions: []
   };
 
   const actions = [
@@ -87,16 +92,27 @@ export default function Users() {
     },
   ];
 
-  useEffect(() => {
-    async function fetchData() {
-      const response = await api.get('users', {
-        headers: { Authorization: `Bearer ${keycloak.token}` },
-      });
+  async function listUsers() {
+    const response = await api.get('users', {
+      headers: { Authorization: `Bearer ${keycloak.token}` },
+    });
 
-      if (response.data) setUsers(response.data);
-      setLoaded(true);
-    }
-    fetchData();
+    if (response.data) setUsers(response.data);
+    setLoaded(true);
+  }
+
+  async function countUsers() {
+    const response = await api.get('users/count', {
+      headers: { Authorization: `Bearer ${keycloak.token}` },
+    }).then(maxUsers => {
+      setMaxUsers(maxUsers.data)
+    });
+  }
+
+  useEffect(() => {
+
+    listUsers();
+    countUsers();
   }, [keycloak.token, selected]);
 
   useEffect(() => {
@@ -112,6 +128,7 @@ export default function Users() {
   function formatDate() {
     return format(new Date(), 'dd/MM');
   }
+
 
   async function handleFormAnswer() {
     if (enabled === true && newRole === 'desabilitado') {
@@ -146,6 +163,49 @@ export default function Users() {
       setNewRole('desabilitado');
       toast.success('Perfil modificado com sucesso!');
     }
+  }
+
+  function handleSearch(e = "") {
+    setPage(0)
+    setNewUsersPaginated([])
+    if(e.length > 0){
+      setSearchUser(e)
+      const deb = debounce(() =>
+        api.get(`users/username/${e}`, {
+        headers: { Authorization: `Bearer ${keycloak.token}` }
+      }).then(users => {
+          setUsers(users.data)
+        })
+      , 300)
+      deb()
+    } else {
+      listUsers()
+    }
+  }
+
+  function debounce(func, wait, immediate) {
+    var timeout;
+    return function() {
+      var context = this, args = arguments;
+      var later = function() {
+        timeout = null;
+        if (!immediate) func.apply(context, args);
+      };
+      var callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+      if (callNow) func.apply(context, args);
+    };
+  };
+
+
+  function handlePagination(page) {
+    setPage(page)
+    api.get(`users/paginated/${page+1}`, {
+      headers: { Authorization: `Bearer ${keycloak.token}` }
+    }).then(users => {
+      setUsers(users.data)
+    })
   }
 
   function handleChangeEnabled(evt) {
@@ -252,12 +312,30 @@ export default function Users() {
                 <CardHeader title="Usuários" subheader={formatDate()} />
                 <Table
                   columns={columns}
-                  data={users}
+                  data={newUsersPaginated.length > 1 ? newUsersPaginated : users}
                   components={{
                     Container: props => (
                       <CardContent>{props.children}</CardContent>
                     ),
+                    Pagination: props => (
+                      <TablePagination
+                        {...props}
+                        count={searchUser.length < 1 ? maxUsers : users.length}
+                        page={page}
+                        onChangePage={
+                          searchUser < 1 ? (e, page) => handlePagination(page) :
+                            (e, page) => {
+                            setPage(page)
+                            const startIndex = page * 20;
+                            const endIndex = startIndex + 20;
+                            setNewUsersPaginated(users.slice(startIndex, endIndex));
+                          }
+                        }
+
+                      />
+                    )
                   }}
+                  handleSearchChange={(e) => handleSearch(e)}
                   options={options}
                   actions={actions}
                 />
