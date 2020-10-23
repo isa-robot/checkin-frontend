@@ -180,12 +180,12 @@ export default function Dairy() {
                     type="button"
                   >
                     <FaRegThumbsDown size="1rem" color="#FFF" />
-                    <strong>Não muito bem...</strong>
+                    <strong>Não muito bem.</strong>
                   </Button>
                 </MainButtonGroup>
                 <span>
-                  Aqui na Qualis você têm a disposição uma equipe altamente
-                  qualificada que presa pela sua saúde e segurança!
+                  Aqui na Qualis você têm à disposição uma equipe altamente
+                  qualificada que preza pela sua saúde e segurança!
                 </span>
               </MainCard>
               <FormCard visible={form}>
@@ -193,7 +193,7 @@ export default function Dairy() {
                 <Form>
                   <InputGroup>
                     <ChoiceGroup>
-                      <strong>Perda de Olfato</strong>
+                      <strong>Perda de olfato</strong>
                       <div>
                         <input
                           type="radio"
@@ -215,7 +215,7 @@ export default function Dairy() {
                       </div>
                     </ChoiceGroup>
                     <ChoiceGroup>
-                      <strong>Perda de Paladar</strong>
+                      <strong>Perda de paladar</strong>
                       <div>
                         <input
                           type="radio"
@@ -237,7 +237,7 @@ export default function Dairy() {
                       </div>
                     </ChoiceGroup>
                     <ChoiceGroup>
-                      <strong>Perda de Apetite</strong>
+                      <strong>Perda de apetite</strong>
                       <div>
                         <input
                           type="radio"
@@ -303,7 +303,7 @@ export default function Dairy() {
                       </div>
                     </ChoiceGroup>
                     <ChoiceGroup>
-                      <strong>Tosse Persistente</strong>
+                      <strong>Tosse persistente</strong>
                       <div>
                         <input
                           type="radio"
@@ -369,7 +369,7 @@ export default function Dairy() {
                       </div>
                     </ChoiceGroup>
                     <ChoiceGroup>
-                      <strong>Dor de Garganta</strong>
+                      <strong>Dor de garganta</strong>
                       <div>
                         <input
                           type="radio"
@@ -391,7 +391,7 @@ export default function Dairy() {
                       </div>
                     </ChoiceGroup>
                     <ChoiceGroup>
-                      <strong>Falta de Ar</strong>
+                      <strong>Falta de ar</strong>
                       <div>
                         <input
                           type="radio"
@@ -413,7 +413,7 @@ export default function Dairy() {
                       </div>
                     </ChoiceGroup>
                     <ChoiceGroup>
-                      <strong>Dor Abdominal</strong>
+                      <strong>Dor abdominal</strong>
                       <div>
                         <input
                           type="radio"
@@ -435,7 +435,7 @@ export default function Dairy() {
                       </div>
                     </ChoiceGroup>
                     <ChoiceGroup>
-                      <strong>Dor no Peito</strong>
+                      <strong>Dor no peito</strong>
                       <div>
                         <input
                           type="radio"

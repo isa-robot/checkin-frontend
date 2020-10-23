@@ -54,7 +54,7 @@ export default function Modal({ toggle, toggleFunction }) {
               <label>Idade (anos)</label>
             </InputDiv>
             {errors.age && errors.age.type === 'required' && (
-              <span>O campo Idade é obrigatório</span>
+              <span>O campo idade é obrigatório</span>
             )}
             {errors.age && errors.age.type === 'pattern' && (
               <span>O campo deve conter somente números</span>
@@ -72,7 +72,7 @@ export default function Modal({ toggle, toggleFunction }) {
               </select>
               <label>Sexo</label>
             </SelectDiv>
-            {errors.genre && <span>O campo Sexo é obrigatório</span>}
+            {errors.genre && <span>O campo sexo é obrigatório</span>}
             <SelectDiv>
               <select
                 required
@@ -87,7 +87,7 @@ export default function Modal({ toggle, toggleFunction }) {
               </select>
               <label>Raça</label>
             </SelectDiv>
-            {errors.race && <span>O campo Raça é obrigatório</span>}
+            {errors.race && <span>O campo raça é obrigatório</span>}
             <InputDiv>
               <input
                 maxLength="3"
@@ -100,7 +100,7 @@ export default function Modal({ toggle, toggleFunction }) {
               <label>Peso (kg)</label>
             </InputDiv>
             {errors.weight && errors.weight.type === 'required' && (
-              <span>O campo Peso é obrigatório</span>
+              <span>O campo peso é obrigatório</span>
             )}
             {errors.weight && errors.weight.type === 'pattern' && (
               <span>O campo deve conter somente números</span>
@@ -117,7 +117,7 @@ export default function Modal({ toggle, toggleFunction }) {
               <label>Altura (cm)</label>
             </InputDiv>
             {errors.height && errors.height.type === 'required' && (
-              <span>O campo Altura é obrigatório</span>
+              <span>O campo altura é obrigatório</span>
             )}
             {errors.height && errors.height.type === 'pattern' && (
               <span>O campo deve conter somente números</span>
@@ -133,7 +133,7 @@ export default function Modal({ toggle, toggleFunction }) {
               <label>Cidade</label>
             </InputDiv>
             {errors.city && errors.city.type === 'required' && (
-              <span>O campo Cidade é obrigatório</span>
+              <span>O campo cidade é obrigatório</span>
             )}
             <InputDiv>
               <input
@@ -146,7 +146,7 @@ export default function Modal({ toggle, toggleFunction }) {
               <label>Ocupação</label>
             </InputDiv>
             {errors.occupation && errors.occupation.type === 'required' && (
-              <span>O campo Ocupação é obrigatório</span>
+              <span>O campo ocupação é obrigatório</span>
             )}
             <InputDiv>
               <input
@@ -160,7 +160,7 @@ export default function Modal({ toggle, toggleFunction }) {
             </InputDiv>
             {errors.occupation_local &&
               errors.occupation_local.type === 'required' && (
-                <span>O campo Local é obrigatório</span>
+                <span>O campo local é obrigatório</span>
               )}
             <SelectDiv>
               <select
@@ -173,9 +173,9 @@ export default function Modal({ toggle, toggleFunction }) {
                 <option value>Sim</option>
                 <option value={false}>Não</option>
               </select>
-              <label>Consultas Médicas Recentes</label>
+              <label>Consultas médicas recentes</label>
             </SelectDiv>
-            {errors.race && <span>O campo Consutas é obrigatório</span>}
+            {errors.race && <span>O campo consutas é obrigatório</span>}
             <SelectDiv>
               <select
                 name="contact_covid19"
@@ -187,10 +187,10 @@ export default function Modal({ toggle, toggleFunction }) {
                 <option value>Sim</option>
                 <option value={false}>Não</option>
               </select>
-              <label>Contato alguém com COVID</label>
+              <label>Contatou alguém com COVID</label>
             </SelectDiv>
             {errors.contact_covid19 && (
-              <span>O campo Contato é obrigatório</span>
+              <span>O campo contatou é obrigatório</span>
             )}
             <SelectDiv>
               <select
@@ -203,9 +203,9 @@ export default function Modal({ toggle, toggleFunction }) {
                 <option value>Sim</option>
                 <option value={false}>Não</option>
               </select>
-              <label>Utilização de mascara</label>
+              <label>Utilização de máscara</label>
             </SelectDiv>
-            {errors.mask && <span>O campo Mascara é obrigatório</span>}
+            {errors.mask && <span>O campo mascara é obrigatório</span>}
             <SelectDiv>
               <select
                 name="hypertension"
@@ -217,10 +217,10 @@ export default function Modal({ toggle, toggleFunction }) {
                 <option value>Sim</option>
                 <option value={false}>Não</option>
               </select>
-              <label>Hipertenção</label>
+              <label>Hipertensão</label>
             </SelectDiv>
             {errors.hypertension && (
-              <span>O campo Hipertenção é obrigatório</span>
+              <span>O campo hipertensão é obrigatório</span>
             )}
             <SelectDiv>
               <select
@@ -233,9 +233,9 @@ export default function Modal({ toggle, toggleFunction }) {
                 <option value>Sim</option>
                 <option value={false}>Não</option>
               </select>
-              <label>Diabete</label>
+              <label>Diabetes</label>
             </SelectDiv>
-            {errors.diabetes && <span>O campo Diabete é obrigatório</span>}
+            {errors.diabetes && <span>O campo diabetes é obrigatório</span>}
             <SelectDiv>
               <select
                 name="heart_disease"
@@ -247,10 +247,10 @@ export default function Modal({ toggle, toggleFunction }) {
                 <option value>Sim</option>
                 <option value={false}>Não</option>
               </select>
-              <label>Doença Cardíaca</label>
+              <label>Doença cardíaca</label>
             </SelectDiv>
             {errors.heart_disease && (
-              <span>O campo Doença Cardíaca é obrigatório</span>
+              <span>O campo doença cardíaca é obrigatório</span>
             )}
             <SelectDiv>
               <select
@@ -263,10 +263,10 @@ export default function Modal({ toggle, toggleFunction }) {
                 <option value>Sim</option>
                 <option value={false}>Não</option>
               </select>
-              <label>Doença Pulmonar</label>
+              <label>Doença pulmonar</label>
             </SelectDiv>
             {errors.lung_disease && (
-              <span>O campo Doença Pulmonar é obrigatório</span>
+              <span>O campo doença pulmonar é obrigatório</span>
             )}
             <SelectDiv>
               <select
@@ -281,7 +281,7 @@ export default function Modal({ toggle, toggleFunction }) {
               </select>
               <label>Asma</label>
             </SelectDiv>
-            {errors.asthma && <span>O campo Asma é obrigatório</span>}
+            {errors.asthma && <span>O campo asma é obrigatório</span>}
             <SelectDiv>
               <select
                 name="smoking"
@@ -295,7 +295,7 @@ export default function Modal({ toggle, toggleFunction }) {
               </select>
               <label>Tabagismo</label>
             </SelectDiv>
-            {errors.smoking && <span>O campo Tabagismo é obrigatório</span>}
+            {errors.smoking && <span>O campo tabagismo é obrigatório</span>}
             <SelectDiv>
               <select
                 name="kidney_disease"
@@ -307,10 +307,10 @@ export default function Modal({ toggle, toggleFunction }) {
                 <option value>Sim</option>
                 <option value={false}>Não</option>
               </select>
-              <label>Doença Renal</label>
+              <label>Doença renal</label>
             </SelectDiv>
             {errors.kidney_disease && (
-              <span>O campo Doença Renal é obrigatório</span>
+              <span>O campo doença renal é obrigatório</span>
             )}
             <SelectDiv>
               <select
@@ -323,9 +323,9 @@ export default function Modal({ toggle, toggleFunction }) {
                 <option value>Sim</option>
                 <option value={false}>Não</option>
               </select>
-              <label>Cancer</label>
+              <label>Câncer</label>
             </SelectDiv>
-            {errors.cancer && <span>O campo Cancer é obrigatório</span>}
+            {errors.cancer && <span>O campo câncer é obrigatório</span>}
             <SelectDiv>
               <select
                 name="corticosteroids_or_methotrexate"
@@ -337,10 +337,10 @@ export default function Modal({ toggle, toggleFunction }) {
                 <option value>Sim</option>
                 <option value={false}>Não</option>
               </select>
-              <label>Corticóides ou Metotrexate</label>
+              <label>Corticóides ou Metotrexato</label>
             </SelectDiv>
             {errors.corticosteroids_or_methotrexate && (
-              <span>O campo Corticóides é obrigatório</span>
+              <span>O campo corticóides ou metotrexato é obrigatório</span>
             )}
             <SelectDiv>
               <select
@@ -355,7 +355,7 @@ export default function Modal({ toggle, toggleFunction }) {
               </select>
               <label>Gestação</label>
             </SelectDiv>
-            {errors.gestation && <span>O campo Gestação é obrigatório</span>}
+            {errors.gestation && <span>O campo gestação é obrigatório</span>}
           </ModalBody>
           <ModalFooter>
             <Button
