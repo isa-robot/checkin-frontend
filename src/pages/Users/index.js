@@ -223,7 +223,8 @@ export default function Users() {
     return roleName === 'admin' ? 'administrador' :
       roleName === 'infectologist' ? 'infectologista' :
         roleName === 'responsible' ? 'responsável' :
-          roleName === 'assisted' ? 'assistido' : ''
+          roleName === 'assisted' ? 'assistido' :
+            roleName === 'student' ? 'estudante': '';
   }
 
   return (

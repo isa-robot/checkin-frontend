@@ -24,7 +24,7 @@ export default function DefaultLayout({ children }) {
         setToggleNoAccess(true);
       } else {
         setToggleNoAccess(false);
-        if (resources.includes('diary') && baseline === null)
+        if (resources.includes('diary') && !roles.includes("student") &&baseline === null)
           setToggleBaseline(true);
       }
     }
