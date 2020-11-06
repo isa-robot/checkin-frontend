@@ -43,7 +43,7 @@ export default function AppRoutes() {
       />
       <Route
         path="/diario"
-        roles={['assisted', 'infectologist', 'responsible']}
+        roles={['assisted', 'student', 'responsible']}
         component={Diary}
         resource="diary"
       />
