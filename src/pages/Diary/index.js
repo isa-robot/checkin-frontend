@@ -23,6 +23,8 @@ import Button from '~/components/Buttons/Button';
 import ApprovalCard from '~/components/ApprovalCard';
 import Modal from '~/components/ConfirmationModal';
 
+import { useSelector } from 'react-redux';
+
 export default function Dairy() {
   const initialState = {
     smellLoss: false,
@@ -51,6 +53,9 @@ export default function Dairy() {
   const [clearAndSend, setClearAndSend] = useState(false);
   const [sending, setSending] = useState(false);
   const [keycloak] = useKeycloak();
+  const { roles, resources } = useSelector(
+    state => state.user.profile
+  );
 
   function toggleModal(prop) {
     setToggle(prop);
@@ -145,7 +150,10 @@ export default function Dairy() {
         answered ? (
           <Container>
             <Content>
-              <ApprovalCard approved={approved} protocolActive={protocolActive} date={date} />
+              <ApprovalCard approved={approved}
+                            protocolActive={protocolActive}
+                            date={date}
+                            roles={roles} />
             </Content>
           </Container>
         ) : (
