@@ -4,27 +4,62 @@ import Card from '~/components/Card';
 export const MainCard = styled(Card)`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: initial;
   max-width: 1400px;
-  max-height: 1400px;
+  height: 1400px;
+  margin-top: 15px;
   overflow-y: scroll;
   text-align: justify;
+  background: #F0F8FF;
+  border-radius: 5px;
+   color: #000000;
   ::-webkit-scrollbar {
     display: none;
   }
-  margin: 0 auto;
-  margin-top: 100px;
-  padding: 0 2px 2px 2px;
-  }
-  @media screen and (max-height: 1000px) {
-    justify-content: initial;
-    margin-top: 5vh;
   }
 `;
 
+export const ButtonDiv = styled.div`
+  display: flex;
+  align-items: center;
 
-export const MainButtonGroup = styled.div`
-  margin: 1.4rem 0px;
+  @media(max-width: 500px) {
+    flex-direction: column;
+        button {
+          width: 2px
+          eight: 2px
+          color: white
+          type: button
+          margin-top: 5px;
+          margin-bottom: 5px;
+          border-radius: 25px;
+        }
+    }
+  flex-direction: row;
+
+    button {
+    width: 13rem
+    height: 3rem
+    color: white
+    type: button
+    margin-left: 5px;
+    margin-right: 5px;
+    border-radius: 25px;
+  }
+
+  #voltar {
+  background: #4B0082;
+  }
+  #naoAceito {
+  background: #FF0000;
+  }
+  #aceito {
+  background: #00FF7F;
+  }
+  #finalizar {
+  background: #00FF7F;
+  }
+
 `;
 
 export const Loading = styled.div`
@@ -39,47 +74,36 @@ export const Container = styled(Card)`
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  flex: 1 1;
-  text-align: center;
-  max-height: 1000px;
-  max-width: 1000px;
-  padding: 3rem;
-  margin-top: 100px;
-  /*background: #77c90daa;*/
-
-  div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-   divButton {
-    display: flex;
-    align-items: center;
-  }
-
+  max-height: 600px;
+  max-width: 1300px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #ffffff;
   span {
     font-size: 1.0rem;
   }
-
-  button {
-    width: 13rem
-    height: 3rem
-    color: white
-    type: button
+    h1 {
+    font-size: 2.0rem;
+    color: #000000;
   }
-
-  @media screen and (max-height: 830px) {
-    margin-top: 5vh;
-    padding: 1.5rem;
+      h2 {
+    font-size: 2.0rem;
+    color: #000000;
+  }
+     span {
+    font-size: 1.5rem;
+    color: #000000;
   }
 `;
 
 export const FlexBox = styled.div`
   display: flex;
-  align-items: center;
+  margin: 50px auto;
+  padding: 0 32px 32px 32px;
+  max-width: 1400px;
+  height: 100%;
   justify-content: center;
-
 `;
 
 

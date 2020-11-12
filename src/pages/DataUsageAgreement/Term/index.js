@@ -1,161 +1,157 @@
 import React, { useState, useEffect } from 'react';
 import {format, formatISO} from 'date-fns';
-import { toast } from 'react-toastify';
-import { useKeycloak } from '@react-keycloak/web';
 
 import {
   Container,
   MainCard,
   FlexBox,
+  ButtonDiv,
 } from './styles';
 
 import api from '~/services/api';
 import Button from '~/components/Buttons/Button';
 
 export default function Term() {
+  const initialState = {
+    personalKidDataTerm: false,
+    responsabilityTerm: false
+  };
 
-  const [loaded, setLoaded] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState(false);
-  const [protocolActive ,setProtocolActive] = useState(false)
-  const [answered, setAnswered] = useState(false);
-  const [approved, setApproved] = useState();
+  const [terms, setTerms] = useState(["    TERMO DE CONSENTIMENTO PARA TRATAMENTO DE DADOS PESSOAIS DE CRIANÇA/ADOLESCENTE: \n" +
+  "                  Em  razão  da  necessidade  de  cuidados  e  precauções  decorrentes  da  situação  de\n" +
+  "                  pandemia da COVID-19 (coronavírus) e considerando as disposições contidas na Lei nº\n" +
+  "                  13.709/18  (Lei  Geral  de  Proteção  de  Dados),  DECLARO  ESTAR  CIENTE  E  DE\n" +
+  "                  ACORDO em disponibilizar dados pessoais e sensíveis do(a) criança/adolescente acima\n" +
+  "                  indicado(a),  dentre  os  quais  se  destacam  o  nome,  sobrenome,  sexo,  idade,  endereço,\n" +
+  "                      doenças pretéritas, condições de saúde, autorizando tratamento destes dados, pelo tempo\n" +
+  "                  que  se  fizer  necessário,  para  o  fim  único  e  exclusivo  de:  tutela  da  saúde  do(a)\n" +
+  "                  criança/adolescente e todos os demais alunos(as) da Instituição de Ensino que se encontra\n" +
+  "                  este  vinculado,  especialmente  para  fins  de  estabelecer  mecanismos  de  controle  à\n" +
+  "                  transmissão do Coronavírus.\n" +
+  "                      Dessa forma, AUTORIZO a QUALIS a utilizar os dados pessoais acima referido\n" +
+  "                  em processos internos, inclusive compartilhando com eventuais parceiros e colaboradores\n" +
+  "                  que atuem conjuntamente na tutela de saúde dos alunos(as) da Instituição de Ensino que\n" +
+  "                  se  encontra  o(a)  criança/adolescente  vinculado(a),  desde  que  respeitada  sempre  a\n" +
+  "                  finalidade acima indicada.\n" +
+  "                      Ademais,  DECLARO  estar  ciente  de  que,  na  condição  de  responsável  legal,  a\n" +
+  "                  qualquer momento, poderei revogar o consentimento constante neste Termo, bem como\n" +
+  "                  requerer  a  anonimização,  bloqueio,  retificação  ou  eliminação  de  dados  desnecessários,\n" +
+  "                      excessivos  ou  tratados  em  desconformidade  com  a  LGPD,  mediante  comunicação  por\n" +
+  "                  escrito endereçada ao e-mail contato@portalqualis.com.br.\n" +
+  "                      Porto Alegre (RS), outubro de 2020.\n" +
+  "                  Atenciosamente\n" +
+  "                  Equipe QUALIS – Soluções em Infectologia",
+
+    "                  TERMO DE RESPONSABILIDADE E DECLARAÇÕES: \n" +
+    "                  Em  razão  da  necessidade  de  cuidados  e  precauções  decorrentes  da  situação  de\n" +
+    "                  pandemia da COVID-19 (coronavírus) e considerando as disposições contidas na Lei nº\n" +
+    "                  13.709/18  (Lei  Geral  de  Proteção  de  Dados),  DECLARO  ESTAR  CIENTE  E  DE\n" +
+    "                  ACORDO em disponibilizar dados pessoais e sensíveis do(a) criança/adolescente acima\n" +
+    "                  indicado(a),  dentre  os  quais  se  destacam  o  nome,  sobrenome,  sexo,  idade,  endereço,\n" +
+    "                  doenças pretéritas, condições de saúde, autorizando tratamento destes dados, pelo tempo\n" +
+    "                  que  se  fizer  necessário,  para  o  fim  único  e  exclusivo  de:  tutela  da  saúde  do(a)\n" +
+    "                  criança/adolescente e todos os demais alunos(as) da Instituição de Ensino que se encontra\n" +
+    "                  este  vinculado,  especialmente  para  fins  de  estabelecer  mecanismos  de  controle  à\n" +
+    "                  transmissão do Coronavírus.\n" +
+    "                  Dessa forma, AUTORIZO a QUALIS a utilizar os dados pessoais acima referido\n" +
+    "                  em processos internos, inclusive compartilhando com eventuais parceiros e colaboradores\n" +
+    "                  que atuem conjuntamente na tutela de saúde dos alunos(as) da Instituição de Ensino que\n" +
+    "                  se  encontra  o(a)  criança/adolescente  vinculado(a),  desde  que  respeitada  sempre  a\n" +
+    "                  finalidade acima indicada.\n" +
+    "                  Ademais,  DECLARO  estar  ciente  de  que,  na  condição  de  responsável  legal,  a\n" +
+    "                  qualquer momento, poderei revogar o consentimento constante neste Termo, bem como\n" +
+    "                  requerer  a  anonimização,  bloqueio,  retificação  ou  eliminação  de  dados  desnecessários,\n" +
+    "                  excessivos  ou  tratados  em  desconformidade  com  a  LGPD,  mediante  comunicação  por\n" +
+    "                  escrito endereçada ao e-mail contato@portalqualis.com.br.\n" +
+    "                  Porto Alegre (RS), outubro de 2020.\n" +
+    "                  Atenciosamente\n" +
+    "                  Equipe QUALIS – Soluções em Infectologia", ""]) ;
+
+  const [selectedTerm, setSelectedTerm]= useState('');
   const [date, setDate] = useState(new Date());
-  const [toggle, setToggle] = useState(false);
-  const [formState, setFormState] = useState();
-  const [clearAndSend, setClearAndSend] = useState(false);
-  const [sending, setSending] = useState(false);
-  const [keycloak] = useKeycloak();
+  const [textIndex, setTextIndex] = useState(0);
+  const [formState, setFormState] = useState(initialState);
 
-  function toggleModal(prop) {
-    setToggle(prop);
-  }
+  useEffect(() => {
+    setSelectedTerm(terms[textIndex]);
+  },[]);
 
-  async function handleFormAnswer() {
-    setLoading(true);
-    setSending(true);
-    await api
-      .post(`/users/diaries`, formState, {
-        headers: {
-          Authorization: `Bearer ${keycloak.token}`,
-        },
-      })
-      .then(response => {
-        toast.success('Resposta enviada com sucesso!');
-        setApproved(response.data.approved);
-        setDate(new Date());
-        setAnswered(true);
-        verifyProtocolsActive();
-        setSending(false)
-      })
-      .catch(() => {
-        setSending(false)
-        toast.error('Houve um problema, contate o suporte!');
-      });
-    setLoading(false);
-  }
-
-  function verifyProtocolsActive() {
-    api.get(`/protocols/active`, {
-      headers: {
-        Authorization: `Bearer ${keycloak.token}`
-      }
-    }).then(response => {
-      if(response.data.length > 0) {
-        setProtocolActive(true)
-      }else {
-        setProtocolActive(false)
-      }
-    })
-
-  }
-
-  function handleOkAnswer() {
-    setFormState({});
-    setClearAndSend(true);
-  }
-
-  function handleFormChange(evt) {
+  function handleTermChange(evt) {
     const { value, name } = evt.target;
     setFormState({
       ...formState,
       [name]: value === 'true',
     });
+    console.info(evt.target);
+    console.info(value,name);
   }
 
-  function handleToggleForm() {
-    setForm(!form);
-  }
-
-  useEffect(() => {
-    async function fetchData() {
-      const newDate = formatISO(new Date(), { representation: 'date' });
-      const dailyAnswer = await api.get(`/users/diaries/date/${newDate}`, {
-        headers: {
-          Authorization: `Bearer ${keycloak.token}`,
-        },
-      });
-      if (dailyAnswer.data) {
-        setAnswered(true);
-        setApproved(dailyAnswer.data.approved);
-        setDate(dailyAnswer.data.date);
+    function nextTerm(currTextIndex){
+      if(currTextIndex < terms.length - 1){
+        setTextIndex(currTextIndex + 1);
+        setSelectedTerm(terms[currTextIndex + 1]);
       }
-      setLoaded(true);
     }
-    fetchData();
-    verifyProtocolsActive()
-  }, []);
 
-  useEffect(() => {
-    if (clearAndSend) {
-      handleFormAnswer();
+  function previousTerm(currTextIndex){
+    console.log(currTextIndex);
+    if(currTextIndex > 0 ){
+      setTextIndex(currTextIndex - 1);
+      setSelectedTerm(terms[currTextIndex - 1]);
     }
-  }, [clearAndSend]);
-
+  }
   return (
     <FlexBox>
         <Container>
-            <h2>TERMO DE CONSENTIMENTO PARA TRATAMENTO DE DADOS
-              PESSOAIS DE CRIANÇA/ADOLESCENTE</h2>
-            <MainCard>
-              <div>
-                <span>Em  razão  da  necessidade  de  cuidados  e  precauções  decorrentes  da  situação  de
-                  pandemia da COVID-19 (coronavírus) e considerando as disposições contidas na Lei nº
-                  13.709/18  (Lei  Geral  de  Proteção  de  Dados),  DECLARO  ESTAR  CIENTE  E  DE
-                  ACORDO em disponibilizar dados pessoais e sensíveis do(a) criança/adolescente acima
-                  indicado(a),  dentre  os  quais  se  destacam  o  nome,  sobrenome,  sexo,  idade,  endereço,
-                  doenças pretéritas, condições de saúde, autorizando tratamento destes dados, pelo tempo
-                  que  se  fizer  necessário,  para  o  fim  único  e  exclusivo  de:  tutela  da  saúde  do(a)
-                  criança/adolescente e todos os demais alunos(as) da Instituição de Ensino que se encontra
-                  este  vinculado,  especialmente  para  fins  de  estabelecer  mecanismos  de  controle  à
-                  transmissão do Coronavírus.
-                  Dessa forma, AUTORIZO a QUALIS a utilizar os dados pessoais acima referido
-                  em processos internos, inclusive compartilhando com eventuais parceiros e colaboradores
-                  que atuem conjuntamente na tutela de saúde dos alunos(as) da Instituição de Ensino que
-                  se  encontra  o(a)  criança/adolescente  vinculado(a),  desde  que  respeitada  sempre  a
-                  finalidade acima indicada.
-                  Ademais,  DECLARO  estar  ciente  de  que,  na  condição  de  responsável  legal,  a
-                  qualquer momento, poderei revogar o consentimento constante neste Termo, bem como
-                  requerer  a  anonimização,  bloqueio,  retificação  ou  eliminação  de  dados  desnecessários,
-                  excessivos  ou  tratados  em  desconformidade  com  a  LGPD,  mediante  comunicação  por
-                  escrito endereçada ao e-mail contato@portalqualis.com.br.</span>
-                  <span>Porto Alegre (RS), outubro de 2020.</span>
-                  <span>Atenciosamente</span>
-                  <span>Equipe QUALIS – Soluções em Infectologia</span>
-              </div>
-            </MainCard>
-            <h1>{format(new Date(date), "dd/MM/yyyy")}</h1>
+          <MainCard>
+            { textIndex <= 1 ? (
+            <div id="termo">
+              {selectedTerm}
+            </div>
+            ) : (
+                <div id="finalizar">
+                  <h2>Deseja finalizar?</h2><br/>
+                  <span>Ao clicar em finalizar você concorda com o envio dos termos apresentados.</span>
+                </div>
+              )
+            }
+          </MainCard>
 
-              <divButton>
-                <Button backgroundColor="mountainMeadow">
-                  <strong>Aceito</strong>
-                </Button>
+          <h1>{format(new Date(date), "dd/MM/yyyy")}</h1>
+          <ButtonDiv>
+            { textIndex > 0 ? (
+              <Button id={"voltar"} onClick={() => previousTerm(textIndex)} >
+                <strong>Voltar</strong>
+              </Button>
+            ) : ''
+            }
+            { textIndex <= 1 ? (
+            <button value={false} name={ textIndex == 0 ? 'personalKidDataTerm' : 'responsabilityTerm' } id={"naoAceito"} onClick={(e) => {
 
-                <Button backgroundColor="sunset">
-                  <strong>Não aceito</strong>
-                </Button>
+              handleTermChange(e)
+              nextTerm(textIndex)}
+            }>
+             Não aceito
+            </button>
+            ) : ''
+            }
+            { textIndex <= 1 ? (
+            <button id={"aceito"} value={true} name={ textIndex == 1 ? 'responsabilityTerm' : 'personalKidDataTerm' } onClick={(e) => {
 
-              </divButton>
+              handleTermChange(e)
+              nextTerm(textIndex)}
+            }>
+              Aceito
+            </button>
+            ) : ''
+            }
+            { textIndex > 1 ? (
+              <Button id={"finalizar"}>
+                <strong>Finalizar</strong>
+              </Button>
+            ) : ''
+            }
+          </ButtonDiv>
         </Container>
     </FlexBox>
   );
