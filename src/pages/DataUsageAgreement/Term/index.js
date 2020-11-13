@@ -10,6 +10,10 @@ import {
 
 import api from '~/services/api';
 import Button from '~/components/Buttons/Button';
+import {toast} from "react-toastify";
+import {useKeycloak} from "@react-keycloak/web";
+import {useHistory} from 'react-router-dom';
+import {keycloak} from "~/keycloak";
 
 export default function Term() {
   const initialState = {
@@ -71,6 +75,10 @@ export default function Term() {
   const [date, setDate] = useState(new Date());
   const [textIndex, setTextIndex] = useState(0);
   const [formState, setFormState] = useState(initialState);
+  const [loading, setLoading] = useState(false);
+  const [keycloak] = useKeycloak();
+  const history = useHistory();
+  const username = keycloak.tokenParsed.preferred_username;
 
   useEffect(() => {
     setSelectedTerm(terms[textIndex]);
@@ -84,6 +92,25 @@ export default function Term() {
     });
     console.info(evt.target);
     console.info(value,name);
+    console.info(formState);
+  }
+
+  function handleTermAnswer() {
+    setLoading(true);
+     api
+      .post(`/users/terms/create`, formState, {
+        headers: {
+          Authorization: `Bearer ${keycloak.token}`,
+        },
+      })
+      .then(response => {
+        toast.success('Resposta enviada com sucesso!');
+        history.push('/qualis')
+      })
+      .catch(() => {
+        toast.error('Houve um problema, contate o suporte!');
+      });
+    setLoading(false);
   }
 
     function nextTerm(currTextIndex){
@@ -146,7 +173,7 @@ export default function Term() {
             ) : ''
             }
             { textIndex > 1 ? (
-              <Button id={"finalizar"}>
+              <Button onClick={() => handleTermAnswer()} id={"finalizar"}>
                 <strong>Finalizar</strong>
               </Button>
             ) : ''

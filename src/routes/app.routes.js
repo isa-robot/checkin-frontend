@@ -16,10 +16,14 @@ import SignUp from '../pages/SignUp';
 import Forgot from '~/pages/Forgot';
 import ResetPassword from '~/pages/ResetPassword';
 import Term from '../pages/DataUsageAgreement/Term';
+import {useSelector} from "react-redux";
 
 export default function AppRoutes() {
+  const { roles, termsAccepted } = useSelector(state => state.user.profile);
   return (
+
     <Switch>
+      {console.info(termsAccepted, roles)}
       <Route path="/" exact component={SignIn} resource={false} />
       <Route
         path="/esqueci-minha-senha"
@@ -43,7 +47,7 @@ export default function AppRoutes() {
       />
       <Route
         path="/termo-de-compromisso"
-        roles={['student', 'assisted']}
+        roles={['student']}
         component={Term}
         resource={false}
       />
@@ -52,6 +56,7 @@ export default function AppRoutes() {
         roles={['assisted', 'student', 'responsible']}
         component={Diary}
         resource="diary"
+        termsAccepted={termsAccepted}
       />
       <Route
         path="/avaliacao-cfpng"

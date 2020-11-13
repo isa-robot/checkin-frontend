@@ -17,6 +17,17 @@ function getBaseline(id) {
     .catch(error => ({ error }));
 }
 
+function getTerm() {
+  return api
+    .get(`/users/terms/by-user`, {
+      headers: {
+        Authorization: `Bearer ${keycloak.token}`,
+      }
+    })
+    .then(response => ({ response }))
+    .catch(error => ({ error }));
+}
+
 export function* kcAuth() {
   api.defaults.headers.Authorization = `Bearer ${keycloak.token}`;
 
@@ -44,8 +55,21 @@ export function* kcAuth() {
       baseline = baseline_response.response.data.baseline;
   }
 
+  let termsAccepted = false;
+  if (roles.includes('student')){
+    const term_response = yield call(getTerm);
+
+    if (term_response.response){
+
+      termsAccepted = term_response.response.data.canUseTheSystem;
+
+    }
+
+  }
+
+
   const user = {};
-  user.profile = { roles, resources, username, emailVerified, baseline, name };
+  user.profile = { roles, resources, username, emailVerified, baseline, name, termsAccepted };
 
   yield put(UpdateStore(user));
 }

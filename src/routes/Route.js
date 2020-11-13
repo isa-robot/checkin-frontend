@@ -11,6 +11,7 @@ export default function RouteWrapper({
   component: Component,
   resource,
   roles,
+  termsAccepted= true ,
   ...rest
 }) {
   const [keycloak] = useKeycloak()
@@ -34,7 +35,7 @@ export default function RouteWrapper({
     <Route
       {...rest}
       render={props => {
-        return isAuthorized(roles) ? (
+        return isAuthorized(roles, termsAccepted) ? (
           <Layout>
             <Component {...props} />
           </Layout>

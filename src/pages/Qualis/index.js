@@ -7,10 +7,11 @@ import { Loading, Container } from './styles';
 
 export default function Qualis() {
   const loaded = useState(true);
-  const { roles } = useSelector(state => state.user.profile);
+  const { roles, termsAccepted } = useSelector(state => state.user.profile);
   const history = useHistory();
 
   useEffect(() => {
+    if (!termsAccepted) history.push('/termo-de-compromisso');
     if (roles.includes('assisted')) history.push('/diario');
   }, [roles, history]);
 
