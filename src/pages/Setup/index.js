@@ -39,10 +39,13 @@ function GmailForm(props) {
     value,
     index,
     submitMailer,
+    translateDestinataries,
     form,
     deleteMailer,
     hasMailer,
-    recipients,
+    usersNotApproved,
+    suport,
+    healthService,
     suportForm,
     submitSuport,
     healthForm,
@@ -190,7 +193,7 @@ function GmailForm(props) {
           {hasMailer && (
             <>
               <CardHeader title="Configuração de Destinatários" />
-              {!recipients.map(r => r.destinatary_type).includes('suport') && (
+              {
                 <CardContent>
                   <form onSubmit={suportForm.handleSubmit(submitSuport)}>
                     <h4>Suporte</h4>
@@ -237,10 +240,8 @@ function GmailForm(props) {
                     </InputsGroup>
                   </form>
                 </CardContent>
-              )}
-              {!recipients
-                .map(r => r.destinatary_type)
-                .includes('usersNotApproved') && (
+              }
+              {
                 <CardContent>
                   <form onSubmit={usersForm.handleSubmit(submitUsers)}>
                     <h4>Usuários não aprovados</h4>
@@ -287,10 +288,8 @@ function GmailForm(props) {
                     </InputsGroup>
                   </form>
                 </CardContent>
-              )}
-              {!recipients
-                .map(r => r.destinatary_type)
-                .includes('healthService') && (
+              }
+              {
                 <CardContent>
                   <form onSubmit={healthForm.handleSubmit(submitHealth)}>
                     <h4>Serviço de saúde</h4>
@@ -337,17 +336,17 @@ function GmailForm(props) {
                     </InputsGroup>
                   </form>
                 </CardContent>
-              )}
+              }
               <List
                 component="nav"
                 aria-labelledby="nested-list-subheader"
                 subheader={
                   <ListSubheader component="div" id="nested-list-subheader">
-                    Destinatários
+                    Usuários Não Aprovados
                   </ListSubheader>
                 }
               >
-                {recipients.map(r => (
+                {usersNotApproved.map(r => (
                   <ListItem button key={r.name}>
                     <ListItemIcon>
                       <Inbox />
@@ -364,7 +363,77 @@ function GmailForm(props) {
                     </ListItemSecondaryAction>
                   </ListItem>
                 ))}
-                {recipients.length ? null : (
+                {usersNotApproved.length ? null : (
+                  <ListItem button>
+                    <ListItemIcon>
+                      <Inbox />
+                    </ListItemIcon>
+                    <ListItemText primary="Não há destinatários cadastrados." />
+                  </ListItem>
+                )}
+              </List>
+              <List
+                component="nav"
+                aria-labelledby="nested-list-subheader"
+                subheader={
+                  <ListSubheader component="div" id="nested-list-subheader">
+                    Suporte
+                  </ListSubheader>
+                }
+              >
+                {suport.map(r => (
+                  <ListItem button key={r.name}>
+                    <ListItemIcon>
+                      <Inbox />
+                    </ListItemIcon>
+                    <ListItemText primary={`${r.name}: ${r.address}`} />
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => deleteRecipient(r)}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                ))}
+                {suport.length ? null : (
+                  <ListItem button>
+                    <ListItemIcon>
+                      <Inbox />
+                    </ListItemIcon>
+                    <ListItemText primary="Não há destinatários cadastrados." />
+                  </ListItem>
+                )}
+              </List>
+              <List
+                component="nav"
+                aria-labelledby="nested-list-subheader"
+                subheader={
+                  <ListSubheader component="div" id="nested-list-subheader">
+                    Serviço de saúde
+                  </ListSubheader>
+                }
+              >
+                {healthService.map(r => (
+                  <ListItem button key={r.name}>
+                    <ListItemIcon>
+                      <Inbox />
+                    </ListItemIcon>
+                    <ListItemText primary={`${r.name}: ${r.address}`} />
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => deleteRecipient(r)}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                ))}
+                {healthService.length ? null : (
                   <ListItem button>
                     <ListItemIcon>
                       <Inbox />
@@ -390,7 +459,9 @@ function AmazonForm(props) {
     form,
     deleteMailer,
     hasMailer,
-    recipients,
+    usersNotApproved,
+    suport,
+    healthService,
     suportForm,
     submitSuport,
     healthForm,
@@ -522,7 +593,7 @@ function AmazonForm(props) {
           {hasMailer && (
             <>
               <CardHeader title="Configuração de Destinatários" />
-              {!recipients.map(r => r.destinatary_type).includes('suport') && (
+              {
                 <CardContent>
                   <form onSubmit={suportForm.handleSubmit(submitSuport)}>
                     <h4>Suporte</h4>
@@ -569,11 +640,8 @@ function AmazonForm(props) {
                     </InputsGroup>
                   </form>
                 </CardContent>
-              )}
-              {!recipients
-                .map(r => r.destinatary_type)
-                .includes('usersNotApproved') && (
-                <CardContent>
+              }
+              {<CardContent>
                   <form onSubmit={usersForm.handleSubmit(submitUsers)}>
                     <h4>Usuários não aprovados</h4>
                     <InputsGroup>
@@ -619,11 +687,8 @@ function AmazonForm(props) {
                     </InputsGroup>
                   </form>
                 </CardContent>
-              )}
-              {!recipients
-                .map(r => r.destinatary_type)
-                .includes('healthService') && (
-                <CardContent>
+              }
+              {<CardContent>
                   <form onSubmit={healthForm.handleSubmit(submitHealth)}>
                     <h4>Serviço de saúde</h4>
                     <InputsGroup>
@@ -669,17 +734,17 @@ function AmazonForm(props) {
                     </InputsGroup>
                   </form>
                 </CardContent>
-              )}
+              }
               <List
                 component="nav"
                 aria-labelledby="nested-list-subheader"
                 subheader={
                   <ListSubheader component="div" id="nested-list-subheader">
-                    Destinatários
+                    Usuários Não Aprovados
                   </ListSubheader>
                 }
               >
-                {recipients.map(r => (
+                {usersNotApproved.map(r => (
                   <ListItem button key={r.name}>
                     <ListItemIcon>
                       <Inbox />
@@ -696,7 +761,77 @@ function AmazonForm(props) {
                     </ListItemSecondaryAction>
                   </ListItem>
                 ))}
-                {recipients.length ? null : (
+                {usersNotApproved.length ? null : (
+                  <ListItem button>
+                    <ListItemIcon>
+                      <Inbox />
+                    </ListItemIcon>
+                    <ListItemText primary="Não há destinatários cadastrados." />
+                  </ListItem>
+                )}
+              </List>
+              <List
+                component="nav"
+                aria-labelledby="nested-list-subheader"
+                subheader={
+                  <ListSubheader component="div" id="nested-list-subheader">
+                    Suporte
+                  </ListSubheader>
+                }
+              >
+                {suport.map(r => (
+                  <ListItem button key={r.name}>
+                    <ListItemIcon>
+                      <Inbox />
+                    </ListItemIcon>
+                    <ListItemText primary={`${r.name}: ${r.address}`} />
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => deleteRecipient(r)}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                ))}
+                {suport.length ? null : (
+                  <ListItem button>
+                    <ListItemIcon>
+                      <Inbox />
+                    </ListItemIcon>
+                    <ListItemText primary="Não há destinatários cadastrados." />
+                  </ListItem>
+                )}
+              </List>
+              <List
+                component="nav"
+                aria-labelledby="nested-list-subheader"
+                subheader={
+                  <ListSubheader component="div" id="nested-list-subheader">
+                    Serviço de saúde
+                  </ListSubheader>
+                }
+              >
+                {healthService.map(r => (
+                  <ListItem button key={r.name}>
+                    <ListItemIcon>
+                      <Inbox />
+                    </ListItemIcon>
+                    <ListItemText primary={`${r.name}: ${r.address}`} />
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => deleteRecipient(r)}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                ))}
+                {healthService.length ? null : (
                   <ListItem button>
                     <ListItemIcon>
                       <Inbox />
@@ -725,6 +860,9 @@ export default function Setup() {
   const [mailer, setMailer] = useState('ethereal');
   const [recipients, setRecipients] = useState([]);
   const [smsChanel, setSmsChanel] = useState('whatsapp');
+  const [usersNotApproved, setUsersNotApproved] = useState([])
+  const [suport, setSuport] = useState([])
+  const [healthService, setHealthService] = useState([])
 
   const [ethereal, setEthereal] = useState({
     address: '',
@@ -805,6 +943,23 @@ export default function Setup() {
     });
 
     if (rec_response.data) {
+      const notApproved = []
+      const sup = []
+      const health = []
+      rec_response.data.forEach( response => {
+        if(response.destinatary_type === 'usersNotApproved') {
+          notApproved.push(response)
+          setUsersNotApproved([...notApproved])
+        }
+        if(response.destinatary_type === 'suport') {
+          sup.push(response)
+          setSuport([...sup])
+        }
+        if(response.destinatary_type === 'healthService') {
+          health.push(response)
+          setHealthService([...health])
+        }
+      })
       setRecipients(rec_response.data);
     }
   }
@@ -972,7 +1127,12 @@ export default function Setup() {
         toast.success('Destinatário para suporte configurado!');
         getRecipients();
       })
-      .catch(() => {
+      .catch((e) => {
+        if(e.response.status == 409) {
+          return toast.error(
+            'Dest. suporte já cadastrado'
+          );
+        }
         toast.error('Erro ao configurar destinatário para suporte!');
       });
   }
@@ -991,10 +1151,15 @@ export default function Setup() {
         },
       })
       .then(() => {
-        toast.success('Destinatário para usuários não aprovados configurado!');
+        toast.success('Dest. para usuários não aprovados configurado!');
         getRecipients();
       })
-      .catch(() => {
+      .catch((e) => {
+        if(e.response.status == 409) {
+          return toast.error(
+            'Dest. para usuarios não aprovados já cadastrado'
+          );
+        }
         toast.error(
           'Erro ao configurar destinatário para Usuários não aprovados!'
         );
@@ -1018,7 +1183,12 @@ export default function Setup() {
         toast.success('Destinatário para serviço de saúde configurado!');
         getRecipients();
       })
-      .catch(() => {
+      .catch((e) => {
+        if(e.response.status == 409) {
+          return toast.error(
+            'Dest. saúde já cadastrado!'
+          );
+        }
         toast.error(
           'Erro ao configurar destinatário para serviço de saúde!'
         );
@@ -1026,6 +1196,13 @@ export default function Setup() {
   }
 
   async function handleDeleteRecipient(r) {
+    if(r.destinatary_type == "usersNotApproved") {
+      setUsersNotApproved(usersNotApproved.filter(user => user.id != r.id))
+    }else if(r.destinatary_type == "suport"){
+      setSuport(suport.filter(user => user.id != r.id))
+    }else {
+      setHealthService(healthService.filter(user => user.id != r.id))
+    }
     api
       .delete(`mails/removeDestinatary/${r.id}`, {
         headers: { Authorization: `Bearer ${keycloak.token}` },
@@ -1103,7 +1280,9 @@ export default function Setup() {
                 submitMailer={handleSubmitEthereal}
                 deleteMailer={handleDeleteMailer}
                 hasMailer={hasMailer}
-                recipients={recipients}
+                usersNotApproved={usersNotApproved}
+                suport={suport}
+                healthService={healthService}
                 suportForm={suportForm}
                 healthForm={healthForm}
                 submitSuport={handleOnSubmitSuport}
@@ -1119,7 +1298,9 @@ export default function Setup() {
                 submitMailer={handleSubmitSes}
                 deleteMailer={handleDeleteMailer}
                 hasMailer={hasMailer}
-                recipients={recipients}
+                usersNotApproved={usersNotApproved}
+                suport={suport}
+                healthService={healthService}
                 suportForm={suportForm}
                 healthForm={healthForm}
                 submitSuport={handleOnSubmitSuport}
