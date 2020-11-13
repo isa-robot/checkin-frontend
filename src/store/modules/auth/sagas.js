@@ -17,6 +17,13 @@ function getBaseline(id) {
     .catch(error => ({ error }));
 }
 
+function getStudentBaseline(id) {
+  return api
+    .get(`/users/student-baselines/${id}`)
+    .then(response => ({ response }))
+    .catch(error => ({ error }));
+}
+
 export function* kcAuth() {
   api.defaults.headers.Authorization = `Bearer ${keycloak.token}`;
 
@@ -39,14 +46,21 @@ export function* kcAuth() {
 
   let baseline = null;
   if (resources.includes('diary')) {
-    const baseline_response = yield call(getBaseline, id);
-    if (baseline_response.response)
-      baseline = baseline_response.response.data.baseline;
+    if(roles.includes('student')) {
+      const baseline_response = yield call(getStudentBaseline, id);
+      if(baseline_response.response) {
+        baseline = baseline_response.response.data.baseline;
+      }
+    }else{
+      const baseline_response = yield call(getBaseline, id);
+      if (baseline_response.response){
+        baseline = baseline_response.response.data.baseline;
+      }
+    }
   }
 
   const user = {};
   user.profile = { roles, resources, username, emailVerified, baseline, name };
-
   yield put(UpdateStore(user));
 }
 
