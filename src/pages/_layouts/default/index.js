@@ -6,6 +6,7 @@ import Header from '~/components/Header';
 import Footer from '~/components/Footer';
 import NoAccessModal from '~/components/NoAccessModal';
 import BaseLineModal from '~/components/BaseLineModal';
+import StudentBaselineModal from '~/components/StudentBaselineModal'
 
 import { Wrapper, Layer } from './styles';
 
@@ -24,8 +25,11 @@ export default function DefaultLayout({ children }) {
         setToggleNoAccess(true);
       } else {
         setToggleNoAccess(false);
-        if (resources.includes('diary') && !roles.includes("student") &&baseline === null)
+        if(roles.includes('student') && !baseline) {
+          setToggleBaseline(true)
+        }else if (resources.includes('diary') && !baseline) {
           setToggleBaseline(true);
+        }
       }
     }
   }, [roles, resources, baseline, loading]);
@@ -41,10 +45,16 @@ export default function DefaultLayout({ children }) {
         {children}
         <Footer />
         <NoAccessModal toggle={toggleNoAccess} />
-        <BaseLineModal
-          toggle={toggleBaseline}
-          toggleFunction={toggleBaselineModal}
-        />
+        { !roles.includes('student') ? (
+          <BaseLineModal
+            toggle={toggleBaseline}
+            toggleFunction={toggleBaselineModal}
+          />
+        ):
+          <StudentBaselineModal
+            toggle={toggleBaseline}
+            toggleFunction={toggleBaselineModal}
+          />}
       </Layer>
     </Wrapper>
   );
