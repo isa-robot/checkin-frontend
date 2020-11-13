@@ -44,9 +44,7 @@ export const ModalHeader = styled.div`
 
 export const ModalBody = styled.div`
   overflow-y: scroll;
-  ::-webkit-scrollbar {
-    display: none;
-  }
+  overflow-x: hidden;
   width: 100%;
   padding: 10px 0;
 
