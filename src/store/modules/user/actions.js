@@ -5,6 +5,13 @@ export function newBaselineRequest(data) {
   };
 }
 
+export function newStudentBaselineRequest(data) {
+  return {
+    type: '@user/NEW_STUDENT_BASELINE_REQUEST',
+    payload: { data },
+  };
+}
+
 export function newBaselineSuccess(baseline) {
   return {
     type: '@user/NEW_BASELINE_SUCCESS',
@@ -12,7 +19,19 @@ export function newBaselineSuccess(baseline) {
   };
 }
 
+export function newStudentBaselineSuccess(baseline) {
+  return {
+    type: '@user/NEW_BASELINE_SUCCESS',
+    payload: { baseline },
+  };
+}
+
 export function newBaselineFailure() {
+  return {
+    type: '@user/NEW_BASELINE_FAILURE',
+  };
+}
+export function newStudentBaselineFailure() {
   return {
     type: '@user/NEW_BASELINE_FAILURE',
   };

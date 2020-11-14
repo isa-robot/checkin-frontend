@@ -23,7 +23,6 @@ export default function AppRoutes() {
   return (
 
     <Switch>
-      {console.info(termsAccepted, roles)}
       <Route path="/" exact component={SignIn} resource={false} />
       <Route
         path="/esqueci-minha-senha"
@@ -46,7 +45,7 @@ export default function AppRoutes() {
         resource={false}
       />
       <Route
-        path="/termo-de-compromisso"
+        path="/termos"
         roles={['student']}
         component={Term}
         resource={false}
@@ -57,6 +56,7 @@ export default function AppRoutes() {
         component={Diary}
         resource="diary"
         termsAccepted={termsAccepted}
+        userRoles={roles}
       />
       <Route
         path="/avaliacao-cfpng"
@@ -71,7 +71,12 @@ export default function AppRoutes() {
         resource={false}
       />
 
-      <Route path="/qualis" roles={[]} component={Qualis} resource={false} />
+      <Route path="/qualis"
+             roles={[]}
+             component={Qualis}
+             resource={false}
+             termsAccepted={termsAccepted}
+             userRoles={roles}/>
       <Route
         path="/configuracao"
         roles={['admin']}

@@ -6,12 +6,13 @@ import { useKeycloak } from '@react-keycloak/web';
 
 import AuthLayout from '~/pages/_layouts/auth';
 import DefaultLayout from '~/pages/_layouts/default';
+import api from '~/services/api';
+import { keycloak } from '~/keycloak';
 
 export default function RouteWrapper({
   component: Component,
   resource,
   roles,
-  termsAccepted= true ,
   ...rest
 }) {
   const [keycloak] = useKeycloak()
@@ -35,7 +36,7 @@ export default function RouteWrapper({
     <Route
       {...rest}
       render={props => {
-        return isAuthorized(roles, termsAccepted) ? (
+        return isAuthorized(roles) ? (
           <Layout>
             <Component {...props} />
           </Layout>

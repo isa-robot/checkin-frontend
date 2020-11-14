@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import {format, formatISO} from 'date-fns';
 
+import { useDispatch } from 'react-redux';
 import {
   Container,
   MainCard,
   FlexBox,
   ButtonDiv,
+  Content,
 } from './styles';
-
 import api from '~/services/api';
 import Button from '~/components/Buttons/Button';
 import {toast} from "react-toastify";
 import {useKeycloak} from "@react-keycloak/web";
 import {useHistory} from 'react-router-dom';
 import {keycloak} from "~/keycloak";
+import { useSelector } from 'react-redux';
+
+import {UpdateUser} from '~/store/modules/auth/actions'
 
 export default function Term() {
   const initialState = {
@@ -78,9 +82,10 @@ export default function Term() {
   const [loading, setLoading] = useState(false);
   const [keycloak] = useKeycloak();
   const history = useHistory();
-  const username = keycloak.tokenParsed.preferred_username;
-
+  const { roles, resources, username, emailVerified, baseline, name, termsAccepted } = useSelector(state => state.user.profile);
+  const dispatch = useDispatch();
   useEffect(() => {
+    if (termsAccepted) history.push('/qualis');
     setSelectedTerm(terms[textIndex]);
   },[]);
 
@@ -90,9 +95,6 @@ export default function Term() {
       ...formState,
       [name]: value === 'true',
     });
-    console.info(evt.target);
-    console.info(value,name);
-    console.info(formState);
   }
 
   function handleTermAnswer() {
@@ -105,11 +107,17 @@ export default function Term() {
       })
       .then(response => {
         toast.success('Resposta enviada com sucesso!');
+        const user = {}
+        const termsAccepted = response.data.canUseTheSystem
+        user.profile = { roles, resources, username, emailVerified, baseline, name, termsAccepted }
+        dispatch(UpdateUser(user))
         history.push('/qualis')
       })
-      .catch(() => {
+      .catch((e) => {
+        console.info(e)
         toast.error('Houve um problema, contate o suporte!');
       });
+
     setLoading(false);
   }
 
@@ -121,7 +129,6 @@ export default function Term() {
     }
 
   function previousTerm(currTextIndex){
-    console.log(currTextIndex);
     if(currTextIndex > 0 ){
       setTextIndex(currTextIndex - 1);
       setSelectedTerm(terms[currTextIndex - 1]);

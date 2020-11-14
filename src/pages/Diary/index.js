@@ -5,6 +5,7 @@ import { FaRegThumbsUp, FaRegThumbsDown } from 'react-icons/fa';
 import { Form } from '@rocketseat/unform';
 import { toast } from 'react-toastify';
 import { useKeycloak } from '@react-keycloak/web';
+import {useHistory} from 'react-router-dom'
 
 import {
   Container,
@@ -22,6 +23,7 @@ import api from '~/services/api';
 import Button from '~/components/Buttons/Button';
 import ApprovalCard from '~/components/ApprovalCard';
 import Modal from '~/components/ConfirmationModal';
+import { useSelector } from 'react-redux';
 
 export default function Dairy() {
   const initialState = {
@@ -51,6 +53,9 @@ export default function Dairy() {
   const [clearAndSend, setClearAndSend] = useState(false);
   const [sending, setSending] = useState(false);
   const [keycloak] = useKeycloak();
+  const { roles, termsAccepted } = useSelector(state => state.user.profile);
+
+  const history = useHistory();
 
   function toggleModal(prop) {
     setToggle(prop);
@@ -132,6 +137,10 @@ export default function Dairy() {
     fetchData();
     verifyProtocolsActive()
   }, []);
+
+  useEffect(() => {
+    if (!termsAccepted && roles.includes('student')) history.push('/termos');
+  })
 
   useEffect(() => {
     if (clearAndSend) {

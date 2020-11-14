@@ -4,16 +4,20 @@ import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import { Loading, Container } from './styles';
+import { useKeycloak } from '@react-keycloak/web';
 
 export default function Qualis() {
   const loaded = useState(true);
-  const { roles, termsAccepted } = useSelector(state => state.user.profile);
+  const user  = useSelector(state => state.user);
+  const [keycloak] = useKeycloak()
   const history = useHistory();
 
   useEffect(() => {
-    if (!termsAccepted) history.push('/termo-de-compromisso');
-    if (roles.includes('assisted')) history.push('/diario');
-  }, [roles, history]);
+    if (keycloak.hasRealmRole('student')) {
+      if(!user.profile.termsAccepted)
+        history.push('/termos');
+    }
+  }, [user]);
 
   return (
     <>

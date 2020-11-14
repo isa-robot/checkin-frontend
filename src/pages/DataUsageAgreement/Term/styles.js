@@ -24,7 +24,7 @@ export const ButtonDiv = styled.div`
   align-items: center;
 
   @media(max-width: 500px) {
-    flex-direction: column;
+    flex-direction: column-reverse;
         button {
           width: 2px
           eight: 2px
@@ -100,10 +100,17 @@ export const Container = styled(Card)`
 export const FlexBox = styled.div`
   display: flex;
   margin: 50px auto;
+
   padding: 0 32px 32px 32px;
   max-width: 1400px;
-  height: 100%;
+  height: 90%;
   justify-content: center;
+  @media(max-width: 500px) {
+    margin-top: 10px;
+    height: 550px
+  }
+
+
 `;
 
 
