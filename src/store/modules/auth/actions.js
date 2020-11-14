@@ -23,6 +23,13 @@ export function UpdateStore(user) {
   };
 }
 
+export function UpdateUser(user) {
+  return {
+    type: '@auth/UPDATE_USER',
+    payload: { user },
+  };
+}
+
 export function cleanStore() {
   return {
     type: '@auth/CLEAN_STORE',
