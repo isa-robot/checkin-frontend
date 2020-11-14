@@ -60,7 +60,7 @@ export default function AppRoutes() {
       />
       <Route
         path="/avaliacao-cfpng"
-        roles={['assisted']}
+        roles={['assisted', 'student']}
         component={Cfpng}
         resource={false}
       />

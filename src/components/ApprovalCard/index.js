@@ -6,7 +6,7 @@ import { Container } from './styles';
 import Button from '@material-ui/core/Button';
 import {Link} from 'react-router-dom';
 
-function ApprovalCard({ approved, answered=true, dateExpired = false,  date, protocolActive=false }) {
+function ApprovalCard({ approved, answered=true, dateExpired = false,  date, protocolActive=false, roles = [""] }) {
   if (approved) {
     return (
       <Container approved={approved}>
@@ -17,7 +17,7 @@ function ApprovalCard({ approved, answered=true, dateExpired = false,  date, pro
           <h1>{format(new Date(date), "dd/MM/yyyy")}</h1>
         </div>
         <p>Bom trabalho!</p>
-        { protocolActive ? (
+        { protocolActive && !roles.includes('student') ? (
           <h2><Button variant="contained" color="primary"><Link style={{ color: "white" }} to={"/avaliacoes"}>Clique aqui para seguir sua avaliação diária</Link></Button></h2>
           ) : ""
         }
@@ -42,7 +42,12 @@ function ApprovalCard({ approved, answered=true, dateExpired = false,  date, pro
         <h1>{format(new Date(date), "dd/MM/yyyy")}</h1>
       </div>
       <p>Contate o setor de saúde</p>
-      <h2><Button variant="contained"><Link style={{color: "black"}} to={"/avaliacoes"}>Clique aqui para seguir sua avaliação diária</Link></Button></h2>
+      { !roles.includes('student') ? (
+        <h2>
+          <Button variant="contained"><Link style={{ color: "black" }} to={"/avaliacoes"}>Clique aqui para seguir sua
+          avaliação diária</Link></Button></h2>
+        ) : ""
+      }
     </Container>
   );
 }

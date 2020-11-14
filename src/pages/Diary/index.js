@@ -154,7 +154,10 @@ export default function Dairy() {
         answered ? (
           <Container>
             <Content>
-              <ApprovalCard approved={approved} protocolActive={protocolActive} date={date} />
+              <ApprovalCard approved={approved}
+                            protocolActive={protocolActive}
+                            date={date}
+                            roles={roles} />
             </Content>
           </Container>
         ) : (
