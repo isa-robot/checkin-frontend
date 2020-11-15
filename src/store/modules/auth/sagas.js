@@ -17,6 +17,24 @@ function getBaseline(id) {
     .catch(error => ({ error }));
 }
 
+function getStudentBaseline(id) {
+  return api
+    .get(`/users/student-baselines/${id}`)
+    .then(response => ({ response }))
+    .catch(error => ({ error }));
+}
+
+function getTerm() {
+  return api
+    .get(`/users/terms/by-user`, {
+      headers: {
+        Authorization: `Bearer ${keycloak.token}`,
+      }
+    })
+    .then(response => ({ response }))
+    .catch(error => ({ error }));
+}
+
 export function* kcAuth() {
   api.defaults.headers.Authorization = `Bearer ${keycloak.token}`;
 
@@ -37,15 +55,36 @@ export function* kcAuth() {
       : []
     : [];
 
-  let baseline = null;
+  let baseline = undefined;
   if (resources.includes('diary')) {
-    const baseline_response = yield call(getBaseline, id);
-    if (baseline_response.response)
-      baseline = baseline_response.response.data.baseline;
+    if(roles.includes('student')) {
+      const baseline_response = yield call(getStudentBaseline, id);
+      if(baseline_response.response) {
+        baseline = baseline_response.response.data.baseline;
+      }
+    }else{
+      const baseline_response = yield call(getBaseline, id);
+      if (baseline_response.response){
+        baseline = baseline_response.response.data.baseline;
+      }
+    }
+  }
+
+  let termsAccepted = undefined;
+  if (roles.includes('student')){
+    const term_response = yield call(getTerm);
+    if (term_response.response){
+      termsAccepted = term_response.response.data.canUseTheSystem;
+    }
   }
 
   const user = {};
-  user.profile = { roles, resources, username, emailVerified, baseline, name };
+  user.profile = { roles, resources, username, emailVerified, baseline, name, termsAccepted };
+
+  yield put(UpdateStore(user));
+}
+
+export function* updateUser(user) {
 
   yield put(UpdateStore(user));
 }
@@ -69,4 +108,5 @@ export default all([
   takeLatest('@auth/KC_SIGN_IN_REQUEST', kcSignIn),
   takeLatest('@auth/KC_SIGN_OUT', kcSignOut),
   takeLatest('@auth/KC_ON_AUTH', kcAuth),
+  takeLatest('@auth/UPDATE_USER', updateUser),
 ]);

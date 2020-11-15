@@ -19,21 +19,39 @@ export const Container = styled.div`
 
 export const ModalCard = styled(Card)`
   display: flex;
-  flex: 1 0;
   flex-direction: column;
-  max-height: 95vh;
+  align-items: center;
+  justify-content: space-around;
+  flex: 1 1;
+  text-align: center;
+  max-height: 550px;
   max-width: 700px;
-  height: 100%;
-  padding: 20px;
-  background: #fff;
+  padding: 3rem;
+  margin-top: 100px;
+  background: #b7b7b7;
 
-  label,
-  strong {
-    color: ${props => props.theme.colors.vulcan};
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
-  strong {
-    text-align: center;
+  h1 {
+    font-size: 2rem;
+  }
+
+  p {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+
+  span {
+    font-size: 1.3rem;
+  }
+
+  @media screen and (max-height: 830px) {
+    margin-top: 5vh;
+    padding: 1.5rem;
   }
 `;
 
@@ -44,7 +62,9 @@ export const ModalHeader = styled.div`
 
 export const ModalBody = styled.div`
   overflow-y: scroll;
-  overflow-x: hidden;
+  ::-webkit-scrollbar {
+    display: none;
+  }
   width: 100%;
   padding: 10px 0;
 

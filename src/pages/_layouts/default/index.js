@@ -5,33 +5,43 @@ import { useSelector } from 'react-redux';
 import Header from '~/components/Header';
 import Footer from '~/components/Footer';
 import NoAccessModal from '~/components/NoAccessModal';
+import NoAccessTermModal from '~/components/NoAccessTermModal';
 import BaseLineModal from '~/components/BaseLineModal';
+import StudentBaselineModal from '~/components/StudentBaselineModal'
 
 import { Wrapper, Layer } from './styles';
 
 export default function DefaultLayout({ children }) {
   const [toggleNoAccess, setToggleNoAccess] = useState(false);
   const [toggleBaseline, setToggleBaseline] = useState(false);
-
-  const { baseline, roles, resources } = useSelector(
+  const [toggleStudentBaseline, setToggleStudentBaseline] = useState(false)
+  const { baseline, roles, resources, termsAccepted } = useSelector(
     state => state.user.profile
   );
   const { loading } = useSelector(state => state.auth);
 
   useEffect(() => {
     if (!loading) {
-      if (roles.length === 0) {
+      if (termsAccepted == false){
+        setToggleNoAccess(true);
+      }else if (roles.length === 0) {
         setToggleNoAccess(true);
       } else {
         setToggleNoAccess(false);
-        if (resources.includes('diary') && !roles.includes("student") &&baseline === null)
+        if(roles.includes('student') && !baseline) {
+          setToggleStudentBaseline(true)
+        }else if (resources.includes('diary') && !baseline) {
           setToggleBaseline(true);
+        }
       }
     }
   }, [roles, resources, baseline, loading]);
 
   function toggleBaselineModal(prop) {
     setToggleBaseline(prop);
+  }
+  function toggleStudentBaselineModal(prop) {
+    setToggleStudentBaseline(prop);
   }
 
   return (
@@ -40,11 +50,20 @@ export default function DefaultLayout({ children }) {
         <Header />
         {children}
         <Footer />
+        { !roles.includes('student') ? (
         <NoAccessModal toggle={toggleNoAccess} />
-        <BaseLineModal
-          toggle={toggleBaseline}
-          toggleFunction={toggleBaselineModal}
-        />
+
+        ) : ( <NoAccessTermModal toggle={toggleNoAccess} /> )}
+        { !roles.includes('student') ? (
+            <BaseLineModal
+              toggle={toggleBaseline}
+              toggleFunction={toggleBaselineModal}
+            />
+          ):
+            <StudentBaselineModal
+              toggle={toggleStudentBaseline}
+              toggleFunction={toggleStudentBaselineModal}
+            />}
       </Layer>
     </Wrapper>
   );
