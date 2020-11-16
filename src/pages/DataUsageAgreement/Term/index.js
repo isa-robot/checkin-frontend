@@ -87,7 +87,7 @@ export default function Term() {
   useEffect(() => {
     if (termsAccepted) history.push('/qualis');
     setSelectedTerm(terms[textIndex]);
-  },[]);
+  },[termsAccepted]);
 
   function handleTermChange(evt) {
     const { value, name } = evt.target;
