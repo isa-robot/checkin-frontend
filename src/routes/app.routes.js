@@ -16,10 +16,8 @@ import SignUp from '../pages/SignUp';
 import Forgot from '~/pages/Forgot';
 import ResetPassword from '~/pages/ResetPassword';
 import Term from '../pages/DataUsageAgreement/Term';
-import {useSelector} from "react-redux";
 
 export default function AppRoutes() {
-  const { roles, termsAccepted } = useSelector(state => state.user.profile);
   return (
 
     <Switch>
@@ -55,8 +53,6 @@ export default function AppRoutes() {
         roles={['assisted', 'student', 'responsible']}
         component={Diary}
         resource="diary"
-        termsAccepted={termsAccepted}
-        userRoles={roles}
       />
       <Route
         path="/avaliacao-cfpng"
@@ -74,9 +70,7 @@ export default function AppRoutes() {
       <Route path="/qualis"
              roles={[]}
              component={Qualis}
-             resource={false}
-             termsAccepted={termsAccepted}
-             userRoles={roles}/>
+             resource={false}/>
       <Route
         path="/configuracao"
         roles={['admin']}

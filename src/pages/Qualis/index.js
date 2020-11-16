@@ -14,7 +14,7 @@ export default function Qualis() {
 
   useEffect(() => {
     if (keycloak.hasRealmRole('student')) {
-      if(!user.profile.termsAccepted)
+      if(user.profile.termsAccepted === undefined)
         history.push('/termos');
     }
   }, [user]);
