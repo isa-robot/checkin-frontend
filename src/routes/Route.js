@@ -5,9 +5,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { useKeycloak } from '@react-keycloak/web';
 
 import AuthLayout from '~/pages/_layouts/auth';
-import DefaultLayout from '~/pages/_layouts/default';
-import api from '~/services/api';
-import { keycloak } from '~/keycloak';
+// import DefaultLayout from '~/pages/_layouts/default';
 
 export default function RouteWrapper({
   component: Component,
