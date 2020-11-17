@@ -5,7 +5,11 @@ import { Route, Redirect } from 'react-router-dom';
 import { useKeycloak } from '@react-keycloak/web';
 
 import AuthLayout from '~/pages/_layouts/auth';
+<<<<<<< HEAD
+// import DefaultLayout from '~/pages/_layouts/default';
+=======
 import DefaultLayout from '~/pages/_layouts/default';
+>>>>>>> 41c49607d877098a7d0b9e7d6c21fb2a24d20f40
 
 export default function RouteWrapper({
   component: Component,

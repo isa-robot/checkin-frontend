@@ -81,7 +81,7 @@ export default function Modal({ toggle, toggleFunction }) {
                 ref={register({ required: true })}
               >
                 <option disabled hidden />
-                <option value="Primeria serie">1ª série</option>
+                <option value="Primeira serie">1ª série</option>
                 <option value="Segunda serie">2ª série</option>
                 <option value="Terceira serie">3ª série</option>
                 <option value="Quarta serie">4ª série</option>
@@ -91,7 +91,7 @@ export default function Modal({ toggle, toggleFunction }) {
                 <option value="Oitava serie">8ª série</option>
                 <option value="Nona serie">9ª série</option>
                 <option value="Primeiro ano">1º ano</option>
-                <option value="Secundo ano">2º ano</option>
+                <option value="Segundo ano">2º ano</option>
                 <option value="Terceiro ano">3º ano</option>
               </select>
               <label>Grau de escolaridade</label>

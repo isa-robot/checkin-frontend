@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import {
   Card as CardMaterial,
   CardHeader as CardHeaderMaterial,
@@ -7,6 +7,47 @@ import {
 import Card from '~/components/Card';
 
 export const Container = styled.div``;
+
+const dragActive = css`
+  border-color: #78e5d5;
+`
+
+const dragReject = css`
+  border-color: #e57878
+`
+
+const messageColors = {
+  default: "#999",
+  error: "#e57878",
+  success: "#78e5d5"
+}
+
+export const HeaderDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const UploadMessage = styled.p`
+  display: flex;
+  color: ${props => messageColors[props.type || '']};
+  justify-content: center;
+  align-items: center;
+`
+
+export const DropContainer = styled.div`
+  border: 3px dashed #ddd;
+  border-radius: 4px;
+  cursor pointer;
+  height: 30px;
+  width: 300px;
+  position: relative;
+  right: 20px;
+  transition: height 0.2s ease;
+  ${props => props.isDragActive && dragActive};
+  ${props => props.isDragReject && dragReject};
+`;
 
 export const Content = styled.div`
   display: flex;
