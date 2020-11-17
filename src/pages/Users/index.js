@@ -5,7 +5,7 @@ import { Form } from '@rocketseat/unform';
 
 import { useKeycloak } from '@react-keycloak/web';
 
-import { Assignment } from '@material-ui/icons';
+import { Assignment,  } from '@material-ui/icons';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
 import api from '~/services/api';
@@ -22,7 +22,11 @@ import {
   FormButtonGroup,
   SelectDiv,
   DropContainer,
-  UploadMessage
+  UploadMessage,
+  DropzoneDiv,
+  QuestionDiv,
+  QuestionText,
+  QuestionIcon
 } from './styles';
 import Button from '~/components/Buttons/Button';
 
@@ -46,6 +50,7 @@ export default function Users() {
   const [newUsersPaginated, setNewUsersPaginated] = useState([])
   const [toggle, setToggle] = useState(false);
   const [notUploaded, setNotUploaded] = useState([])
+  const [showMessage, setShowMessage] = useState(false)
   function toggleModal(prop) {
     setToggle(prop);
   }
@@ -351,22 +356,30 @@ export default function Users() {
               <MyCard>
                 <HeaderDiv>
                   <CardHeader title="Usuários" subheader={formatDate()} />
-                  <Dropzone accept={".csv, text/csv"} multiple={false} maxFiles={1} onDropAccepted={(e) => uploadFile(e)}>
-                    {({ getRootProps, getInputProps, isDragActive, isDragReject}) => {
-                      return (
-                        <DropContainer
-                        {...getRootProps()}
-                          className={"dropzone"}
-                          isDragActive={isDragActive}
-                          isDragReject={isDragReject}
-                          >
-                         <input {...getInputProps()} />
-                         {renderDragMessage(isDragActive, isDragReject)}
-                        </DropContainer>
-                      );
-                    }}
-
-                  </Dropzone>
+                  <DropzoneDiv>
+                    <Dropzone accept={".csv, text/csv"} multiple={false} maxFiles={1} onDropAccepted={(e) => uploadFile(e)}>
+                      {({ getRootProps, getInputProps, isDragActive, isDragReject}) => {
+                        return (
+                          <DropContainer
+                          {...getRootProps()}
+                            className={"dropzone"}
+                            isDragActive={isDragActive}
+                            isDragReject={isDragReject}
+                            >
+                           <input {...getInputProps()} />
+                           {renderDragMessage(isDragActive, isDragReject)}
+                          </DropContainer>
+                        );
+                      }}
+                    </Dropzone>
+                    <QuestionDiv>
+                      <QuestionIcon onMouseEnter={() => setShowMessage(true)} onMouseLeave={() => setShowMessage(false)}>?</QuestionIcon>
+                      <QuestionText active={showMessage}>
+                        as colunas devem ser respectivamente:
+                        firstName, lastName, email, username.
+                      </QuestionText>
+                    </QuestionDiv>
+                  </DropzoneDiv>
                 </HeaderDiv>
                 <Table
                   columns={columns}
