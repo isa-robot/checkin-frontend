@@ -26,22 +26,6 @@ export const QuestionDiv = styled.div`
   }
 `;
 
-export const QuestionText = styled.p`
-  display: ${props => props.active ? 'flex' : 'none'}
-  position: absolute;
-  right: 35px;
-  top: 0;
-  width: 200px;
-  text-align: center;
-  z-index: 999;
-  padding: 10px;
-  font-size: 14px;
-  border-radius: 10px;
-  border: none;
-  box-shadow: 1px 3px 5px rgba(0,0,0,0.3);
-  background-color: white;
-`;
-
 export const DropzoneDiv = styled.div`
   display: flex;
   align-items: center;

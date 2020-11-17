@@ -9,7 +9,7 @@ import { Assignment,  } from '@material-ui/icons';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
 import api from '~/services/api';
-
+import * as XLSX from 'xlsx';
 import {
   Container,
   Content,
@@ -25,7 +25,6 @@ import {
   UploadMessage,
   DropzoneDiv,
   QuestionDiv,
-  QuestionText,
   QuestionIcon
 } from './styles';
 import Button from '~/components/Buttons/Button';
@@ -35,6 +34,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import Dropzone from 'react-dropzone';
 import { HeaderDiv } from '~/pages/Users/styles';
 import Modal from '~/components/UsersNotUploadedModal';
+import Tooltip from '@material-ui/core/Tooltip';
 
 export default function Users() {
   const [loaded, setLoaded] = useState(false);
@@ -50,7 +50,6 @@ export default function Users() {
   const [newUsersPaginated, setNewUsersPaginated] = useState([])
   const [toggle, setToggle] = useState(false);
   const [notUploaded, setNotUploaded] = useState([])
-  const [showMessage, setShowMessage] = useState(false)
   function toggleModal(prop) {
     setToggle(prop);
   }
@@ -256,6 +255,7 @@ export default function Users() {
   const uploadFile = (files) => {
     const data = new FormData();
     data.append('usersCsv', files[0])
+
     api.post("/users/csv", data, {
       headers: { Authorization: `Bearer ${keycloak.token}` }
     })
@@ -373,11 +373,9 @@ export default function Users() {
                       }}
                     </Dropzone>
                     <QuestionDiv>
-                      <QuestionIcon onMouseEnter={() => setShowMessage(true)} onMouseLeave={() => setShowMessage(false)}>?</QuestionIcon>
-                      <QuestionText active={showMessage}>
-                        as colunas devem ser respectivamente:
-                        firstName, lastName, email, username.
-                      </QuestionText>
+                      <Tooltip title={<h2 styles={{fontSize: '14px'}}>As colunas do csv devem ser respectivamente: firstName, lastName, email, userName.</h2>}>
+                        <QuestionIcon>?</QuestionIcon>
+                      </Tooltip>
                     </QuestionDiv>
                   </DropzoneDiv>
                 </HeaderDiv>
