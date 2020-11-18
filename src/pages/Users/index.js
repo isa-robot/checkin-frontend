@@ -5,7 +5,7 @@ import { Form } from '@rocketseat/unform';
 
 import { useKeycloak } from '@react-keycloak/web';
 
-import { Assignment } from '@material-ui/icons';
+import { Assignment,  } from '@material-ui/icons';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
 import api from '~/services/api';
@@ -33,6 +33,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import Dropzone from 'react-dropzone';
 import { HeaderDiv } from '~/pages/Users/styles';
 import Modal from '~/components/UsersNotUploadedModal';
+import Tooltip from '@material-ui/core/Tooltip';
 
 export default function Users() {
   const [loaded, setLoaded] = useState(false);
@@ -253,6 +254,7 @@ export default function Users() {
   const uploadFile = (files) => {
     const data = new FormData();
     data.append('usersCsv', files[0])
+
     api.post("/users/csv", data, {
       headers: { Authorization: `Bearer ${keycloak.token}` }
     })
@@ -353,30 +355,28 @@ export default function Users() {
               <MyCard>
                 <HeaderDiv>
                   <CardHeader title="Usuários" subheader={formatDate()} />
-                  <Tooltip style={{fontSize: "48px"}} title="As colunas do csv devem ser respectivamente: firstName, lastName, email, userName">
-                    <div>(?)</div>
-                  </Tooltip>
-
-                  <Tooltip title={<h1 style={{ color: "lightblue" , fontSize: "12px"}}>As colunas do csv devem ser respectivamente: firstName, lastName, email, userName</h1>}>
-                    <div>(!)</div>
-                  </Tooltip>
-
-                  <Dropzone accept={".csv, text/csv"} multiple={false} maxFiles={1} onDropAccepted={(e) => uploadFile(e)}>
-                    {({ getRootProps, getInputProps, isDragActive, isDragReject}) => {
-                      return (
-                        <DropContainer
-                        {...getRootProps()}
-                          className={"dropzone"}
-                          isDragActive={isDragActive}
-                          isDragReject={isDragReject}
-                          >
-                         <input {...getInputProps()} />
-                         {renderDragMessage(isDragActive, isDragReject)}
-                        </DropContainer>
-                      );
-                    }}
-
-                  </Dropzone>
+                  <DropzoneDiv>
+                    <Dropzone accept={".csv, text/csv"} multiple={false} maxFiles={1} onDropAccepted={(e) => uploadFile(e)}>
+                      {({ getRootProps, getInputProps, isDragActive, isDragReject}) => {
+                        return (
+                          <DropContainer
+                          {...getRootProps()}
+                            className={"dropzone"}
+                            isDragActive={isDragActive}
+                            isDragReject={isDragReject}
+                            >
+                           <input {...getInputProps()} />
+                           {renderDragMessage(isDragActive, isDragReject)}
+                          </DropContainer>
+                        );
+                      }}
+                    </Dropzone>
+                    <QuestionDiv>
+                      <Tooltip title={<h2 styles={{fontSize: '14px'}}>As colunas do csv devem ser respectivamente: firstName, lastName, email, userName.</h2>}>
+                        <QuestionIcon>?</QuestionIcon>
+                      </Tooltip>
+                    </QuestionDiv>
+                  </DropzoneDiv>
                 </HeaderDiv>
                 <Table
                   columns={columns}
