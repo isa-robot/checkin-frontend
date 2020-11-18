@@ -5,10 +5,11 @@ import { Form } from '@rocketseat/unform';
 
 import { useKeycloak } from '@react-keycloak/web';
 
-import { Assignment } from '@material-ui/icons';
+import { Assignment,  } from '@material-ui/icons';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
 import api from '~/services/api';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import {
   Container,
@@ -21,11 +22,18 @@ import {
   ChoiceGroup,
   FormButtonGroup,
   SelectDiv,
+  DropContainer,
+  UploadMessage,
+  HideDiv
 } from './styles';
 import Button from '~/components/Buttons/Button';
 
 import Table from '~/components/Table';
 import TablePagination from '@material-ui/core/TablePagination';
+import Dropzone from 'react-dropzone';
+import { HeaderDiv } from '~/pages/Users/styles';
+import Modal from '~/components/UsersNotUploadedModal';
+import Tooltip from '@material-ui/core/Tooltip';
 
 export default function Users() {
   const [loaded, setLoaded] = useState(false);
@@ -39,6 +47,12 @@ export default function Users() {
   const [selected, selectUser] = useState(null);
   const [newRole, setNewRole] = useState('desabilitado');
   const [newUsersPaginated, setNewUsersPaginated] = useState([])
+  const [toggle, setToggle] = useState(false);
+  const [notUploaded, setNotUploaded] = useState([])
+  function toggleModal(prop) {
+    setToggle(prop);
+  }
+
   const handleManageUser = user => {
     const role = user.roles.length ? user.roles[0].name : 'desabilitado';
     if (user.roles.length) setEnabled(true);
@@ -227,6 +241,35 @@ export default function Users() {
             roleName === 'student' ? 'estudante': '';
   }
 
+  const renderDragMessage = (isDragActive, isDragReject) => {
+    if(!isDragActive) {
+      return <UploadMessage>Arraste um arquivo CSV aqui...</UploadMessage>
+    }
+    if( isDragReject ) {
+      return <UploadMessage type="error">Arquivo não suportado</UploadMessage>
+    }
+    return <UploadMessage type="success">Solte os arquivos aqui</UploadMessage>
+  }
+
+  const uploadFile = (files) => {
+    const data = new FormData();
+    data.append('usersCsv', files[0])
+
+    api.post("/users/csv", data, {
+      headers: { Authorization: `Bearer ${keycloak.token}` }
+    })
+      .then((response) => {
+        toast.success("Arquivo enviado com sucesso")
+        if(response.data.length > 0) {
+          setNotUploaded(response.data);
+          setToggle(true)
+        }
+      })
+      .catch(e => {
+        toast.error(e.response.data);
+      })
+  }
+
   return (
     <>
       {loaded ? (
@@ -310,7 +353,31 @@ export default function Users() {
           <Container>
             <Scroll>
               <MyCard>
-                <CardHeader title="Usuários" subheader={formatDate()} />
+                <HeaderDiv>
+                  <CardHeader title="Usuários" subheader={formatDate()} />
+                  <DropzoneDiv>
+                    <Dropzone accept={".csv, text/csv"} multiple={false} maxFiles={1} onDropAccepted={(e) => uploadFile(e)}>
+                      {({ getRootProps, getInputProps, isDragActive, isDragReject}) => {
+                        return (
+                          <DropContainer
+                          {...getRootProps()}
+                            className={"dropzone"}
+                            isDragActive={isDragActive}
+                            isDragReject={isDragReject}
+                            >
+                           <input {...getInputProps()} />
+                           {renderDragMessage(isDragActive, isDragReject)}
+                          </DropContainer>
+                        );
+                      }}
+                    </Dropzone>
+                    <QuestionDiv>
+                      <Tooltip title={<h2 styles={{fontSize: '14px'}}>As colunas do csv devem ser respectivamente: firstName, lastName, email, userName.</h2>}>
+                        <QuestionIcon>?</QuestionIcon>
+                      </Tooltip>
+                    </QuestionDiv>
+                  </DropzoneDiv>
+                </HeaderDiv>
                 <Table
                   columns={columns}
                   data={newUsersPaginated.length > 1 ? newUsersPaginated : users}
@@ -342,6 +409,11 @@ export default function Users() {
                 />
               </MyCard>
             </Scroll>
+            <Modal
+              toggle={toggle}
+              toggleFunction={toggleModal}
+              data={notUploaded}
+            />
           </Container>
         )
       ) : (

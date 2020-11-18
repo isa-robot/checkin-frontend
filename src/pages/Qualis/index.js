@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { Loading, Container } from './styles';
 import { useKeycloak } from '@react-keycloak/web';
 
+
 export default function Qualis() {
   const loaded = useState(true);
   const user  = useSelector(state => state.user);
@@ -22,7 +23,7 @@ export default function Qualis() {
   return (
     <>
       {loaded ? (
-        <Container />
+        <Container/>
       ) : (
         <Loading>
           <CircularProgress size="5rem" />
