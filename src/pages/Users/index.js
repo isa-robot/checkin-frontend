@@ -9,6 +9,7 @@ import { Assignment } from '@material-ui/icons';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
 import api from '~/services/api';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import {
   Container,
@@ -22,7 +23,8 @@ import {
   FormButtonGroup,
   SelectDiv,
   DropContainer,
-  UploadMessage
+  UploadMessage,
+  HideDiv
 } from './styles';
 import Button from '~/components/Buttons/Button';
 
@@ -351,6 +353,14 @@ export default function Users() {
               <MyCard>
                 <HeaderDiv>
                   <CardHeader title="Usuários" subheader={formatDate()} />
+                  <Tooltip style={{fontSize: "48px"}} title="As colunas do csv devem ser respectivamente: firstName, lastName, email, userName">
+                    <div>(?)</div>
+                  </Tooltip>
+
+                  <Tooltip title={<h1 style={{ color: "lightblue" , fontSize: "12px"}}>As colunas do csv devem ser respectivamente: firstName, lastName, email, userName</h1>}>
+                    <div>(!)</div>
+                  </Tooltip>
+
                   <Dropzone accept={".csv, text/csv"} multiple={false} maxFiles={1} onDropAccepted={(e) => uploadFile(e)}>
                     {({ getRootProps, getInputProps, isDragActive, isDragReject}) => {
                       return (
