@@ -29,7 +29,7 @@ import Button from '~/components/Buttons/Button';
 import Table from '~/components/Table';
 import TablePagination from '@material-ui/core/TablePagination';
 import Dropzone from 'react-dropzone';
-import { HeaderDiv } from '~/pages/Users/styles';
+import { DropzoneDiv, HeaderDiv, QuestionDiv, QuestionIcon } from '~/pages/Users/styles';
 import Modal from '~/components/UsersNotUploadedModal';
 import Tooltip from '@material-ui/core/Tooltip';
 
