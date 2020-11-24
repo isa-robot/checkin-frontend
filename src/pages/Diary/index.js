@@ -5,7 +5,7 @@ import { FaRegThumbsUp, FaRegThumbsDown } from 'react-icons/fa';
 import { Form } from '@rocketseat/unform';
 import { toast } from 'react-toastify';
 import { useKeycloak } from '@react-keycloak/web';
-import {useHistory} from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 import {
   Container,
