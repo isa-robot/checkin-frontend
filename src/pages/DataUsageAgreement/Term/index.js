@@ -84,6 +84,7 @@ export default function Term() {
   const history = useHistory();
   const { roles, resources, username, emailVerified, baseline, name, termsAccepted } = useSelector(state => state.user.profile);
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (termsAccepted) history.push('/qualis');
     setSelectedTerm(terms[textIndex]);
