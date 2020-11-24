@@ -9,8 +9,6 @@ import { Assignment,  } from '@material-ui/icons';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
 import api from '~/services/api';
-import Tooltip from '@material-ui/core/Tooltip';
-
 import {
   Container,
   Content,
