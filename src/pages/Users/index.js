@@ -22,9 +22,7 @@ import {
   SelectDiv,
   DropContainer,
   UploadMessage,
-  DropzoneDiv,
-  QuestionDiv,
-  QuestionIcon
+  HideDiv
 } from './styles';
 import Button from '~/components/Buttons/Button';
 
