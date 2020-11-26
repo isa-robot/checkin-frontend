@@ -96,6 +96,7 @@ export default function Term() {
       ...formState,
       [name]: value === 'true',
     });
+    console.info(formState)
   }
 
   function handleTermAnswer() {
@@ -161,23 +162,21 @@ export default function Term() {
             ) : ''
             }
             { textIndex <= 1 ? (
-            <button value={false} name={ textIndex == 0 ? 'personalKidDataTerm' : 'responsabilityTerm' } id={"naoAceito"} onClick={(e) => {
-
-              handleTermChange(e)
-              nextTerm(textIndex)}
-            }>
-             Não aceito
-            </button>
+              <button value={false} name={ textIndex == 0 ? 'personalKidDataTerm' : 'responsabilityTerm' } id={"naoAceito"} onClick={(e) => {
+                handleTermChange(e)
+                nextTerm(textIndex)}
+              }>
+               Não aceito
+              </button>
             ) : ''
             }
             { textIndex <= 1 ? (
-            <button id={"aceito"} value={true} name={ textIndex == 1 ? 'responsabilityTerm' : 'personalKidDataTerm' } onClick={(e) => {
-
-              handleTermChange(e)
-              nextTerm(textIndex)}
-            }>
-              Aceito
-            </button>
+              <button  id={"aceito"} value={true} name={ textIndex == 1 ? 'responsabilityTerm' : 'personalKidDataTerm' } onClick={(e) => {
+                handleTermChange(e)
+                nextTerm(textIndex)}
+              }>
+                Aceito
+              </button>
             ) : ''
             }
             { textIndex > 1 ? (
