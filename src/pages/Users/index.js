@@ -370,7 +370,7 @@ export default function Users() {
                       }}
                     </Dropzone>
                     <QuestionDiv>
-                      <Tooltip title={<h2 styles={{fontSize: '14px'}}>As colunas do csv devem ser respectivamente: firstName, lastName, email, userName.</h2>}>
+                      <Tooltip title={<h2 styles={{fontSize: '14px'}}>As colunas do csv devem ser respectivamente: firstName, lastName, email, username.</h2>}>
                         <QuestionIcon>?</QuestionIcon>
                       </Tooltip>
                     </QuestionDiv>
