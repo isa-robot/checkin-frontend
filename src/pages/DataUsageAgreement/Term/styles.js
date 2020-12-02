@@ -16,7 +16,6 @@ export const MainCard = styled(Card)`
   ::-webkit-scrollbar {
     display: none;
   }
-  }
 `;
 
 export const ButtonDiv = styled.div`
@@ -26,10 +25,10 @@ export const ButtonDiv = styled.div`
   @media(max-width: 500px) {
     flex-direction: column-reverse;
         button {
-          width: 2px
-          eight: 2px
-          color: white
-          type: button
+          width: 2px;
+          eight: 2px;
+          color: white;
+          type: button;
           margin-top: 5px;
           margin-bottom: 5px;
           border-radius: 25px;
