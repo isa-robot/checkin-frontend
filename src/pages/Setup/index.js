@@ -1267,9 +1267,9 @@ export default function Setup() {
                 onChange={handleChangeTab}
                 aria-label="disabled tabs example"
               >
-                <Tab label="Gmail" disabled={hasMailer && mailer === 'ses'} />
+                <Tab label="SMTP" disabled={hasMailer && mailer === 'ses'} />
                 <Tab
-                  label="Amazon"
+                  label="SES"
                   disabled={hasMailer && mailer === 'ethereal'}
                 />
               </Tabs>
