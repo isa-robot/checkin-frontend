@@ -11,6 +11,7 @@ export default function DatePicker({
   dateFormat,
   minDate,
   initialValue,
+  ...props
 }) {
   const ref = useRef(null);
   const { fieldName, registerField, error } = useField(name);
@@ -37,6 +38,7 @@ export default function DatePicker({
         ref={ref}
         minDate={minDate}
         locale="pt"
+        {...props}
       />
       {error && <span>{error}</span>}
     </>

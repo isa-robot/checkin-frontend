@@ -4,11 +4,14 @@ import {
   CircularProgress,
   CardContent,
   Box,
-  Typography
+  Typography,
+  IconButton
 } from '@material-ui/core';
 import {
-  ExpandMore
+  ExpandMore,
+  Event
 } from '@material-ui/icons';
+import { makeStyles } from '@material-ui/styles'
 import {
   ResponsiveContainer,
   AreaChart,
@@ -24,7 +27,6 @@ import {
 } from 'recharts';
 import { subDays, formatISO, format, parseISO } from 'date-fns';
 import api from '~/services/api';
-
 import {
   Loading,
   Container,
@@ -38,10 +40,24 @@ import {
 } from './styles';
 
 import Table from "~/components/Table";
+import DatePicker from '~/components/DatePicker'
+
+const useStyles = makeStyles({
+  usersListCard: {
+    overflow: 'visible'
+  },
+  tablePicker: {
+    '& .react-datepicker-popper': {
+      zIndex: '99',
+      left: '-28px !important'
+    }
+  }
+})
 
 export default function Monitoring() {
+  const classes = useStyles();
   const [keycloak] = useKeycloak();
-  const date = formatISO(new Date(), { representation: 'date' });
+  const [date, setDate] = useState(new Date());
   const [loadedUsers, setLoadedUsers] = useState(false);
   const [loadedAccession, setLoadedAccession] = useState(false);
   const [loadedSymptoms, setLoadedSymptom] = useState(false);
@@ -159,7 +175,7 @@ export default function Monitoring() {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await api.get(`/establishments/graphics/users/${date}`, {
+      const response = await api.get(`/establishments/graphics/users/${formatISO(date, { representation: 'date' })}`, {
         headers: { Authorization: `Bearer ${keycloak.token}` },
       });
       setUsersData(response.data);
@@ -280,7 +296,7 @@ export default function Monitoring() {
   }
 
   function formatDate() {
-    return format(new Date(date), 'dd/MM');
+    return format(date, 'dd/MM');
   }
 
   function formatDateSymptoms() {
@@ -431,17 +447,25 @@ export default function Monitoring() {
                 }
               </CardContent>
             </Card>
-            <Card>
+            <Card className = { classes.usersListCard }>
               <CardHeader title="Lista de Usuários" subheader={formatDate()} />
               <Table
                 columns={columns}
                 data={usersData}
                 components={{
-                  Container: props => (
-                    <CardContent>{props.children}</CardContent>
-                  )
+                  Container: props => <CardContent>{props.children}</CardContent>,
+                  Actions: props => <div className = { classes.tablePicker } {...props}>
+                      <DatePicker
+                        name="date"
+                        dateFormat="Pp"
+                        maxDate={ new Date()}
+                        initialValue={ date }
+                        onChange={ newDate => setDate(newDate) }
+                        customInput={ <IconButton><Event /></IconButton> }
+                      />
+                    </div>
                 }}
-                options={options}
+                options={{...options, toolbarButtonAlignment: "left"}}
                 detailPanel={detailPanel}
               />
             </Card>
