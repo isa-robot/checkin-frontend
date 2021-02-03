@@ -204,6 +204,7 @@ export default function Monitoring() {
         });
 
       setApprovedNotApprovedData(response.data);
+      console.info(response.data)
       setLoadedApprovedNotApproved(true);
     }
     fetchData();
@@ -390,7 +391,7 @@ export default function Monitoring() {
                           return format(new Date(parseISO(label)), 'dd/MM');
                         }}
                       />
-                      <YAxis stroke="#6f6f6f" tick={{ stroke: '#383A3D' }} unit="%" />
+                      <YAxis stroke="#6f6f6f" tick={{ stroke: '#383A3D' }} allowDecimals={false} unit="%" />
                       <Tooltip content={<CustomTooltip />} />
                       <Legend />
                       <Area
