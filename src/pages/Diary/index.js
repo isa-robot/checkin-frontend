@@ -66,7 +66,6 @@ export default function Dairy() {
   async function handleFormAnswer() {
     setLoading(true);
     setSending(true);
-    console.info(formState)
     await api
       .post(`/users/diaries`, formState, {
         headers: {
