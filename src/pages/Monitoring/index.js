@@ -204,7 +204,6 @@ export default function Monitoring() {
         });
 
       setApprovedNotApprovedData(response.data);
-      console.info(response.data)
       setLoadedApprovedNotApproved(true);
     }
     fetchData();
