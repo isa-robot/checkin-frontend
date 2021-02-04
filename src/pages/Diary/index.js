@@ -39,6 +39,7 @@ export default function Dairy() {
     shortnessOfBreath: false,
     abdominalPain: false,
     chestPain: false,
+    hadContactWithInfected: false,
   };
 
   const [loaded, setLoaded] = useState(false);
@@ -54,7 +55,8 @@ export default function Dairy() {
   const [sending, setSending] = useState(false);
   const [keycloak] = useKeycloak();
   const { roles, termsAccepted } = useSelector(state => state.user.profile);
-
+  const [ hadContactWithInfectedAnswered, setHadContactWithInfectedAnswered ] = useState(false);
+  const [ contactWithInfectedForm, setContactWithInfectedForm ] = useState(false);
   const history = useHistory();
 
   function toggleModal(prop) {
@@ -119,6 +121,10 @@ export default function Dairy() {
     setForm(!form);
   }
 
+  function handleToggleContactWithInfected() {
+    setContactWithInfectedForm(!contactWithInfectedForm);
+  }
+
   useEffect(() => {
     async function fetchData() {
       const newDate = formatISO(new Date(), { representation: 'date' });
@@ -147,6 +153,15 @@ export default function Dairy() {
       handleFormAnswer();
     }
   }, [clearAndSend]);
+
+  function handleContactWithInfectedAnswered(value){
+    setFormState({
+      ...formState,
+      hadContactWithInfected: value,
+    });
+    handleToggleContactWithInfected();
+    setHadContactWithInfectedAnswered( !hadContactWithInfectedAnswered );
+  }
 
   return (
     <>
@@ -187,7 +202,7 @@ export default function Dairy() {
                     height="3rem"
                     backgroundColor="sunset"
                     color="white"
-                    onClick={() => handleToggleForm()}
+                    onClick={() => [handleToggleContactWithInfected(), handleToggleForm()]}
                     disabled={loading}
                     type="button"
                   >
@@ -200,7 +215,41 @@ export default function Dairy() {
                   qualificada que preza pela sua saúde e segurança!
                 </span>
               </MainCard>
-              <FormCard visible={form}>
+              <MainCard visible={ contactWithInfectedForm }>
+                <h1>Você teve contato com alguém que testou positivo para COVID-19?</h1>
+                <MainButtonGroup>
+                  <Button
+                    width="13rem"
+                    height="3rem"
+                    backgroundColor="mountainMeadow"
+                    color="white"
+                    onClick={() => handleContactWithInfectedAnswered(true)}
+                    disabled={loading}
+                    type="button"
+                  >
+                    <FaRegThumbsUp size="1rem" color="#FFF" />
+                    <strong>Sim</strong>
+                  </Button>
+                  <Button
+                    width="13rem"
+                    height="3rem"
+                    backgroundColor="sunset"
+                    color="white"
+                    onClick={() => handleContactWithInfectedAnswered(false)}
+                    disabled={loading}
+                    type="button"
+                  >
+                    <FaRegThumbsDown size="1rem" color="#FFF" />
+                    <strong>Não</strong>
+                  </Button>
+
+                </MainButtonGroup>
+                <span>
+                  Aqui na Qualis você têm à disposição uma equipe altamente
+                  qualificada que preza pela sua saúde e segurança!
+                </span>
+              </MainCard>
+              <FormCard visible={form && !contactWithInfectedForm }>
                 <p>Informe os seus sintomas abaixo</p>
                 <Form>
                   <InputGroup>
