@@ -57,6 +57,7 @@ export default function Dairy() {
   const { roles, termsAccepted } = useSelector(state => state.user.profile);
   const [ hadContactWithInfectedAnswered, setHadContactWithInfectedAnswered ] = useState(false);
   const [ contactWithInfectedForm, setContactWithInfectedForm ] = useState(false);
+  const [hasSimptomsForm, setHasSimptomsForm] = useState(false);
   const history = useHistory();
 
   function toggleModal(prop) {
@@ -123,6 +124,10 @@ export default function Dairy() {
 
   function handleToggleContactWithInfected() {
     setContactWithInfectedForm(!contactWithInfectedForm);
+  }
+
+  function handleToggleHasSimptomsForm() {
+    setHasSimptomsForm(!hasSimptomsForm);
   }
 
   useEffect(() => {
@@ -217,13 +222,13 @@ export default function Dairy() {
               </MainCard>
               <MainCard visible={ contactWithInfectedForm }>
                 <h1>Você teve contato com alguém que testou positivo para COVID-19?</h1>
-                <MainButtonGroup>
+                <FormButtonGroup>
                   <Button
                     width="13rem"
                     height="3rem"
                     backgroundColor="mountainMeadow"
                     color="white"
-                    onClick={() => handleContactWithInfectedAnswered(true)}
+                    onClick={() => [handleContactWithInfectedAnswered(true), handleToggleHasSimptomsForm()]}
                     disabled={loading}
                     type="button"
                   >
@@ -235,7 +240,7 @@ export default function Dairy() {
                     height="3rem"
                     backgroundColor="sunset"
                     color="white"
-                    onClick={() => handleContactWithInfectedAnswered(false)}
+                    onClick={() => [handleContactWithInfectedAnswered(false), handleToggleHasSimptomsForm()]}
                     disabled={loading}
                     type="button"
                   >
@@ -243,13 +248,71 @@ export default function Dairy() {
                     <strong>Não</strong>
                   </Button>
 
-                </MainButtonGroup>
+                  <Button
+                    type="button"
+                    width="13rem"
+                    height="3rem"
+                    backgroundColor="dimGray"
+                    color="black"
+                    children={<strong>Voltar</strong>}
+                    onClick={() => [handleToggleContactWithInfected(), handleToggleForm()]}
+                    disabled={loading}
+                  >
+                  </Button>
+                </FormButtonGroup>
                 <span>
                   Aqui na Qualis você têm à disposição uma equipe altamente
                   qualificada que preza pela sua saúde e segurança!
                 </span>
               </MainCard>
-              <FormCard visible={form && !contactWithInfectedForm }>
+              <MainCard visible={ !contactWithInfectedForm && hasSimptomsForm }>
+                <h1>Você tem algum sintoma?</h1>
+                <div style={{height: "70px"}}></div>
+                <FormButtonGroup>
+                  <Button
+                    width="13rem"
+                    height="3rem"
+                    backgroundColor="mountainMeadow"
+                    color="white"
+                    onClick={() => handleToggleHasSimptomsForm()}
+                    disabled={loading}
+                    type="button"
+                  >
+                    <FaRegThumbsUp size="1rem" color="#FFF" />
+                    <strong>Sim</strong>
+                  </Button>
+                  <Button
+                    width="13rem"
+                    height="3rem"
+                    backgroundColor="sunset"
+                    color="white"
+                    onClick={() => {
+                      toggleModal(true);
+                    }}
+                    disabled={loading}
+                    type="button"
+                  >
+                    <FaRegThumbsDown size="1rem" color="#FFF" />
+                    <strong>Não</strong>
+                  </Button>
+                  <Button
+                    type="button"
+                    width="13rem"
+                    height="3rem"
+                    backgroundColor="dimGray"
+                    color="black"
+                    children={<strong>Voltar</strong>}
+                    onClick={() => [handleToggleHasSimptomsForm(), handleToggleContactWithInfected()]}
+                    disabled={loading}
+                  >
+                  </Button>
+                </FormButtonGroup>
+                <span>
+                  Aqui na Qualis você têm à disposição uma equipe altamente
+                  qualificada que preza pela sua saúde e segurança!
+                </span>
+              </MainCard>
+              <FormCard visible={form && !contactWithInfectedForm && !hasSimptomsForm }>
                 <p>Informe os seus sintomas abaixo</p>
                 <Form>
                   <InputGroup>
@@ -537,11 +600,22 @@ export default function Dairy() {
                       width="13rem"
                       height="3rem"
                       backgroundColor="sunset"
-                      color="white"
+                      color="black"
                       onClick={() => handleToggleForm()}
                       disabled={loading}
                     >
-                      <strong>Voltar</strong>
+                      <strong>cancelar</strong>
+                    </Button>
+                    <Button
+                      type="button"
+                      width="13rem"
+                      height="3rem"
+                      backgroundColor="dimGray"
+                      color="black"
+                      children={<strong>Voltar</strong>}
+                      onClick={() => [handleToggleHasSimptomsForm()]}
+                      disabled={loading}
+                    >
                     </Button>
                   </FormButtonGroup>
                 </Form>
