@@ -195,7 +195,7 @@ export default function Dairy() {
                     height="3rem"
                     backgroundColor="mountainMeadow"
                     color="white"
-                    onClick={() => handleOkAnswer()}
+                    onClick={() => [handleToggleContactWithInfected(), handleToggleForm()]}
                     disabled={loading}
                     type="button"
                   >
@@ -221,7 +221,7 @@ export default function Dairy() {
                 </span>
               </MainCard>
               <MainCard visible={ contactWithInfectedForm }>
-                <h1>Você teve contato com alguém que testou positivo para COVID-19?</h1>
+                <h1>Você teve contato com alguém que testou positivo para COVID-19 nos últimos 14 dias?</h1>
                 <FormButtonGroup>
                   <Button
                     width="13rem"
@@ -261,8 +261,6 @@ export default function Dairy() {
                   </Button>
                 </FormButtonGroup>
                 <span>
-                  Aqui na Qualis você têm à disposição uma equipe altamente
-                  qualificada que preza pela sua saúde e segurança!
                 </span>
               </MainCard>
               <MainCard visible={ !contactWithInfectedForm && hasSimptomsForm }>
@@ -307,10 +305,6 @@ export default function Dairy() {
                   >
                   </Button>
                 </FormButtonGroup>
-                <span>
-                  Aqui na Qualis você têm à disposição uma equipe altamente
-                  qualificada que preza pela sua saúde e segurança!
-                </span>
               </MainCard>
               <FormCard visible={form && !contactWithInfectedForm && !hasSimptomsForm }>
                 <p>Informe os seus sintomas abaixo</p>
