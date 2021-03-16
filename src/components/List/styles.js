@@ -19,7 +19,7 @@ export const BasicList = styled.ul`
     display: flex;
     justify-content: center;
     align-content: center;
-    flex-direction: column;
+    flexfique-direction: column;
 
     @media (max-width: 1025px) {
       flex-direction: column;
