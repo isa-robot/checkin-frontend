@@ -115,7 +115,7 @@ export const MainButtonGroup = styled.div`
 export const InputGroup = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: space-between;
   @media screen and (max-width: 767px) {
     display: grid;
     grid-template-columns: 1fr 1fr;

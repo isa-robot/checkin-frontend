@@ -39,6 +39,7 @@ export default function Dairy() {
     shortnessOfBreath: false,
     abdominalPain: false,
     chestPain: false,
+    coryza: false,
     hadContactWithInfected: false,
   };
 
@@ -572,6 +573,28 @@ export default function Dairy() {
                           defaultChecked
                         />
                         <label htmlFor="chestPain-false">Não</label>
+                      </div>
+                    </ChoiceGroup>
+                    <ChoiceGroup>
+                      <strong>Coriza</strong>
+                      <div>
+                        <input
+                          type="radio"
+                          id="coryza-true"
+                          name="coryza"
+                          value="true"
+                          onChange={handleFormChange}
+                        />
+                        <label htmlFor="coryza-true">Sim</label>
+                        <input
+                          type="radio"
+                          id="coryza-false"
+                          name="coryza"
+                          value="false"
+                          onChange={handleFormChange}
+                          defaultChecked
+                        />
+                        <label htmlFor="coryza-false">Não</label>
                       </div>
                     </ChoiceGroup>
                   </InputGroup>
