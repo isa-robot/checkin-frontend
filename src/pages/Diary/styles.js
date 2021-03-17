@@ -82,10 +82,10 @@ export const FormCard = styled(Card)`
   ::-webkit-scrollbar {
     display: none;
   }
-  max-height: 650px;
+  max-height: 900px;
   max-width: 700px;
   padding: 2rem;
-  margin-top: 100px;
+  margin-top: 10px;
 
   p {
     font-size: 1.5rem;
