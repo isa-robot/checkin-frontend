@@ -90,6 +90,8 @@ export default function Modal({
           return 'Fez oximetria';
         case 'extraSymptom':
           return 'Você apresentou algum sintoma a mais';
+        case 'coryza':
+          return 'Coriza';
         case 'hadContactWithInfected':
           return 'Teve contato com alguém infectado';
         default:

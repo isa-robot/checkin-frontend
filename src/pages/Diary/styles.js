@@ -82,10 +82,10 @@ export const FormCard = styled(Card)`
   ::-webkit-scrollbar {
     display: none;
   }
-  max-height: 600px;
+  max-height: 900px;
   max-width: 700px;
   padding: 2rem;
-  margin-top: 100px;
+  margin-top: 10px;
 
   p {
     font-size: 1.5rem;
@@ -115,7 +115,7 @@ export const MainButtonGroup = styled.div`
 export const InputGroup = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: space-between;
   @media screen and (max-width: 767px) {
     display: grid;
     grid-template-columns: 1fr 1fr;
