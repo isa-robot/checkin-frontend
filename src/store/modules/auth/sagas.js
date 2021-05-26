@@ -39,7 +39,6 @@ export function* kcAuth() {
   api.defaults.headers.Authorization = `Bearer ${keycloak.token}`;
 
   const id = keycloak.tokenParsed.sub;
-
   const username = keycloak.tokenParsed.preferred_username;
   const { emailVerified, name } = keycloak.tokenParsed;
 

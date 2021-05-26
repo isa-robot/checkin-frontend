@@ -22,7 +22,7 @@ export default function DefaultLayout({ children }) {
 
   useEffect(() => {
     if (!loading) {
-      if (termsAccepted == false){
+      if (termsAccepted == undefined){
         setToggleNoAccess(true);
       }else if (roles.length === 0) {
         setToggleNoAccess(true);

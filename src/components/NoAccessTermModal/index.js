@@ -28,18 +28,25 @@ export default function Modal({ toggle }) {
     dispatch(kcSignOut());
   };
 
+  const resendEmail = () => {
+    resendEmail();
+  }
+
+
   return (
-    <Container display={String(display)} onClick={handleModalClick}>
+    <Container display={String(display)}>
       <ModalCard>
         <ModalHeader>
-          <h1>SEM ACESSO</h1>
+          <h1>Desculpe</h1>
         </ModalHeader>
         <ModalBody>
-          <AiOutlineMinusCircle color="#FFF" size="10rem" />
+          <p>Parece que o termo encaminhado para o seu e-mail ainda não foi assinado!</p>
         </ModalBody>
         <ModalFooter>
-          <p>Você não aceitou um dos termos</p>
+          <p>Gostaria de recebê-lo novamente?</p>
         </ModalFooter>
+        <button onClick={resendEmail}>Reenviar e-mail</button>
+        <button onClick={handleModalClick}>Sair</button>
       </ModalCard>
     </Container>
   );

@@ -24,9 +24,11 @@ function createBaseline(baseline) {
 }
 
 function createStudentBaselines(baseline) {
+  console.log(keycloak.token);
+  console.info("token", keycloak);
   return api
     .post(`/users/student-baselines/`, baseline, {
-      headers: { Authorization: `Bearer ${keycloak.token}` },
+      headers: { Authorization: `Bearer `+keycloak.token },
     })
     .then(response => ({ response }))
     .catch(error => ({ error }));

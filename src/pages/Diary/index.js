@@ -60,6 +60,9 @@ export default function Dairy() {
   const [ contactWithInfectedForm, setContactWithInfectedForm ] = useState(false);
   const [hasSimptomsForm, setHasSimptomsForm] = useState(false);
   const history = useHistory();
+  const [sendSignatureSolicitation, setSendSignatureSolicitation] = useState(false);
+  const [documentSigned] = useState(false);
+  const [signed, signatureVerified] = useState(false);
 
   function toggleModal(prop) {
     setToggle(prop);
@@ -89,6 +92,38 @@ export default function Dairy() {
     setLoading(false);
   }
 
+  function resendEmail () {
+    api.post(`/signature/send-solicitation`, sendSignatureSolicitation, {
+      headers: {
+        Authorization: `Bearer ${keycloak.token}`
+      }
+    });
+    setSendSignatureSolicitation(true);
+  }
+
+  function documentSigner(){
+    api.post(`/signature/document-signer`, documentSigned, {
+    headers: {
+      Authorization: `Bearer ${keycloak.token}`
+    }
+    });
+  }
+
+  function signverify(){
+    api.post(`/signature/by-user`, signatureVerified, {
+      headers: {
+        Authorization: `Bearer ${keycloak.token}`
+      }
+    }).then(response => {
+      if(signed == true){
+        signatureVerified = true;
+      }else{
+        signatureVerified = false;
+      }
+    })
+  }
+
+
   function verifyProtocolsActive() {
     api.get(`/protocols/active`, {
       headers: {
@@ -101,7 +136,6 @@ export default function Dairy() {
         setProtocolActive(false)
       }
     })
-
   }
 
   function handleOkAnswer() {
@@ -150,9 +184,6 @@ export default function Dairy() {
     verifyProtocolsActive()
   }, []);
 
-  useEffect(() => {
-    if (!termsAccepted && roles.includes('student')) history.push('/termos');
-  })
 
   useEffect(() => {
     if (clearAndSend) {
