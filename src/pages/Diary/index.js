@@ -5,7 +5,6 @@ import { FaRegThumbsUp, FaRegThumbsDown } from 'react-icons/fa';
 import { Form } from '@rocketseat/unform';
 import { toast } from 'react-toastify';
 import { useKeycloak } from '@react-keycloak/web';
-import { useHistory } from 'react-router-dom'
 
 import {
   Container,
@@ -59,10 +58,6 @@ export default function Dairy() {
   const [ hadContactWithInfectedAnswered, setHadContactWithInfectedAnswered ] = useState(false);
   const [ contactWithInfectedForm, setContactWithInfectedForm ] = useState(false);
   const [hasSimptomsForm, setHasSimptomsForm] = useState(false);
-  const history = useHistory();
-  const [sendSignatureSolicitation, setSendSignatureSolicitation] = useState(false);
-  const [documentSigned] = useState(false);
-  const [signed, signatureVerified] = useState(false);
 
   function toggleModal(prop) {
     setToggle(prop);
@@ -91,38 +86,6 @@ export default function Dairy() {
       });
     setLoading(false);
   }
-
-  function resendEmail () {
-    api.post(`/signature/send-solicitation`, sendSignatureSolicitation, {
-      headers: {
-        Authorization: `Bearer ${keycloak.token}`
-      }
-    });
-    setSendSignatureSolicitation(true);
-  }
-
-  function documentSigner(){
-    api.post(`/signature/document-signer`, documentSigned, {
-    headers: {
-      Authorization: `Bearer ${keycloak.token}`
-    }
-    });
-  }
-
-  function signverify(){
-    api.get(`/signature/by-user`, signatureVerified, {
-      headers: {
-        Authorization: `Bearer ${keycloak.token}`
-      }
-    }).then(response => {
-      if(signed == true){
-        signatureVerified (true);
-      }else{
-        signatureVerified (false);
-      }
-    })
-  }
-
 
   function verifyProtocolsActive() {
     api.get(`/protocols/active`, {

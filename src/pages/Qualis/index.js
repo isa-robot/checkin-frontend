@@ -16,7 +16,6 @@ export default function Qualis() {
   useEffect(() => {
     if (keycloak.hasRealmRole('student')) {
         return history.push('/diario')
-
     }
     if(keycloak.hasRealmRole('assisted')){
       history.push('diario');

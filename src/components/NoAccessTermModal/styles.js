@@ -12,8 +12,8 @@ export const Container = styled.div`
   height: 100%;
   font-size: 16px !important;
 
-  button {
-    font-size: 16px !important;
+  .button-icon{
+    margin-right: 16px;
   }
 
   background: rgba(0, 0, 0, 0.7);
@@ -49,16 +49,6 @@ export const ModalCard = styled(Card)`
     color: #000000;
   }
 
-  button{
-    font-size: 1.5rem;
-    margin-bottom: 20px;
-    color: #000000;
-  }
-
-  span {
-    font-size: 1.3rem;
-  }
-
   @media screen and (max-height: 830px) {
     margin-top: 5vh;
     padding: 1.5rem;
@@ -78,17 +68,17 @@ export const ModalBody = styled.div`
   width: 100%;
   padding: 10px 0;
 
-  span {
+  p {
     padding-left: 5px;
-    color: ${props => props.theme.colors.sunset};
-    font-size: 12px;
+    font-size: 16px;
   }
 `;
 
 export const ModalFooter = styled.div`
   display: flex;
+  flex-flow: row nowrap !important;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   width: 100%;
   min-height: 70px;
 `;
