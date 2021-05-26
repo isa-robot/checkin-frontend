@@ -110,15 +110,15 @@ export default function Dairy() {
   }
 
   function signverify(){
-    api.post(`/signature/by-user`, signatureVerified, {
+    api.get(`/signature/by-user`, signatureVerified, {
       headers: {
         Authorization: `Bearer ${keycloak.token}`
       }
     }).then(response => {
       if(signed == true){
-        signatureVerified = true;
+        signatureVerified (true);
       }else{
-        signatureVerified = false;
+        signatureVerified (false);
       }
     })
   }
@@ -136,6 +136,7 @@ export default function Dairy() {
         setProtocolActive(false)
       }
     })
+
   }
 
   function handleOkAnswer() {
