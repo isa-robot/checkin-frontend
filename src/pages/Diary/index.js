@@ -5,7 +5,6 @@ import { FaRegThumbsUp, FaRegThumbsDown } from 'react-icons/fa';
 import { Form } from '@rocketseat/unform';
 import { toast } from 'react-toastify';
 import { useKeycloak } from '@react-keycloak/web';
-import { useHistory } from 'react-router-dom'
 
 import {
   Container,
@@ -59,7 +58,6 @@ export default function Dairy() {
   const [ hadContactWithInfectedAnswered, setHadContactWithInfectedAnswered ] = useState(false);
   const [ contactWithInfectedForm, setContactWithInfectedForm ] = useState(false);
   const [hasSimptomsForm, setHasSimptomsForm] = useState(false);
-  const history = useHistory();
 
   function toggleModal(prop) {
     setToggle(prop);
@@ -150,9 +148,6 @@ export default function Dairy() {
     verifyProtocolsActive()
   }, []);
 
-  useEffect(() => {
-    if (!termsAccepted && roles.includes('student')) history.push('/termos');
-  })
 
   useEffect(() => {
     if (clearAndSend) {

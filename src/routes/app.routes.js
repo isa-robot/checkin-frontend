@@ -15,7 +15,6 @@ import SignIn from '../pages/SignIn';
 import SignUp from '../pages/SignUp';
 import Forgot from '~/pages/Forgot';
 import ResetPassword from '~/pages/ResetPassword';
-import Term from '../pages/DataUsageAgreement/Term';
 
 export default function AppRoutes() {
   return (
@@ -40,12 +39,6 @@ export default function AppRoutes() {
         path="/configuracoes"
         component={Setup}
         roles={['admin']}
-        resource={false}
-      />
-      <Route
-        path="/termos"
-        roles={['student']}
-        component={Term}
         resource={false}
       />
       <Route

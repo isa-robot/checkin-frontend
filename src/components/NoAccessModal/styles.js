@@ -28,12 +28,13 @@ export const ModalCard = styled(Card)`
   max-width: 700px;
   padding: 3rem;
   margin-top: 100px;
-  background: #b7b7b7;
+  background: #ffffff;
 
   div {
     display: flex;
     flex-direction: column;
     align-items: center;
+    color: #ffffff;
   }
 
   h1 {
@@ -43,6 +44,13 @@ export const ModalCard = styled(Card)`
   p {
     font-size: 1.5rem;
     margin-bottom: 20px;
+    color: #ffffff;
+  }
+
+  button{
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #000000;
   }
 
   span {
