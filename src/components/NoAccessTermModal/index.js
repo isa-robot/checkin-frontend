@@ -97,16 +97,16 @@ export default function Modal({ toggle }) {
         <h1>Termo enviado por e-mail</h1>
       </ModalHeader>
       <ModalBody>
-        <p>Assine o termo e reinicie a página para prosseguir com o login, ou clique no botão abaixo caso não tenha recebido o termo em seu e-mail.</p>
+        <p>Seu acesso será liberado assim que o termo for assinado</p>
         <Button style={{marginTop:8, marginBottom:8}} variant='text' onClick={resendEmail}>
           <SendIcon style={{marginRight:16}}></SendIcon>
-          Reenviar e-mail
+          Reenviar termo por e-mail
         </Button>
       </ModalBody>
       <ModalFooter>
-          <Button variant='contained' onClick={reloadPage}>
+          <Button variant='outlined' onClick={reloadPage}>
             <CachedIcon style={{marginRight:16}}></CachedIcon>
-            Reiniciar Pagina
+            Atualizar Pagina
           </Button>
           <Button variant='contained' style={{background:'#e11400aa', color:'#fff'}} onClick={handleModalClick}>
             <ExitToAppIcon style={{marginRight:16}}></ExitToAppIcon>
