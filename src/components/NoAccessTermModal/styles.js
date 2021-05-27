@@ -44,7 +44,7 @@ export const ModalCard = styled(Card)`
   }
 
   p {
-    font-size: 1.5rem;
+    font-size: 1.7rem;
     margin-bottom: 20px;
     color: #000000;
   }
@@ -81,6 +81,10 @@ export const ModalFooter = styled.div`
   justify-content: space-between;
   width: 100%;
   min-height: 70px;
+
+  @media screen and (max-width: 500px) {
+    flex-direction: column !important;
+  }
 `;
 
 export const InputDiv = styled.div`
