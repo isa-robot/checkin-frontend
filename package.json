@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "version": "1.13.0",
+  "version": "1.14.0",
   "author": "Qualis Infectologia Ltda. <contato@portalqualis.com.br>",
   "scripts": {
     "production": "rm -rf node_modules package-lock.json && npm install && npm run build",

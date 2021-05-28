@@ -26,7 +26,7 @@ import logo from '~/assets/images/header-logo.png';
 
 export default function Header() {
   const [keycloak] = useKeycloak();
-  const resources = keycloak.resourceAccess['isa-frontend']
+  const resources = keycloak.resourceAccess && keycloak.resourceAccess['isa-frontend']
     ? keycloak.resourceAccess['isa-frontend'].roles
     : [];
 

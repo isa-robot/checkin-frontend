@@ -11,9 +11,11 @@ export const Container = styled.div`
   width: 100%;
   height: 100%;
   font-size: 16px !important;
-  button {
-    font-size: 16px !important;
+
+  .button-icon{
+    margin-right: 16px;
   }
+
   background: rgba(0, 0, 0, 0.7);
 `;
 
@@ -28,7 +30,7 @@ export const ModalCard = styled(Card)`
   max-width: 700px;
   padding: 3rem;
   margin-top: 100px;
-  background: #b7b7b7;
+  background: #ffffff;
 
   div {
     display: flex;
@@ -38,15 +40,13 @@ export const ModalCard = styled(Card)`
 
   h1 {
     font-size: 2rem;
+    color: #000000;
   }
 
   p {
-    font-size: 1.5rem;
+    font-size: 1.7rem;
     margin-bottom: 20px;
-  }
-
-  span {
-    font-size: 1.3rem;
+    color: #000000;
   }
 
   @media screen and (max-height: 830px) {
@@ -68,19 +68,23 @@ export const ModalBody = styled.div`
   width: 100%;
   padding: 10px 0;
 
-  span {
+  p {
     padding-left: 5px;
-    color: ${props => props.theme.colors.sunset};
-    font-size: 12px;
+    font-size: 16px;
   }
 `;
 
 export const ModalFooter = styled.div`
   display: flex;
+  flex-flow: row nowrap !important;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   width: 100%;
   min-height: 70px;
+
+  @media screen and (max-width: 500px) {
+    flex-direction: column !important;
+  }
 `;
 
 export const InputDiv = styled.div`
