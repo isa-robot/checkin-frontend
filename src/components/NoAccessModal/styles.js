@@ -34,7 +34,7 @@ export const ModalCard = styled(Card)`
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: #ffffff;
+    color: #000;
   }
 
   h1 {
@@ -44,7 +44,7 @@ export const ModalCard = styled(Card)`
   p {
     font-size: 1.5rem;
     margin-bottom: 20px;
-    color: #ffffff;
+    color: #000;
   }
 
   button{
