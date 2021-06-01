@@ -32,13 +32,13 @@ export default function Modal({ toggle }) {
     <Container display={String(display)} onClick={handleModalClick}>
       <ModalCard>
         <ModalHeader>
-          <h1>AGUARDANDO HABILIAÇÃO</h1>
+          <h1>NÃO HABILITADO</h1>
         </ModalHeader>
         <ModalBody>
+          <AiOutlineMinusCircle color="#000" size="10rem" />
         </ModalBody>
         <ModalFooter>
-          <p>Por favor, aguarde sua autorização para usar o sistema</p>
-          <button onClick={handleModalClick}>Sair</button>
+          <p>Aguarde sua aprovação para usar o sistema</p>
         </ModalFooter>
       </ModalCard>
     </Container>

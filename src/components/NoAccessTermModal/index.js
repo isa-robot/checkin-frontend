@@ -41,7 +41,7 @@ export default function Modal({ toggle }) {
   }
 
   function documentSigner(){
-    api.post(`/signature/document-signer`, {}, {
+    api.post(`/signature/document-signer`, { "docType": "WEB" }, {
       headers: {
         Authorization: `Bearer ${keycloak.token}`
       }
