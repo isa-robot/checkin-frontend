@@ -7,24 +7,28 @@ import Footer from '~/components/Footer';
 import NoAccessModal from '~/components/NoAccessModal';
 import NoAccessTermModal from '~/components/NoAccessTermModal';
 import BaseLineModal from '~/components/BaseLineModal';
+import ParentModal from '~/components/ParentModal';
 import StudentBaselineModal from '~/components/StudentBaselineModal'
 
 import { Wrapper, Layer } from './styles';
 
 export default function DefaultLayout({ children }) {
   const [toggleNoAccess, setToggleNoAccess] = useState(false);
+
   const [toggleBaseline, setToggleBaseline] = useState(false);
   const [toggleStudentBaseline, setToggleStudentBaseline] = useState(false)
+  const [toggleTermModal, setToggleTermModal] = useState(false);
+  const [toggleParentModal, setToggleParentModal] = useState(false);
+
   const { baseline, roles, resources, termsAccepted } = useSelector(
     state => state.user.profile
   );
   const { loading } = useSelector(state => state.auth);
 
   useEffect(() => {
+    console.info(baseline)
     if (!loading) {
-      if (termsAccepted == undefined && roles.includes('student')){
-        setToggleNoAccess(true);
-      } else if (roles.length === 0) {
+      if (roles.length === 0) {
         setToggleNoAccess(true);
       } else {
         setToggleNoAccess(false);
@@ -33,6 +37,12 @@ export default function DefaultLayout({ children }) {
         }else if (resources.includes('diary') && !baseline) {
           setToggleBaseline(true);
         }
+      }
+      if (baseline.age < 18) {
+        setToggleParentModal(true);
+      }
+      if (baseline && false) {
+        setToggleTermModal(true);
       }
     }
   }, [roles, resources, baseline, loading]);
@@ -50,10 +60,8 @@ export default function DefaultLayout({ children }) {
         <Header />
         {children}
         <Footer />
-        { !roles.includes('student') ? (
-        <NoAccessModal toggle={toggleNoAccess} />
-
-        ) : ( <NoAccessTermModal toggle={toggleNoAccess} /> )}
+        <NoAccessModal toggle={toggleNoAccess}/>
+        <NoAccessTermModal toggle={toggleTermModal}/>
         { !roles.includes('student') ? (
             <BaseLineModal
               toggle={toggleBaseline}
@@ -63,7 +71,11 @@ export default function DefaultLayout({ children }) {
             <StudentBaselineModal
               toggle={toggleStudentBaseline}
               toggleFunction={toggleStudentBaselineModal}
-            />}
+            />
+        }
+        <ParentModal
+        toggle={toggleParentModal}
+        />
       </Layer>
     </Wrapper>
   );
