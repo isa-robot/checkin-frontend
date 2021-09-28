@@ -12,9 +12,9 @@ import {
   ModalFooter,
   InputDiv,
 } from './styles';
-import { newBaselineRequest } from '~/store/modules/user/actions';
+import { newResponsibleBaselineRequest } from '~/store/modules/user/actions';
 
-export default function ParentModal({ toggle, toggleFunction }) {
+export default function ResponsibleModal({ toggle, toggleFunction }) {
   const ref = useRef();
   const dispatch = useDispatch();
   const [display, setDisplay] = useState(toggle);
@@ -27,10 +27,9 @@ export default function ParentModal({ toggle, toggleFunction }) {
   }, [toggle]);
 
   function handleAnswer(data) {
-    dispatch(newBaselineRequest(data));
+    dispatch(newResponsibleBaselineRequest(data));
     toggleFunction(Boolean(loading));
   }
-
 
   return (
     <Container ref={ref} display={String(display)}>
@@ -100,12 +99,12 @@ export default function ParentModal({ toggle, toggleFunction }) {
   );
 }
 
-ParentModal.propTypes = {
+ResponsibleModal.propTypes = {
   toggle: PropTypes.bool,
   toggleFunction: PropTypes.func.isRequired,
 };
 
-ParentModal.defaultProps = {
+ResponsibleModal.defaultProps = {
   toggle: false,
 };
 

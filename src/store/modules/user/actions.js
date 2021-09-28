@@ -12,7 +12,23 @@ export function newStudentBaselineRequest(data) {
   };
 }
 
+
+export function newResponsibleBaselineRequest(responsible) {
+  return {
+    type: '@user/NEW_RESPONSIBLE_BASELINE_REQUEST',
+    payload: { responsible }
+  }
+}
+
+
 export function newBaselineSuccess(baseline) {
+  return {
+    type: '@user/NEW_BASELINE_SUCCESS',
+    payload: { baseline },
+  };
+}
+
+export function newResponsibleBaselineSuccess(baseline) {
   return {
     type: '@user/NEW_BASELINE_SUCCESS',
     payload: { baseline },
@@ -31,6 +47,14 @@ export function newBaselineFailure() {
     type: '@user/NEW_BASELINE_FAILURE',
   };
 }
+
+export function newResponsibleBaselineFailure() {
+  return {
+    type: '@user/NEW_BASELINE_FAILURE',
+  };
+}
+
+
 export function newStudentBaselineFailure() {
   return {
     type: '@user/NEW_BASELINE_FAILURE',

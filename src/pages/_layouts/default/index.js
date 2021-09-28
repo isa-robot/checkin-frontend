@@ -7,7 +7,7 @@ import Footer from '~/components/Footer';
 import NoAccessModal from '~/components/NoAccessModal';
 import NoAccessTermModal from '~/components/NoAccessTermModal';
 import BaseLineModal from '~/components/BaseLineModal';
-import ParentModal from '~/components/ParentModal';
+import ResponsibleModal from '~/components/ResponsibleBaselineModal';
 import StudentBaselineModal from '~/components/StudentBaselineModal'
 
 import { Wrapper, Layer } from './styles';
@@ -18,7 +18,7 @@ export default function DefaultLayout({ children }) {
   const [toggleBaseline, setToggleBaseline] = useState(false);
   const [toggleStudentBaseline, setToggleStudentBaseline] = useState(false)
   const [toggleTermModal, setToggleTermModal] = useState(false);
-  const [toggleParentModal, setToggleParentModal] = useState(false);
+  const [toggleResponsible, setToggleResponsible] = useState(false);
 
   const { baseline, roles, resources, termsAccepted } = useSelector(
     state => state.user.profile
@@ -26,7 +26,6 @@ export default function DefaultLayout({ children }) {
   const { loading } = useSelector(state => state.auth);
 
   useEffect(() => {
-    console.info(baseline)
     if (!loading) {
       if (roles.length === 0) {
         setToggleNoAccess(true);
@@ -38,8 +37,8 @@ export default function DefaultLayout({ children }) {
           setToggleBaseline(true);
         }
       }
-      if (baseline.age < 18) {
-        setToggleParentModal(true);
+      if (roles.includes('student') && baseline.age < 18) {
+        setToggleResponsible(true);
       }
       if (baseline && false) {
         setToggleTermModal(true);
@@ -50,9 +49,13 @@ export default function DefaultLayout({ children }) {
   function toggleBaselineModal(prop) {
     setToggleBaseline(prop);
   }
+  function toggleResponsibleBaselineModal(prop) {
+    setToggleResponsible(prop);
+  }
   function toggleStudentBaselineModal(prop) {
     setToggleStudentBaseline(prop);
   }
+
 
   return (
     <Wrapper>
@@ -73,9 +76,13 @@ export default function DefaultLayout({ children }) {
               toggleFunction={toggleStudentBaselineModal}
             />
         }
-        <ParentModal
-        toggle={toggleParentModal}
-        />
+        { roles.includes('student') ? (
+          <ResponsibleModal
+            toggle={toggleResponsible}
+            toggleFunction={toggleResponsibleBaselineModal}
+          />
+        ): ''}
+
       </Layer>
     </Wrapper>
   );

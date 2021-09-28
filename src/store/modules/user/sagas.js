@@ -7,8 +7,10 @@ import { keycloak } from '~/keycloak';
 
 import {
   newBaselineSuccess,
+  newResponsibleBaselineSuccess,
   newStudentBaselineSuccess,
   newBaselineFailure,
+  newResponsibleBaselineFailure,
   newStudentBaselineFailure,
   updateUserSuccess,
   updateUserFailure,
@@ -18,6 +20,16 @@ function createBaseline(baseline) {
   return api
     .post(`/users/baselines/`, baseline, {
       headers: { Authorization: `Bearer ${keycloak.token}` },
+    })
+    .then(response => ({ response }))
+    .catch(error => ({ error }));
+}
+
+function createResponsibleBaseline(responsible) {
+  console.log(responsible)
+  return api
+    .post(`/minor-responsible/by-user`, responsible, {
+      headers: {Authorization: `Bearer ${keycloak.token}`},
     })
     .then(response => ({ response }))
     .catch(error => ({ error }));
@@ -45,6 +57,19 @@ export function* newBaseline({ payload }) {
   } catch (error) {
     toast.error('Houve um erro, contate o suporte!');
     yield put(newBaselineFailure());
+  }
+}
+
+export function* newResponsibleBaseline() {
+  try {
+    const { response } = yield call(createResponsibleBaseline);
+
+    toast.success('Perfil preenchido com sucesso!');
+
+    yield put(newResponsibleBaselineSuccess(response.data));
+  } catch (error) {
+    toast.error('Houve um erro, contate o suporte!');
+    yield put(newResponsibleBaselineFailure());
   }
 }
 
