@@ -7,10 +7,10 @@ import { keycloak } from '~/keycloak';
 
 import {
   newBaselineSuccess,
-  newResponsibleBaselineSuccess,
+  newResponsibleSuccess,
   newStudentBaselineSuccess,
   newBaselineFailure,
-  newResponsibleBaselineFailure,
+  newResponsibleFailure,
   newStudentBaselineFailure,
   updateUserSuccess,
   updateUserFailure,
@@ -25,10 +25,9 @@ function createBaseline(baseline) {
     .catch(error => ({ error }));
 }
 
-function createResponsibleBaseline(responsible) {
-  console.log(responsible)
+function createResponsible(responsible) {
   return api
-    .post(`/minor-responsible/by-user`, responsible, {
+    .post(`/minor-responsible/`, responsible, {
       headers: {Authorization: `Bearer ${keycloak.token}`},
     })
     .then(response => ({ response }))
@@ -36,8 +35,8 @@ function createResponsibleBaseline(responsible) {
 }
 
 function createStudentBaselines(baseline) {
-  console.log(keycloak.token);
-  console.info("token", keycloak);
+  //console.log(keycloak.token);
+  //console.info("token", keycloak);
   return api
     .post(`/users/student-baselines/`, baseline, {
       headers: { Authorization: `Bearer `+keycloak.token },
@@ -60,16 +59,17 @@ export function* newBaseline({ payload }) {
   }
 }
 
-export function* newResponsibleBaseline() {
+export function* newResponsible({ payload }) {
   try {
-    const { response } = yield call(createResponsibleBaseline);
+    const responsible = payload.data;
+    const { response } = yield call(createResponsible, responsible);
 
     toast.success('Perfil preenchido com sucesso!');
 
-    yield put(newResponsibleBaselineSuccess(response.data));
+    yield put(newResponsibleSuccess(response.data));
   } catch (error) {
     toast.error('Houve um erro, contate o suporte!');
-    yield put(newResponsibleBaselineFailure());
+    yield put(newResponsibleFailure());
   }
 }
 
@@ -109,6 +109,7 @@ export function* updateUser({ payload }) {
 
 export default all([
   takeLatest('@user/NEW_BASELINE_REQUEST', newBaseline),
+  takeLatest('@user/NEW_RESPONSIBLE_REQUEST', newResponsible),
   takeLatest('@user/NEW_STUDENT_BASELINE_REQUEST', newStudentBaseline),
   takeLatest('@user/UPDATE_USER_REQUEST', updateUser),
 ]);

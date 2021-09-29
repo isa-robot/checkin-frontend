@@ -12,7 +12,7 @@ import {
   ModalFooter,
   InputDiv,
 } from './styles';
-import { newResponsibleBaselineRequest } from '~/store/modules/user/actions';
+import { newResponsibleRequest } from '~/store/modules/user/actions';
 
 export default function ResponsibleModal({ toggle, toggleFunction }) {
   const ref = useRef();
@@ -27,7 +27,9 @@ export default function ResponsibleModal({ toggle, toggleFunction }) {
   }, [toggle]);
 
   function handleAnswer(data) {
-    dispatch(newResponsibleBaselineRequest(data));
+    data.cpf = data.cpf.toString();
+    data.rg = data.rg.toString();
+    dispatch(newResponsibleRequest(data));
     toggleFunction(Boolean(loading));
   }
 
@@ -56,9 +58,38 @@ export default function ResponsibleModal({ toggle, toggleFunction }) {
             )}
             <InputDiv>
               <input
+                name="email"
+                type="text"
+                autoComplete="off"
+                placeholder="-"
+                ref={register({ required: true, pattern: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/ })}
+
+              />
+              <label>Email do Responsável</label>
+            </InputDiv>
+            {errors.email && errors.email.type === 'required' && (
+              <span>O campo email é obrigatório</span>
+            )}
+            {errors.email && errors.email.type === 'pattern' && (
+              <span>Email inválido</span>
+            )}
+            <InputDiv>
+              <input
+                name="address"
+                type="text"
+                autoComplete="off"
+                placeholder="-"
+                ref={register({ required: true })}
+              />
+              <label>Endereço do Responsável</label>
+            </InputDiv>
+            {errors.adress && errors.adress.type === 'required' && (
+              <span>O campo endereço é obrigatório</span>
+            )}
+            <InputDiv>
+              <input
                 name="cpf"
                 type="number"
-                minLength={10}
                 autoComplete="off"
                 placeholder="-"
                 ref={register({ required: true })}
@@ -70,16 +101,16 @@ export default function ResponsibleModal({ toggle, toggleFunction }) {
             )}
             <InputDiv>
               <input
-                name="email"
-                type="text"
+                name="rg"
+                type="number"
                 autoComplete="off"
                 placeholder="-"
                 ref={register({ required: true })}
               />
-              <label>Email do Responsável</label>
+              <label>RG do Responsável</label>
             </InputDiv>
-            {errors.email && errors.email.type === 'required' && (
-              <span>O campo email é obrigatório</span>
+            {errors.rg && errors.rg.type === 'required' && (
+              <span>O campo RG é obrigatório</span>
             )}
           </ModalBody>
           <ModalFooter>

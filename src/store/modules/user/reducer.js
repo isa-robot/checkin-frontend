@@ -40,15 +40,19 @@ export default function User(state = INICIAL_STATE, action) {
         draft.loading = false;
         break;
       }
-      case '@user/NEW_RESPONSIBLE_BASELINE_REQUEST': {
-        draft.laoding = true;
-        break
+      case '@user/NEW_RESPONSIBLE_REQUEST': {
+        draft.loading = true;
+        break;
       }
-      case '@user/NEW_RESPONSIBLE_BASELINE_SUCCESS': {
+      case '@user/NEW_RESPONSIBLE_SUCCESS': {
         const { responsible } = action.payload;
         draft.profile.responsible = responsible;
         draft.loading = false;
-        break
+        break;
+      }
+      case '@user/NEW_RESPONSIBLE_FAILURE': {
+        draft.loading = false;
+        break;
       }
       case '@user/UPDATE_USER_REQUEST': {
         draft.loading = true;

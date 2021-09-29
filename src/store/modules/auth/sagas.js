@@ -62,7 +62,7 @@ export function* kcAuth() {
     : [];
 
   let baseline = undefined;
-  let responsible = undefined;
+  let responsible = {};
 
   if (resources.includes('diary')) {
     if(roles.includes('student')) {
@@ -71,7 +71,7 @@ export function* kcAuth() {
         baseline = baseline_response.response.data.baseline;
         const responsible_response = yield call(getResponsible);
         if(responsible_response.response) {
-          responsible = responsible.response.data;
+          responsible = responsible_response.response.data;
         }
       }
     }else{
