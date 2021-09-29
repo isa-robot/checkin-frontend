@@ -17,6 +17,13 @@ function getBaseline(id) {
     .catch(error => ({ error }));
 }
 
+function getResponsible() {
+  return api
+    .get(`/minor-responsible/by-user`)
+    .then(response => ({ response }))
+    .catch(error => ({ error }));
+}
+
 function getStudentBaseline(id) {
   return api
     .get(`/users/student-baselines/${id}`)
@@ -55,11 +62,17 @@ export function* kcAuth() {
     : [];
 
   let baseline = undefined;
+  let responsible = {};
+
   if (resources.includes('diary')) {
     if(roles.includes('student')) {
       const baseline_response = yield call(getStudentBaseline, id);
       if(baseline_response.response) {
         baseline = baseline_response.response.data.baseline;
+        const responsible_response = yield call(getResponsible);
+        if(responsible_response.response) {
+          responsible = responsible_response.response.data;
+        }
       }
     }else{
       const baseline_response = yield call(getBaseline, id);
@@ -78,7 +91,7 @@ export function* kcAuth() {
   }
 
   const user = {};
-  user.profile = { roles, resources, username, emailVerified, baseline, name, termsAccepted };
+  user.profile = { responsible, roles, resources, username, emailVerified, baseline, name, termsAccepted };
 
   yield put(UpdateStore(user));
 }
