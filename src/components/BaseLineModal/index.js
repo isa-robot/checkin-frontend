@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Button from '~/components/Buttons/Button';
+
 import {
   Container,
   ModalCard,
@@ -14,6 +15,7 @@ import {
   SelectDiv,
 } from './styles';
 import { newBaselineRequest } from '~/store/modules/user/actions';
+import { boolean } from 'yup';
 
 export default function Modal({ toggle, toggleFunction }) {
   const ref = useRef();
@@ -59,6 +61,7 @@ export default function Modal({ toggle, toggleFunction }) {
             {errors.age && errors.age.type === 'pattern' && (
               <span>O campo deve conter somente números</span>
             )}
+
             <SelectDiv>
               <select
                 required
@@ -359,11 +362,11 @@ export default function Modal({ toggle, toggleFunction }) {
           </ModalBody>
           <ModalFooter>
             <Button
-              type="submit"
-              color="white"
-              backgroundColor="mountainMeadow"
-              width="150px"
-              height="50px"
+            type="submit"
+            color="white"
+            backgroundColor="mountainMeadow"
+            width="200px"
+            height="70px"
             >
               <p> {loading ? 'Enviando...' : 'Enviar'}</p>
             </Button>

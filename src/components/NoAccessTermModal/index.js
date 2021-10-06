@@ -47,7 +47,6 @@ export default function Modal({ toggle }) {
       }
     }).catch(error => {
       setSignatureVerified(false);
-      toast.error('Houve um problema, contate o suporte!');
     });
   }
 

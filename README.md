@@ -93,4 +93,3 @@ REACT_APP_KEYCLOAK_SERVER_URL="http://$(hostname -I | awk '{print $1}'):8080/aut
 <a href="https://github.com/isa-robot/checkin-frontend/commit/">
   <img src="https://img.shields.io/badge/GitHub%20last%20commit-up-green.svg?style=flat" alt="GitHub last commit">
 </a>
-
