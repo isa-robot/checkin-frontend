@@ -37,10 +37,7 @@ export default function DefaultLayout({ children }) {
           setToggleBaseline(true);
         }
       }
-      if (baseline && roles.includes('student') && baseline.age < 18 && !responsible) {
-        setToggleResponsible(true);
-      }
-      else if (baseline && !toggleResponsible && !toggleBaseline && !toggleStudentBaseline && !toggleNoAccess) {
+      if (baseline && !toggleResponsible && !toggleBaseline && !toggleStudentBaseline && !toggleNoAccess && !roles.includes('student')) {
         setToggleTermModal(true);
       }
     }
