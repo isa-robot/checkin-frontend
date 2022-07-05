@@ -38,10 +38,6 @@ export default function ProtocolsPending() {
   });
   const history = useHistory();
 
-  const handleClickOnDate = (item) => {
-   history.push(`/avaliacao-cfpng?${item}`)
-  };
-
   const handleClick = () => {
     setOpen(!open)
   };
@@ -135,7 +131,7 @@ export default function ProtocolsPending() {
                                 { protocols.protocolsPendent.length > 0 ? (
                                   <List>
                                     {protocols.protocolsPendent.map((item, index) => (
-                                      <ListItem onClick={evt => handleClickOnDate(item)} style={{marginLeft: "10px"}} key={`protocolPendent: ${index}`} button alignItems ='center'>
+                                      <ListItem style={{marginLeft: "10px"}} key={`protocolPendent: ${index}`} button alignItems ='center'>
                                         {item}
                                       </ListItem>
                                     ))}
