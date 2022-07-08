@@ -47,19 +47,6 @@ export default function AppRoutes() {
         component={Diary}
         resource="diary"
       />
-      <Route
-        path="/avaliacao-cfpng"
-        roles={['assisted', 'student']}
-        component={Cfpng}
-        resource={false}
-      />
-      <Route
-        path="/avaliacoes"
-        roles={['assisted']}
-        component={ProtocolsPending}
-        resource={false}
-      />
-
       <Route path="/qualis"
              roles={[]}
              component={Qualis}
