@@ -112,9 +112,6 @@ export default function Monitoring() {
                   rowData.diary.cough ? (<li>Tosse persistente</li>) : ("")
                 }
                 {
-                  rowData.diary.diarrhea ? (<li>Diarréia</li>) : ("")
-                }
-                {
                   rowData.diary.delirium ? (<li>Delírios</li>) : ("")
                 }
                 {
@@ -122,9 +119,6 @@ export default function Monitoring() {
                 }
                 {
                   rowData.diary.shortnessOfBreath ? (<li>Falta de ar</li>) : ("")
-                }
-                {
-                  rowData.diary.abdominalPain ? (<li>Dor abdominal</li>) : ("")
                 }
                 {
                   rowData.diary.chestPain ? (<li>Dor torácica</li>) : ("")
