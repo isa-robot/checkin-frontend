@@ -50,16 +50,12 @@ export default function Modal({
           return 'Febre';
         case 'cough':
           return 'Tosse Persistente';
-        case 'diarrhea':
-          return 'Diarréia';
         case 'delirium':
           return 'Delírios';
         case 'soreThroat':
           return 'Dor de Garganta';
         case 'shortnessOfBreath':
           return 'Falta de Ar';
-        case 'abdominalPain':
-          return 'Dor Abdominal';
         case 'chestPain':
           return 'Dor no Peito';
         case 'breathLess':

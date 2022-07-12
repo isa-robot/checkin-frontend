@@ -32,11 +32,9 @@ export default function Dairy() {
     fatigue: false,
     fever: false,
     cough: false,
-    diarrhea: false,
     delirium: false,
     soreThroat: false,
     shortnessOfBreath: false,
-    abdominalPain: false,
     chestPain: false,
     coryza: false,
     hadContactWithInfected: false,
@@ -217,7 +215,7 @@ export default function Dairy() {
                 </span>
               </MainCard>
               <MainCard visible={ contactWithInfectedForm }>
-                <h1>Você teve contato com alguém que testou positivo para COVID-19 nos últimos 14 dias?</h1>
+                <h2>Você teve contato prolongado e sem uso de máscara com alguém infectado por COVID-19 nos últimos 7 dias?</h2>
                 <FormButtonGroup>
                   <Button
                     width="13rem"
@@ -439,28 +437,6 @@ export default function Dairy() {
                       </div>
                     </ChoiceGroup>
                     <ChoiceGroup>
-                      <strong>Diarréia</strong>
-                      <div>
-                        <input
-                          type="radio"
-                          id="diarrhea-true"
-                          name="diarrhea"
-                          value="true"
-                          onChange={handleFormChange}
-                        />
-                        <label htmlFor="diarrhea-true">Sim</label>
-                        <input
-                          type="radio"
-                          id="diarrhea-false"
-                          name="diarrhea"
-                          value="false"
-                          onChange={handleFormChange}
-                          defaultChecked
-                        />
-                        <label htmlFor="diarrhea-false">Não</label>
-                      </div>
-                    </ChoiceGroup>
-                    <ChoiceGroup>
                       <strong>Delírios</strong>
                       <div>
                         <input
@@ -524,28 +500,6 @@ export default function Dairy() {
                           defaultChecked
                         />
                         <label htmlFor="shortnessOfBreath-false">Não</label>
-                      </div>
-                    </ChoiceGroup>
-                    <ChoiceGroup>
-                      <strong>Dor abdominal</strong>
-                      <div>
-                        <input
-                          type="radio"
-                          id="abdominalPain-true"
-                          name="abdominalPain"
-                          value="true"
-                          onChange={handleFormChange}
-                        />
-                        <label htmlFor="abdominalPain-true">Sim</label>
-                        <input
-                          type="radio"
-                          id="abdominalPain-false"
-                          name="abdominalPain"
-                          value="false"
-                          onChange={handleFormChange}
-                          defaultChecked
-                        />
-                        <label htmlFor="abdominalPain-false">Não</label>
                       </div>
                     </ChoiceGroup>
                     <ChoiceGroup>

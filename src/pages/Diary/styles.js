@@ -43,6 +43,9 @@ export const MainCard = styled(Card)`
   h1 {
     font-size: 3rem;
   }
+  h2 {
+    font-size: 2.5rem;
+  }
   > div {
     display: flex;
     flex-wrap: wrap;
@@ -63,6 +66,9 @@ export const MainCard = styled(Card)`
           margin-bottom: 1.3rem;
         }
       }
+    }
+    h2 {
+      font-size: 2rem;
     }
   }
 
