@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux';
 import Header from '~/components/Header';
 import Footer from '~/components/Footer';
 import NoAccessModal from '~/components/NoAccessModal';
-import NoAccessTermModal from '~/components/NoAccessTermModal';
 import BaseLineModal from '~/components/BaseLineModal';
 import ResponsibleModal from '~/components/ResponsibleModal';
 import StudentBaselineModal from '~/components/StudentBaselineModal'
@@ -17,12 +16,12 @@ export default function DefaultLayout({ children }) {
 
   const [toggleBaseline, setToggleBaseline] = useState(false);
   const [toggleStudentBaseline, setToggleStudentBaseline] = useState(false)
-  const [toggleTermModal, setToggleTermModal] = useState(false);
   const [toggleResponsible, setToggleResponsible] = useState(false);
 
-  const { baseline, roles, resources, termsAccepted, responsible } = useSelector(
+  const { baseline, roles, resources, responsible } = useSelector(
     state => state.user.profile
   );
+
   const { loading } = useSelector(state => state.auth);
 
   useEffect(() => {
@@ -36,9 +35,6 @@ export default function DefaultLayout({ children }) {
         }else if (resources.includes('diary') && !baseline) {
           setToggleBaseline(true);
         }
-      }
-      if (baseline && !toggleResponsible && !toggleBaseline && !toggleStudentBaseline && !toggleNoAccess && !roles.includes('student')) {
-        setToggleTermModal(true);
       }
     }
   }, [roles, resources, baseline, loading, responsible]);
@@ -60,10 +56,6 @@ export default function DefaultLayout({ children }) {
         <Header />
         {children}
         <Footer />
-        {toggleTermModal ? (
-          <NoAccessTermModal toggle={toggleTermModal}/>
-        ): ""
-        }
         <NoAccessModal toggle={toggleNoAccess}/>
         { !roles.includes('student') ? (
             <BaseLineModal
